@@ -107,4 +107,30 @@
       host.appendChild(row);
     });
   }
+  /* Adaptive two-stage search: global visible grid, then local refinement inside declared bounds. */
+  function optimizePhysical(){
+    try {
+      renderPhysical();if(!last)return;syncOptimizerFromDeclared();
+      if(last.p.storageMode!=='constant'){const o=$('optout');o.className='status warn';o.textContent='The present area-width design search requires a constant-area S(H) representation.';return;}
+      const qlim=num('qallow'),hlim=num('hallow'),conf=declaredConfiguration(),obj=$('optObjective').value,checks=['optB','optAo','optD'].filter(id=>$(id).checked),limit=$('optMode').value==='full'?3:2;
+      if(checks.length>limit){syncDesignControls();return;}
+      const good=(lo,hi,on)=>!on||(Number.isFinite(lo)&&Number.isFinite(hi)&&lo>0&&hi>=lo);
+      if(!good(num('optBmin'),num('optBmax'),$('optB').checked)||!good(num('optAomin'),num('optAomax'),$('optAo').checked)||!good(num('optDmin'),num('optDmax'),$('optD').checked)){const o=$('optout');o.className='status warn';o.textContent='Each selected size range must satisfy 0 < minimum ≤ maximum.';return;}
+      const ranges={b:[num('optBmin'),num('optBmax'),$('optB').checked,last.p.bw],ao:[num('optAomin'),num('optAomax'),$('optAo').checked,last.p.ao],d:[num('optDmin'),num('optDmax'),$('optD').checked,last.p.riserD]};
+      const uniform=(lo,hi,on,fixed,n=5)=>!on?[fixed]:Array.from({length:n},(_,i)=>lo+(hi-lo)*i/(n-1));
+      let best=null,candidates=[];
+      const search=(bs,as,ds,areas)=>{for(const A of areas)for(const b of bs)for(const ao of as)for(const d of ds){const p={...last.p,area:A,bw:b,ao,riserD:d,weir:conf.includes('weir')||conf==='all',ori:conf.includes('orifice')||conf==='all',riser:conf.includes('riser')||conf==='all'},z=routeDesignCandidate(p),ok=z.qmax<=qlim&&z.hmax<=hlim&&Math.abs(z.residual)/Math.max(z.vin,1)<=.005;candidates.push({A,b,ao,d,s:z.smax,h:z.hmax,q:z.qmax,ok});const score=obj==='storage'?z.smax:A;if(ok&&(!best||score<best.score||(score===best.score&&A<best.p.area)))best={p,score};}};
+      const allAreas=Array.from({length:28},(_,i)=>60+i*20);
+      search(uniform(...ranges.b),uniform(...ranges.ao),uniform(...ranges.d),allAreas);
+      const local=(r,x,pass)=>{const [lo,hi,on,fixed]=r;if(!on)return[fixed];const base=(hi-lo)/4;const half=base/Math.pow(2,pass-1);return uniform(Math.max(lo,x-half),Math.min(hi,x+half),true,x);};
+      let passes=0;
+      for(let pass=1;best&&pass<=2;pass++){const near=[Math.max(60,best.p.area-20),best.p.area,Math.min(600,best.p.area+20)].filter((v,i,a)=>a.indexOf(v)===i);search(local(ranges.b,best.p.bw,pass),local(ranges.ao,best.p.ao,pass),local(ranges.d,best.p.riserD,pass),near);passes=pass;}
+      drawOptimization(candidates,best);const o=$('optout'),box=$('optResultBox');box.classList.remove('hide');o.classList.remove('hide');
+      if(!best){o.className='status warn';o.textContent='No feasible solution was found within the declared physical bounds and discrete search domain.';$('sizegraphic').innerHTML='<p class="meta">No feasible design dimensions are available for the current bounds.</p>';return;}
+      applyRecommendedDesign(best.p);renderPhysical();best.p=last.p;best.r=last.r;best.e=last.e;
+      const rs=best.e.hp.s/Math.max(best.r.vin,1e-12),active=[best.p.weir&&['Weir width b','m',best.p.bw,$('optB').checked,num('optBmin'),num('optBmax')],best.p.ori&&['Orifice area Ao','m²',best.p.ao,$('optAo').checked,num('optAomin'),num('optAomax')],best.p.riser&&['Riser diameter D','m',best.p.riserD,$('optD').checked,num('optDmin'),num('optDmax')]].filter(Boolean);
+      drawSizeDesign(active);const dims=active.map(v=>'<tr><td>'+v[0]+'</td><td>'+v[2].toFixed(v[1]==='m²'?3:2)+' '+v[1]+'</td><td>'+(v[3]?'searched':'fixed from Outlet module')+'</td></tr>').join('');const lower=active.filter(v=>v[3]&&Math.abs(v[2]-v[4])<1e-9).map(v=>v[0]),upper=active.filter(v=>v[3]&&Math.abs(v[2]-v[5])<1e-9).map(v=>v[0]);const boundary=[lower.length?'lower bound: '+lower.join(', '):'',upper.length?'upper bound: '+upper.join(', '):''].filter(Boolean).join('; ');
+      o.className='status';o.innerHTML='<strong>Adaptive discrete constrained optimum — applied to routing</strong><p class="meta">The program evaluated the full visible grid, then performed '+passes+' local refinement passes inside the declared size bounds. The plots above are rerouted with the recommended design.'+(boundary?' <strong>Bound check:</strong> '+boundary+' remains active after refinement; this is a boundary solution within the user-declared domain.':' No searched outlet dimension remains at a declared bound.')+'</p><table class="metrics"><tr><th>Recommended item</th><th>Result</th><th>Interpretation</th></tr><tr><td>Outlet configuration</td><td>'+$('optConfig').options[$('optConfig').selectedIndex].text+'</td><td>Only listed outlet elements are active.</td></tr><tr><td>Plan area A</td><td>'+best.p.area.toFixed(0)+' m²</td><td>Selected on the declared 20 m² grid.</td></tr>'+dims+'<tr><td>Required detention volume Smax</td><td>'+best.e.hp.s.toFixed(1)+' m³</td><td>Maximum routed storage to be accommodated.</td></tr><tr><td>Peak outflow / allowable</td><td>'+best.e.pout.qo.toFixed(4)+' / '+qlim.toFixed(4)+' m³/s</td><td>Outlet-peak constraint satisfied.</td></tr><tr><td>Peak water level / allowable</td><td>'+best.e.hp.h.toFixed(3)+' / '+hlim.toFixed(3)+' m</td><td>Water-level constraint satisfied.</td></tr><tr><td>Response indicators</td><td>RQ = '+best.e.qratio.toFixed(3)+'; RS = '+rs.toFixed(3)+'</td><td>Attenuation and required-storage descriptors.</td></tr></table><p class="meta">This is a refined discrete constrained optimum under the declared bounds and is not a continuous global optimum.</p>';
+    }catch(err){const box=$('optResultBox'),o=$('optout');box.classList.remove('hide');o.className='status warn';o.textContent='Optimization could not be completed: '+err.message;drawOptimizationMessage('Optimization stopped — review the stated input condition.');}
+  }
 })();
