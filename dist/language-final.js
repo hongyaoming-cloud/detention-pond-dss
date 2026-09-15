@@ -14,5 +14,6 @@
   let en=true;
   function apply(){const reverse=Object.fromEntries(Object.entries(zh).map(([a,b])=>[b,a]));const map=en?reverse:zh;const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode()){const s=n.nodeValue.trim();if(map[s])n.nodeValue=n.nodeValue.replace(s,map[s]);}document.documentElement.lang=en?'en':'zh-Hant';document.title=en?'Detention Pond Routing Decision Support':'滯洪池路由決策支援系統';btn.textContent=en?'中文':'English';}
   btn.onclick=()=>{en=!en;apply();}; apply();
-  new MutationObserver(()=>{if(!en)apply();}).observe(document.body,{childList:true,subtree:true,characterData:true});
+  /* Translate only after the two known render actions; never observe the whole page. */
+  ['run','optimize'].forEach(id=>document.getElementById(id)?.addEventListener('click',()=>setTimeout(()=>{if(!en)apply();},0)));
 })();
