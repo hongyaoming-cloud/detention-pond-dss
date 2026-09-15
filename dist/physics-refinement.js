@@ -7,14 +7,23 @@
     <select id="storageMode"><option value="constant">Constant plan area: S(H) = A H</option><option value="table">Tabulated stage-storage relation S(H)</option></select>
     <div id="storageTableBox" class="hide"><label>Stage-storage table (water level m, storage m3; one pair per line)</label><textarea id="storageTable" rows="5">0, 0
 0.50, 90
-1.00, 180</textarea><div class="meta">Levels and storage must increase from 0. The highest listed level is a hard physical boundary.</div></div>
+1.00, 180</textarea><div class="meta">Storage must begin at 0; water-level elevation may use any declared datum. Both columns must increase. The highest listed level is a hard physical boundary.</div></div>
     <div class="meta">State equation: dS/dt = Qin - Qout(H); H is recovered from the declared S(H).</div>`;
   document.querySelector('h3:nth-of-type(2)').insertAdjacentElement('afterend', physical);
+  const riser = document.createElement('div');
+  riser.innerHTML = `<label class="checkbox"><input id="riserOn" type="checkbox">Vertical riser shaft</label>
+    <div id="riserBox" class="hide"><div class="twocol"><div><label>Riser crest elevation (m)</label><input id="riserCrest" type="number" step="0.01" value="0.60"></div><div><label>Shaft invert elevation (m)</label><input id="riserInvert" type="number" step="0.01" value="0.00"></div></div><div class="twocol"><div><label>Shaft diameter D (m)</label><input id="riserD" type="number" step="0.01" value="0.30"></div><div><label>Riser coefficient Cr</label><input id="riserCr" type="number" step="0.01" value="1.70"></div></div><label>Shaft discharge coefficient Cd</label><input id="riserCd" type="number" step="0.01" value="0.62"><div class="meta">Riser discharge = min(crest-inlet capacity, shaft capacity). Both capacities are reported through the same water-level datum.</div></div>`;
+  document.querySelector('h3:nth-of-type(3)').insertAdjacentElement('afterend', riser);
+  const flow = document.createElement('div');
+  flow.className='optflow';
+  flow.innerHTML='<strong>Optimization logic</strong><span>Declared inflow and constraints</span><b>↓</b><span>Route every candidate by dS/dt = Qin − Qout</span><b>↓</b><span>Screen Qp,o, Hmax, mass balance, and bounds</span><b>↓</b><span>Report the minimum-objective feasible design</span>';
+  document.querySelector('#optimize').insertAdjacentElement('afterend',flow);
+  const style=document.createElement('style');style.textContent='.optflow{margin:14px 0 4px;padding:12px;border:1px solid #bfd1dc;background:#f8fbfd;text-align:center;font-size:13px}.optflow strong,.optflow span,.optflow b{display:block}.optflow strong{color:#102a43;margin-bottom:5px}.optflow span{border:1px solid #bfd1dc;background:#fff;padding:5px}.optflow b{color:#0b557d;font-size:18px;line-height:17px}';document.head.appendChild(style);
 
   function pairs() {
     if ($('storageMode').value === 'constant') return null;
     const a = $('storageTable').value.trim().split(/\n+/).map(x => x.trim().split(/[ ,;\t]+/).map(Number));
-    if (a.length < 2 || a.some(x => x.length < 2 || !Number.isFinite(x[0]) || !Number.isFinite(x[1])) || a[0][0] !== 0 || a[0][1] !== 0 || a.some((x,i) => i && (x[0] <= a[i-1][0] || x[1] <= a[i-1][1]))) throw new Error('Stage-storage table must begin at 0, 0 and increase strictly.');
+    if (a.length < 2 || a.some(x => x.length < 2 || !Number.isFinite(x[0]) || !Number.isFinite(x[1])) || a[0][1] !== 0 || a.some((x,i) => i && (x[0] <= a[i-1][0] || x[1] <= a[i-1][1]))) throw new Error('Stage-storage table must begin at zero storage and increase strictly. Elevation may use any declared datum.');
     return a;
   }
   function interpolate(x, a, xi, yi) {
@@ -24,17 +33,24 @@
   }
   function sOfH(h,p) { return p.storageMode==='constant' ? p.area*h : interpolate(h,p.table,0,1); }
   function hOfS(s,p) { return p.storageMode==='constant' ? s/p.area : interpolate(s,p.table,1,0); }
+  function outflowPhysical(h,p) {
+    let q=0;
+    if(p.weir&&h>p.crest)q+=p.cw*p.bw*Math.pow(h-p.crest,1.5);
+    if(p.ori&&h>p.invert)q+=p.cd*p.ao*Math.sqrt(2*g*(h-p.invert));
+    if(p.riser&&h>p.riserCrest){const inlet=p.riserCr*Math.PI*p.riserD*Math.pow(h-p.riserCrest,1.5);const shaft=p.riserCd*Math.PI*p.riserD*p.riserD/4*Math.sqrt(2*g*Math.max(0,h-p.riserInvert));q+=Math.min(inlet,shaft);}
+    return q;
+  }
   function routePhysical(p) {
     const dt=2, T=p.dur*60+Math.max(1800,p.dur*30), s0=sOfH(p.h0,p); let s=s0, vin=0,vout=0; const rows=[];
-    const rhs=(t,ss)=>inflow(t,p)-outflow(hOfS(Math.max(0,ss),p),p);
-    for(let t=0;t<=T;t+=dt) { const h=hOfS(s,p), qi=inflow(t,p), qo=outflow(h,p); rows.push({t,qi,qo,h,s}); vin+=qi*dt;vout+=qo*dt; const k1=rhs(t,s),k2=rhs(t+dt/2,s+k1*dt/2),k3=rhs(t+dt/2,s+k2*dt/2),k4=rhs(t+dt,s+k3*dt);s=Math.max(0,s+dt*(k1+2*k2+2*k3+k4)/6); }
+    const rhs=(t,ss)=>inflow(t,p)-outflowPhysical(hOfS(Math.max(0,ss),p),p);
+    for(let t=0;t<=T;t+=dt) { const h=hOfS(s,p), qi=inflow(t,p), qo=outflowPhysical(h,p); rows.push({t,qi,qo,h,s}); vin+=qi*dt;vout+=qo*dt; const k1=rhs(t,s),k2=rhs(t+dt/2,s+k1*dt/2),k3=rhs(t+dt/2,s+k2*dt/2),k4=rhs(t+dt,s+k3*dt);s=Math.max(0,s+dt*(k1+2*k2+2*k3+k4)/6); }
     return {rows,vin,vout,residual:vin-vout-rows.at(-1).s+s0};
   }
   function readInputs() {
-    const p={qp:num('qp'),dur:num('dur'),shape:$('shape').value,area:num('area'),h0:num('h0'),weir:$('weirOn').checked,cw:num('cw'),bw:num('bw'),crest:num('crest'),ori:$('oriOn').checked,cd:num('cd'),ao:num('ao'),invert:num('invert'),storageMode:$('storageMode').value,tpeak:num('tpeak'),recess:num('recess'),rise:num('rise'),plateau:num('plateau')};
+    const p={qp:num('qp'),dur:num('dur'),shape:$('shape').value,area:num('area'),h0:num('h0'),weir:$('weirOn').checked,cw:num('cw'),bw:num('bw'),crest:num('crest'),ori:$('oriOn').checked,cd:num('cd'),ao:num('ao'),invert:num('invert'),riser:$('riserOn').checked,riserCrest:num('riserCrest'),riserInvert:num('riserInvert'),riserD:num('riserD'),riserCr:num('riserCr'),riserCd:num('riserCd'),storageMode:$('storageMode').value,tpeak:num('tpeak'),recess:num('recess'),rise:num('rise'),plateau:num('plateau')};
     if(p.storageMode==='table')p.table=pairs();
     if(p.shape==='custom'){p.points=parsePoints();p.dur=p.points.at(-1)[0]/60;p.qp=Math.max(...p.points.map(x=>x[1]));}
-    if(!(p.qp>0&&p.dur>0&&p.h0>=0&&(p.weir||p.ori)&&p.cw>=0&&p.cd>=0&&p.bw>=0&&p.ao>=0&&p.crest>=0&&p.invert>=0&&(p.storageMode==='table'||p.area>0))) throw new Error('Enter physically valid non-negative geometry and at least one outlet.');
+    if(!(p.qp>0&&p.dur>0&&Number.isFinite(p.h0)&&(p.storageMode==='table'||p.h0>=0)&&(p.weir||p.ori||p.riser)&&p.cw>=0&&p.cd>=0&&p.bw>=0&&p.ao>=0&&p.crest>=0&&p.invert>=0&&p.riserCrest>=p.riserInvert&&p.riserD>0&&p.riserCr>=0&&p.riserCd>=0&&(p.storageMode==='table'||p.area>0))) throw new Error('Enter physically valid geometry and at least one outlet. Riser crest must be at or above its invert.');
     return p;
   }
   function updateDecision() {
@@ -58,5 +74,7 @@
     for(let A=60;A<=600;A+=10)for(let b=.05;b<=1.0001;b+=.05){const p={...last.p,area:A,bw:+b.toFixed(2)},r=routePhysical(p),e=evaluate(p,r);if(e.pout.qo<=qlim&&e.hp.h<=hlim&&Math.abs(r.residual)/Math.max(r.vin,1)<=.005&&(!best||A<best.p.area||(A===best.p.area&&b<best.p.bw)))best={p,r,e};}
     const o=$('optout');o.classList.remove('hide');if(!best){o.className='status warn';o.textContent='No feasible solution was found within the declared physical bounds and discrete search domain.';return;}const rs=best.e.hp.s/Math.max(best.r.vin,1e-12);o.className='status';o.innerHTML='<strong>Discrete constrained optimum</strong>Area A = '+best.p.area.toFixed(0)+' m2; weir width b = '+best.p.bw.toFixed(2)+' m; peak outflow = '+best.e.pout.qo.toFixed(4)+' m3/s; peak level = '+best.e.hp.h.toFixed(3)+' m; RQ = '+best.e.qratio.toFixed(3)+'; RS = '+rs.toFixed(3)+'.';
   }
-  $('storageMode').addEventListener('change',()=>{$('storageTableBox').classList.toggle('hide',$('storageMode').value!=='table');renderPhysical();});$('storageTable').addEventListener('change',renderPhysical);$('run').onclick=renderPhysical;$('optimize').onclick=optimizePhysical;$('displayMin').addEventListener('input',renderPhysical);renderPhysical();
+  const storageFile=document.createElement('div');storageFile.innerHTML='<label>Import stage-storage file (.csv or .txt)</label><input id="storageFile" type="file" accept=".csv,.txt,text/csv,text/plain"><div class="meta">Two columns: water-surface elevation (or level) in m, then storage in m3.</div>';$('storageTableBox').insertAdjacentElement('afterend',storageFile);
+  $('storageFile').addEventListener('change',ev=>{const f=ev.target.files[0];if(!f)return;const reader=new FileReader();reader.onload=()=>{$('storageTable').value=String(reader.result).replace(/\r/g,'').trim();$('storageMode').value='table';$('storageTableBox').classList.remove('hide');renderPhysical();};reader.readAsText(f);});
+  $('storageMode').addEventListener('change',()=>{$('storageTableBox').classList.toggle('hide',$('storageMode').value!=='table');renderPhysical();});$('storageTable').addEventListener('change',renderPhysical);$('riserOn').addEventListener('change',()=>{$('riserBox').classList.toggle('hide',!$('riserOn').checked);renderPhysical();});$('run').onclick=renderPhysical;$('optimize').onclick=optimizePhysical;$('displayMin').addEventListener('input',renderPhysical);renderPhysical();
 })();
