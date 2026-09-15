@@ -163,4 +163,22 @@
       $('metricbody').innerHTML=m.map(x=>`<tr><td>${x[0]}</td><td>${x[1]}</td><td>${x[2]}</td></tr>`).join('');const st=$('status');st.className='status '+e.status;st.innerHTML=`<strong>${e.title}</strong>${e.text}`;$('runmeta').textContent='State routing in S; RK4; Δt = 2 s; '+r.rows.length+' steps';updateDecision();syncDesignControls();screenDesign(p,r,e);
     }catch(err){const st=$('status');st.className='status stop';st.innerHTML='<strong>Do not use until physical inputs are resolved</strong>'+err.message;const box=$('designScreening');if(box){box.className='status stop';box.textContent='Input screening unavailable until the physical input error is resolved.';}}
   }
+  function englishUI(){return $('lang').textContent.trim()==='中文';}
+  function recommendedSizing(p,hlim,qtarget,qcap){
+    if(!(qcap>0)||qcap>=qtarget)return null;
+    const cap=f=>outflowPhysical(hlim,{...p,bw:p.bw*f,ao:p.ao*f,riserD:p.riserD*f});let hi=2;while(hi<64&&cap(hi)<qtarget)hi*=2;
+    if(cap(hi)<qtarget)return {unresolved:true};let lo=1;for(let i=0;i<36;i++){const mid=(lo+hi)/2;if(cap(mid)<qtarget)lo=mid;else hi=mid;}
+    return {factor:hi,b:p.weir?p.bw*hi:null,ao:p.ori?p.ao*hi:null,d:p.riser?p.riserD*hi:null};
+  }
+  function screenDesign(p,r,e){
+    const box=$('designScreening');if(!box)return;const en=englishUI(),hlim=num('hallow'),qlim=num('qallow'),qcap=outflowPhysical(hlim,p),qtarget=Math.min(qlim,p.qp),available=Math.max(0,sOfH(hlim,p)-sOfH(p.h0,p)),used=e.hp.s,ratio=qcap/Math.max(p.qp,1e-12),overH=e.hp.h>hlim+1e-6,nearStorage=available>0&&used/available>.85,rec=recommendedSizing(p,hlim,qtarget,qcap);let level='ok',head=en?'Input screening: hydraulically plausible':'輸入防呆判讀：水理設定合理',lines=[];
+    const fmt=n=>n.toFixed(3), capLine=en?'At Hallow, outlet capacity = '+fmt(qcap)+' m³/s; target = '+fmt(qtarget)+' m³/s.':'在容許水位 Hallow 下，出口能力 = '+fmt(qcap)+' m³/s；目標 = '+fmt(qtarget)+' m³/s。';
+    if(overH){level='stop';head=en?'Input screening: routed water level exceeds the limit':'輸入防呆判讀：路由水位超過容許上限';lines.push(en?'Hmax = '+fmt(e.hp.h)+' m exceeds Hallow = '+fmt(hlim)+' m. Do not adopt this design before revision.':'Hmax = '+fmt(e.hp.h)+' m，高於 Hallow = '+fmt(hlim)+' m；修正前不可採用此設計。');if(p.storageMode==='constant'&&hlim>p.h0){const amin=e.hp.s/(hlim-p.h0);lines.push(en?'If outlet configuration is unchanged, preliminary minimum plan area ≈ '+Math.ceil(amin/20)*20+' m² (rounded to the 20 m² design grid).':'若出口配置不變，初估平面面積至少約 '+Math.ceil(amin/20)*20+' m²（依 20 m² 設計網格取整）。');}}
+    else if(qcap<.10*p.qp||nearStorage){level='warn';head=en?'Input screening: high detention risk':'輸入防呆判讀：高滯洪風險';lines.push(qcap<.10*p.qp?(en?'Outlet capacity at Hallow is only '+(100*ratio).toFixed(1)+'% of inflow peak.':'Hallow 下的出口能力僅為入流洪峰的 '+(100*ratio).toFixed(1)+'%。'):(en?'Routed storage uses '+(100*used/available).toFixed(1)+'% of available storage below Hallow.':'路由蓄水量已使用 Hallow 以下可用池容的 '+(100*used/available).toFixed(1)+'%。'));}
+    lines.push(capLine);
+    if(rec){if(level==='ok'){level='warn';head=en?'Input screening: outlet capacity below design target':'輸入防呆判讀：出口能力低於設計目標';}if(rec.unresolved)lines.push(en?'No practical uniform size increase within a 64× trial scale reaches the target. Add an outlet, enlarge storage, or review Hallow and freeboard.':'以 64 倍尺寸試算仍無法達到目標；應增加出口、擴大池容，或重新檢討 Hallow 與出水高。');else{const vals=[];if(rec.b!==null)vals.push((en?'weir width b ≈ ':'建議堰寬 b ≈ ')+rec.b.toFixed(2)+' m');if(rec.ao!==null)vals.push((en?'orifice area Ao ≈ ':'建議孔口面積 Ao ≈ ')+rec.ao.toFixed(3)+' m²');if(rec.d!==null)vals.push((en?'riser diameter D ≈ ':'建議豎井直徑 D ≈ ')+rec.d.toFixed(2)+' m');lines.push((en?'Preliminary capacity-matched modification: ':'初步能力匹配建議：')+vals.join(en?'; ':'；')+(en?'. Confirm with constrained routing optimization.':'。仍須以受限路由最佳化確認。'));}}
+    if(qlim>p.qp)lines.push(en?'Allowable outflow exceeds the inflow peak; this limit is not active for the present event.':'容許出流量高於入流洪峰；本事件中此限制不具約束作用。');
+    box.className='status '+level;box.innerHTML='<strong>'+head+'</strong><br>'+lines.join('<br>');
+  }
+  $('lang').addEventListener('click',()=>window.setTimeout(()=>{if(last)screenDesign(last.p,last.r,last.e);},0));
 })();
