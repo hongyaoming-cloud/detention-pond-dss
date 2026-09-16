@@ -65,10 +65,9 @@
     return q;
   }
   function routePhysical(p) {
-    const dt=2, T=p.dur*60+Math.max(1800,p.dur*30), s0=sOfH(p.h0,p); let s=s0, vin=0,vout=0; const rows=[];
-    const rhs=(t,ss)=>inflow(t,p)-outflowPhysical(hOfS(Math.max(0,ss),p),p);
-    for(let t=0;t<=T;t+=dt) { const h=hOfS(s,p), qi=inflow(t,p), qo=outflowPhysical(h,p); rows.push({t,qi,qo,h,s}); vin+=qi*dt;vout+=qo*dt; const k1=rhs(t,s),k2=rhs(t+dt/2,s+k1*dt/2),k3=rhs(t+dt/2,s+k2*dt/2),k4=rhs(t+dt,s+k3*dt);s=Math.max(0,s+dt*(k1+2*k2+2*k3+k4)/6); }
-    return {rows,vin,vout,residual:vin-vout-rows.at(-1).s+s0};
+    if(!window.DetentionRoutingCore)throw new Error('Authoritative RK4 routing core did not load.');
+    const dt=2,T=p.dur*60,s0=sOfH(p.h0,p);
+    return window.DetentionRoutingCore.routeStorage({tEnd:T,dt,storage0:s0,inflow:t=>inflow(t,p),stageOfStorage:s=>hOfS(Math.max(0,s),p),outflow:h=>outflowPhysical(h,p),tailSeconds:Math.max(1800,p.dur*30)});
   }
   function readInputs() {
     const p={qp:num('qp'),dur:num('dur'),shape:$('shape').value,area:num('area'),h0:num('h0'),weir:$('weirOn').checked,cw:num('cw'),bw:num('bw'),crest:num('crest'),ori:$('oriOn').checked,cd:num('cd'),ao:num('ao'),oriH:num('oriH'),invert:num('invert'),riser:$('riserOn').checked,riserCrest:num('riserCrest'),riserInvert:num('riserInvert'),riserD:num('riserD'),riserCr:num('riserCr'),riserCd:num('riserCd'),pipe:$('pipeOn').checked,pipeD:num('pipeD'),pipeCd:num('pipeCd'),pipeInvert:num('pipeInvert'),storageMode:$('storageMode').value,coeffMode:$('coeffMode').value,tpeak:num('tpeak'),recess:num('recess'),rise:num('rise'),plateau:num('plateau')};

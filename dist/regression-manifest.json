@@ -1,5 +1,7 @@
 {
   "schema": "detention-routing-regression/v1",
+  "interactive_routing_core": "software-i-rk4-v1",
+  "core_equivalence_regression": "regression_176.js",
   "fixture_suite": "fixed laboratory regression fixtures",
   "cases": 176,
   "series": 352,

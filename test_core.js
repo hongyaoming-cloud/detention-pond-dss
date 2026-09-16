@@ -17,3 +17,7 @@ if(count(/function renderPhysical\(/g)!==1)throw new Error('Interactive app must
 if(count(/function optimizePhysical\(/g)!==1)throw new Error('Interactive app must declare exactly one authoritative optimizePhysical function');
 if(/setTimeout\(optimizePhysical/.test(app))throw new Error('Interactive app must not auto-run optimization during startup');
 console.log('interactive authority guard: passed');
+
+const core=fs.readFileSync('dist/routing-core.js','utf8');
+if(!/routeStorage/.test(core)||!/rk4Scalar/.test(core))throw new Error('Interactive routing must expose the authoritative RK4 core');
+console.log('shared RK4 core guard: passed');
