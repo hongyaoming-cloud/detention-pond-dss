@@ -7,6 +7,9 @@ reference table created from the same raw records.
 from __future__ import annotations
 
 import csv
+import argparse
+import hashlib
+import json
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -49,7 +52,7 @@ def rerun(ti, qi, h0, control, size, dt=.1):
         h=max(h+dt*(k1+2*k2+2*k3+k4)/6,0); t+=dt
     return qmax,tmax
 
-def main():
+def main(manifest_path=None):
     expected=pd.read_csv(FX/"rerun_case_metrics.csv")
     source=pd.read_csv(FX/"corrected_raw_case_metrics.csv")
     assert len(expected)==len(source)==176, "fixture count must be 176"
@@ -64,7 +67,27 @@ def main():
     targets={"A":2.924,"B":2.954,"C":4.104,"D":4.649}
     for g in targets:
         if abs(mares[g]-targets[g])>.001: failures.append(f"group {g} MARE={mares[g]:.3f}%")
-    print({"cases":176,"series":352,"peak_MARE_by_group":{g:round(mares[g],3) for g in mares},"all_passed":not failures})
+    summary={
+        "schema":"detention-routing-regression/v1",
+        "fixture_suite":"fixed laboratory regression fixtures",
+        "cases":176,
+        "series":352,
+        "groups":{"A":48,"B":48,"C":40,"D":40},
+        "hydrograph_forms":{"triangular":96,"long_duration":80},
+        "validated_outlets":["passive overflow weir","rectangular orifice"],
+        "excluded_from_validation":["riser","circular opening or pipe","variable coefficient table","compound outlet"],
+        "peak_MARE_by_group":{g:round(mares[g],3) for g in mares},
+        "all_passed":not failures,
+        "runner_sha256":hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+        "reference_metrics_sha256":hashlib.sha256((FX/"rerun_case_metrics.csv").read_bytes()).hexdigest(),
+    }
+    if manifest_path:
+        Path(manifest_path).write_text(json.dumps(summary,indent=2)+"\n",encoding="utf-8")
+    print(summary)
     if failures: raise SystemExit("Regression failure:\n"+"\n".join(failures[:20]))
 
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--manifest",help="write a traceable JSON release manifest")
+    args=parser.parse_args()
+    main(args.manifest)

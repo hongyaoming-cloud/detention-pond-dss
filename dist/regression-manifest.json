@@ -1,0 +1,35 @@
+{
+  "schema": "detention-routing-regression/v1",
+  "fixture_suite": "fixed laboratory regression fixtures",
+  "cases": 176,
+  "series": 352,
+  "groups": {
+    "A": 48,
+    "B": 48,
+    "C": 40,
+    "D": 40
+  },
+  "hydrograph_forms": {
+    "triangular": 96,
+    "long_duration": 80
+  },
+  "validated_outlets": [
+    "passive overflow weir",
+    "rectangular orifice"
+  ],
+  "excluded_from_validation": [
+    "riser",
+    "circular opening or pipe",
+    "variable coefficient table",
+    "compound outlet"
+  ],
+  "peak_MARE_by_group": {
+    "A": 2.924,
+    "B": 2.954,
+    "C": 4.104,
+    "D": 4.649
+  },
+  "all_passed": true,
+  "runner_sha256": "9e9331eb7d12134fb03871a9975597e93b2f558c2b096bfa0b0adfd31b21bd33",
+  "reference_metrics_sha256": "090fc82833da5d2917d72a7f8975e92f385d69633bc7ada1fa8e0b24333615d0"
+}
