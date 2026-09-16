@@ -277,6 +277,23 @@
     const st=$('status');st.className='status stop';st.innerHTML='<strong>'+last.e.title+'</strong>'+last.e.text;
     $('metricbody').insertAdjacentHTML('beforeend',en?'<tr><td>Stage-storage boundary</td><td>Exceeded</td><td>Highest declared storage was reached; no extrapolation was used.</td></tr>':'<tr><td>水位—蓄水量邊界</td><td>已超出</td><td>已達表列最高蓄水量；系統未進行外插。</td></tr>');
   };
+  /* A run report is a rerunnable engineering record, not merely a screenshot of the charts. */
+  function reportValue(v){return typeof v==='number'&&Number.isFinite(v)?v.toPrecision(12):String(v??'');}
+  function downloadRunRecord(){if(!last)return;const {p,r,e}=last,en=appEnglish,componentKeys=['weir','rectangularOpening','riser','pipe'],rows=[];
+    rows.push(en?'Detention Pond Routing — Reproducible Run Record':'滯洪池路由——可重現執行紀錄');
+    rows.push((en?'Generated UTC: ':'產生時間（UTC）：')+new Date().toISOString());
+    rows.push((en?'Scope: ':'適用範圍：')+(en?'one facility; known event inflow; event-based level-pool routing.':'單一設施；已知事件入流；事件式水平池路由。'));
+    rows.push((en?'Numerics: ':'數值設定：')+'RK4; state=S; Δt=2 s; S(H) linear interpolation; '+(en?'tail extension=':'尾段延伸=')+Math.max(1800,p.dur*30)+' s.');
+    rows.push((en?'Applicability status: ':'適用性狀態：')+e.title);
+    rows.push((en?'Decision text: ':'判讀說明：')+e.text.replace(/<[^>]*>/g,' '));
+    rows.push((en?'Stage-storage boundary: ':'水位—蓄水量邊界：')+(r.stateExceeded?(en?'EXCEEDED — no extrapolation used.':'已超出——未進行外插。'):(en?'not exceeded.':'未超出。')));
+    rows.push((en?'Input snapshot JSON: ':'輸入快照 JSON：')+JSON.stringify(p));
+    rows.push((en?'Results: ':'結果：')+'Qp,in='+reportValue(e.pin.qi)+' m3/s; Qp,out='+reportValue(e.pout.qo)+' m3/s; Hmax='+reportValue(e.hp.h)+' m; Smax='+reportValue(e.hp.s)+' m3; RQ='+reportValue(e.qratio)+'; RT='+reportValue(e.lag)+'; mass residual='+reportValue(r.residual)+' m3.');
+    rows.push('');rows.push('time_s,Qin_m3s,Qout_total_m3s,H_m,S_m3,Q_weir_m3s,Q_rectangular_opening_m3s,Q_riser_m3s,Q_pipe_m3s');
+    r.rows.forEach(z=>rows.push([z.t,z.qi,z.qo,z.h,z.s,...componentKeys.map(k=>z.components?.[k]||0)].map(reportValue).join(',')));
+    const blob=new Blob([rows.join('\n')],{type:'text/plain;charset=utf-8'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='detention-pond-routing-run-record.txt';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),0);
+  }
+  $('download').onclick=downloadRunRecord;
   /* Replace legacy controls once: old inline and listener bindings cannot issue a second routing or search. */
   function installAuthoritativeControls(){
     const replace=id=>{const old=$(id),fresh=old.cloneNode(true);old.replaceWith(fresh);return fresh;};

@@ -16,6 +16,7 @@ const count=(pattern)=>(app.match(pattern)||[]).length;
 if(count(/function renderPhysical\(/g)!==1)throw new Error('Interactive app must declare exactly one authoritative renderPhysical function');
 if(count(/function optimizePhysical\(/g)!==1)throw new Error('Interactive app must declare exactly one authoritative optimizePhysical function');
 if(/setTimeout\(optimizePhysical/.test(app))throw new Error('Interactive app must not auto-run optimization during startup');
+if(!/Reproducible Run Record/.test(app)||!/Q_rectangular_opening_m3s/.test(app)||!/Stage-storage boundary/.test(app))throw new Error('Run record must retain numerical, boundary, and component-outflow information');
 console.log('interactive authority guard: passed');
 
 const core=fs.readFileSync('dist/routing-core.js','utf8');
