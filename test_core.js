@@ -8,3 +8,12 @@ const bottomOutlet=route({...base,crest:0});
 if(!(bottomOutlet.rows[0].qo===0 && bottomOutlet.rows[1].qo>0))throw new Error('Bottom-outlet hydrograph must start at zero and rise immediately');
 const cases={triangular:base,longDuration:{...base,shape:'long',dur:120},orifice:{...base,weir:false,ori:true},custom:{...base,shape:'custom',points:[[0,0],[1500,.1],[3000,.1],[4500,0]],dur:75,qp:.1}};
 for(const [name,p] of Object.entries(cases)){const r=route(p),q=peak(r.rows,'qo').qo,relative=Math.abs(r.residual)/r.vin;if(!(q>0&&relative<.005))throw new Error(name+' routing test failed');console.log(name+': peak='+q.toFixed(6)+' m3/s; balance='+(100*relative).toFixed(4)+'%')}
+
+/* Release guard: the interactive application may expose only one formal renderer and optimizer. */
+const fs=require('fs');
+const app=fs.readFileSync('dist/physics-refinement.js','utf8');
+const count=(pattern)=>(app.match(pattern)||[]).length;
+if(count(/function renderPhysical\(/g)!==1)throw new Error('Interactive app must declare exactly one authoritative renderPhysical function');
+if(count(/function optimizePhysical\(/g)!==1)throw new Error('Interactive app must declare exactly one authoritative optimizePhysical function');
+if(/setTimeout\(optimizePhysical/.test(app))throw new Error('Interactive app must not auto-run optimization during startup');
+console.log('interactive authority guard: passed');

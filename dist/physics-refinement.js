@@ -88,7 +88,8 @@
   function applyOptimizerConfiguration(){const conf=$('optConfig').value;$('weirOn').checked=conf.includes('weir')||conf==='all';$('oriOn').checked=conf.includes('orifice')||conf==='all';$('riserOn').checked=conf.includes('riser')||conf==='all';if(conf==='all'){$('optMode').value='full';['optB','optAo','optD'].forEach(id=>$(id).checked=true);}$('riserBox').classList.toggle('hide',!$('riserOn').checked);renderPhysical();}
   function applyRecommendedDesign(p){$('area').value=p.area;$('bw').value=p.bw;$('ao').value=p.ao;$('riserD').value=p.riserD;$('weirOn').checked=p.weir;$('oriOn').checked=p.ori;$('riserOn').checked=p.riser;$('riserBox').classList.toggle('hide',!p.riser);$('optConfig').value=p.weir&&p.ori&&p.riser?'all':p.weir&&p.ori?'weirorifice':p.weir&&p.riser?'weirriser':p.ori&&p.riser?'orificeriser':p.weir?'weir':p.ori?'orifice':'riser';syncOptimizerFromDeclared();}
   function invalidateOptimization(){const box=$('optResultBox'),o=$('optout');box.classList.remove('hide');o.className='status warn';o.textContent='Outlet configuration or dimensions changed. Run the design search again to update the recommended dimensions.';$('sizegraphic').innerHTML='<p class="meta">Awaiting the updated routing and design search.</p>';drawOptimizationMessage('Run the design search to update candidates.');}
-  function renderPhysical() {
+  /* Retained only for migration comparison; the final authoritative renderer is declared below. */
+  function renderPhysicalLegacy() {
     syncTimes();
     try {
       const p=readInputs(),r=routePhysical(p),e=evaluate(p,r); if(p.shape==='custom'&&e.status==='ok'){e.status='warn';e.title='Independent verification required';e.text='The imported event was routed successfully. Confirm its dimensionless response and input assumptions before design use.';} last={p,r,e};
@@ -99,7 +100,7 @@
     } catch(err) { const st=$('status');st.className='status stop';st.innerHTML='<strong>Do not use until physical inputs are resolved</strong>'+err.message; }
   }
   function routeDesignCandidate(p){const dt=2,T=p.dur*60+Math.max(1800,p.dur*30),s0=sOfH(p.h0,p);let s=s0,vin=0,vout=0,qmax=0,hmax=p.h0,smax=s0;const rhs=(t,ss)=>inflow(t,p)-outflowPhysical(hOfS(Math.max(0,ss),p),p);for(let t=0;t<=T;t+=dt){const h=hOfS(s,p),qi=inflow(t,p),qo=outflowPhysical(h,p);vin+=qi*dt;vout+=qo*dt;if(qo>qmax)qmax=qo;if(h>hmax)hmax=h;if(s>smax)smax=s;const k1=rhs(t,s),k2=rhs(t+dt/2,s+k1*dt/2),k3=rhs(t+dt/2,s+k2*dt/2),k4=rhs(t+dt,s+k3*dt);s=Math.max(0,s+dt*(k1+2*k2+2*k3+k4)/6);}return {vin,vout,qmax,hmax,smax,residual:vin-vout-s+s0};}
-  function optimizePhysical() { try {
+  function optimizePhysicalLegacy() { try {
     renderPhysical(); if(!last)return;syncOptimizerFromDeclared();
     if(last.p.storageMode!=='constant'){const o=$('optout');o.className='status warn';o.textContent='The present area-width discrete search is defined only for a constant-area S(H) representation. For a tabulated basin, declare a compatible design-variable parameterization before optimization.';return;}
     const qlim=num('qallow'),hlim=num('hallow'),conf=declaredConfiguration(),obj=$('optObjective').value,checks=['optB','optAo','optD'].filter(id=>$(id).checked),limit=$('optMode').value==='full'?3:2;if(checks.length>limit){syncDesignControls();return;}const validRange=(lo,hi,on)=>!on||(Number.isFinite(lo)&&Number.isFinite(hi)&&lo>0&&hi>=lo);if(!validRange(num('optBmin'),num('optBmax'),$('optB').checked)||!validRange(num('optAomin'),num('optAomax'),$('optAo').checked)||!validRange(num('optDmin'),num('optDmax'),$('optD').checked)){const o=$('optout');o.className='status warn';o.textContent='Each selected size range must satisfy 0 < minimum ≤ maximum.';return;}const grid=(a,b,on,fixed)=>!on?[fixed]:[0,1,2,3,4].map(i=>a+(b-a)*i/4);const bs=grid(num('optBmin'),num('optBmax'),$('optB').checked,last.p.bw),as=grid(num('optAomin'),num('optAomax'),$('optAo').checked,last.p.ao),ds=grid(num('optDmin'),num('optDmax'),$('optD').checked,last.p.riserD);let best=null,candidates=[];
@@ -176,7 +177,7 @@
     if(qlim>p.qp)items.push('Allowable peak outflow exceeds the inflow peak; it is not an active attenuation constraint for this event.');
     box.className='status '+level;box.innerHTML='<strong>'+headline+'</strong><br>'+items.join('<br>');
   }
-  function renderPhysical(){
+  function renderPhysicalLegacyB(){
     syncTimes();
     try{
       const p=readInputs(),r=routePhysical(p),e=evaluate(p,r);if(p.shape==='custom'&&e.status==='ok'){e.status='warn';e.title='Independent verification required';e.text='The imported event was routed successfully. Confirm its dimensionless response and input assumptions before design use.';}last={p,r,e};
