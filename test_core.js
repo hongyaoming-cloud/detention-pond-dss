@@ -30,3 +30,7 @@ const qCrown=Core.rectangularOpeningDischarge({...opening,head:opening.height});
 const qAbove=Core.rectangularOpeningDischarge({...opening,head:opening.height+eps});
 if(Math.abs(qCrown-qBelow)>2e-7||Math.abs(qAbove-qCrown)>2e-7||qAbove<qCrown)throw new Error('Rectangular-opening free-to-submerged transition must be continuous and non-decreasing');
 console.log('rectangular-opening transition guard: passed');
+
+const bounded=Core.routeStorage({tEnd:10,dt:1,storage0:0,maxStorage:2,inflow:()=>1,stageOfStorage:s=>s,outflow:()=>0});
+if(!bounded.stateExceeded||bounded.rows.some(row=>row.s>2))throw new Error('Stage-storage ceiling must stop routing before an undefined state is reported');
+console.log('stage-storage hard-boundary guard: passed');

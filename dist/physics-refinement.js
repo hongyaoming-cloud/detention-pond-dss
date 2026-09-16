@@ -67,12 +67,13 @@
   function routePhysical(p) {
     if(!window.DetentionRoutingCore)throw new Error('Authoritative RK4 routing core did not load.');
     const dt=2,T=p.dur*60,s0=sOfH(p.h0,p);
-    return window.DetentionRoutingCore.routeStorage({tEnd:T,dt,storage0:s0,inflow:t=>inflow(t,p),stageOfStorage:s=>hOfS(Math.max(0,s),p),outflow:h=>outflowPhysical(h,p),tailSeconds:Math.max(1800,p.dur*30)});
+    const maxStorage=p.storageMode==='table'?p.table.at(-1)[1]:Infinity;
+    return window.DetentionRoutingCore.routeStorage({tEnd:T,dt,storage0:s0,inflow:t=>inflow(t,p),stageOfStorage:s=>hOfS(Math.max(0,s),p),outflow:h=>outflowPhysical(h,p),tailSeconds:Math.max(1800,p.dur*30),maxStorage});
   }
   function readInputs() {
     const p={qp:num('qp'),dur:num('dur'),shape:$('shape').value,area:num('area'),h0:num('h0'),weir:$('weirOn').checked,cw:num('cw'),bw:num('bw'),crest:num('crest'),ori:$('oriOn').checked,cd:num('cd'),ao:num('ao'),oriH:num('oriH'),invert:num('invert'),riser:$('riserOn').checked,riserCrest:num('riserCrest'),riserInvert:num('riserInvert'),riserD:num('riserD'),riserCr:num('riserCr'),riserCd:num('riserCd'),pipe:$('pipeOn').checked,pipeD:num('pipeD'),pipeCd:num('pipeCd'),pipeInvert:num('pipeInvert'),storageMode:$('storageMode').value,coeffMode:$('coeffMode').value,tpeak:num('tpeak'),recess:num('recess'),rise:num('rise'),plateau:num('plateau')};
     if(p.coeffMode==='table'){p.coeffSource=$('coeffSource').value.trim();p.coeffUrl=$('coeffUrl').value.trim();p.coeffTable=$('coeffTable').value.trim().split(/\n+/).map(x=>x.trim().split(/[ ,;\t]+/).map(Number));if(!p.coeffSource)throw new Error('Enter the coefficient-table citation or field-test record.');if(!/^https?:\/\//i.test(p.coeffUrl))throw new Error('Enter a valid source URL beginning with http:// or https://.');if(p.coeffTable.length<2||p.coeffTable.some((x,i)=>x.length<5||x.some(v=>!Number.isFinite(v))||(i&&x[0]<=p.coeffTable[i-1][0])))throw new Error('Coefficient table requires at least two rows with increasing water level H and five numeric coefficients.');}
-    if(p.storageMode==='table')p.table=pairs();
+    if(p.storageMode==='table'){p.table=pairs();if(p.h0<p.table[0][0]||p.h0>p.table.at(-1)[0])throw new Error('Initial water level must lie within the declared stage-storage table range.');}
     if(p.shape==='custom'){p.points=parsePoints();p.dur=p.points.at(-1)[0]/60;p.qp=Math.max(...p.points.map(x=>x[1]));}
     if(!(p.qp>0&&p.dur>0&&Number.isFinite(p.h0)&&(p.storageMode==='table'||p.h0>=0)&&(p.weir||p.ori||p.riser||p.pipe)&&p.cw>=0&&p.cd>=0&&p.bw>=0&&p.ao>=0&&p.oriH>0&&p.crest>=0&&p.invert>=0&&p.riserCrest>=p.riserInvert&&p.riserD>0&&p.riserCr>=0&&p.riserCd>=0&&p.pipeD>0&&p.pipeCd>=0&&p.pipeInvert>=0&&(p.storageMode==='table'||p.area>0))) throw new Error('Enter physically valid geometry and at least one outlet. Rectangular opening height must be positive; riser crest must be at or above its invert.');
     return p;
@@ -258,6 +259,14 @@
   }
   ['weirOn','oriOn','riserOn','pipeOn','coeffMode'].forEach(id=>$(id).addEventListener('change',()=>setTimeout(enforceValidatedEnvelope,0)));
   const checkedRender=renderPhysical;renderPhysical=function(){checkedRender();enforceValidatedEnvelope();};
+  /* A tabulated S(H) relation is defined only over its declared elevation range. */
+  const renderWithStorageBoundary=renderPhysical;
+  renderPhysical=function(){renderWithStorageBoundary();if(!last||!last.r.stateExceeded)return;const en=appEnglish;
+    last.e.status='stop';last.e.title=en?'Stage-storage boundary exceeded':'已超出水位—蓄水量邊界';
+    last.e.text=en?'Routing stopped before an undefined stage-storage state was reported. Extend or correct S(H), or revise the design; this is not an overflow calculation.':'路由已在進入未定義的水位—蓄水量狀態前停止。請擴充或修正 S(H)，或修改設計；此結果並非溢流計算。';
+    const st=$('status');st.className='status stop';st.innerHTML='<strong>'+last.e.title+'</strong>'+last.e.text;
+    $('metricbody').insertAdjacentHTML('beforeend',en?'<tr><td>Stage-storage boundary</td><td>Exceeded</td><td>Highest declared storage was reached; no extrapolation was used.</td></tr>':'<tr><td>水位—蓄水量邊界</td><td>已超出</td><td>已達表列最高蓄水量；系統未進行外插。</td></tr>');
+  };
   /* Replace legacy controls once: old inline and listener bindings cannot issue a second routing or search. */
   function installAuthoritativeControls(){
     const replace=id=>{const old=$(id),fresh=old.cloneNode(true);old.replaceWith(fresh);return fresh;};
