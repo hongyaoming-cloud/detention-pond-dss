@@ -37,6 +37,10 @@ const bounded=Core.routeStorage({tEnd:10,dt:1,storage0:0,maxStorage:2,inflow:()=
 if(!bounded.stateExceeded||bounded.rows.some(row=>row.s>2))throw new Error('Stage-storage ceiling must stop routing before an undefined state is reported');
 console.log('stage-storage hard-boundary guard: passed');
 
+const accounting=Core.routeStorage({tEnd:10,dt:3,storage0:0,inflow:()=>1,stageOfStorage:s=>s,outflow:()=>0,tailSeconds:0});
+if(accounting.rows.at(-1).t!==10||Math.abs(accounting.vin-10)>1e-12||Math.abs(accounting.residual)>1e-12)throw new Error('Routing record and mass accounting must cover the same exact time interval');
+console.log('time-interval accounting guard: passed');
+
 const componentRoute=Core.routeStorage({tEnd:2,dt:1,storage0:1,inflow:()=>0,stageOfStorage:s=>s,outflow:h=>h+h/2,outflowComponents:h=>({weir:h,rectangularOpening:h/2})});
 if(componentRoute.rows.some(row=>Math.abs(row.qo-(row.components.weir+row.components.rectangularOpening))>1e-12))throw new Error('Recorded outlet components must sum exactly to total outflow');
 console.log('compound-outlet component-record guard: passed');

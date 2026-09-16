@@ -6,23 +6,29 @@
 })(typeof window!=='undefined'?window:globalThis,function(){
   function rk4Scalar({t0=0,tEnd,dt,y0,rhs,onStep,stop}){
     let t=t0,y=y0;
-    while(t<=tEnd+1e-9){
+    while(t<tEnd-1e-9){
       if(stop&&stop(t,y))break;
       const snapshot=onStep?onStep(t,y):undefined;
-      const k1=rhs(t,y),k2=rhs(t+dt/2,y+k1*dt/2),k3=rhs(t+dt/2,y+k2*dt/2),k4=rhs(t+dt,y+k3*dt);
-      y=Math.max(0,y+dt*(k1+2*k2+2*k3+k4)/6);
-      t+=dt;
+      const step=Math.min(dt,tEnd-t);
+      const k1=rhs(t,y),k2=rhs(t+step/2,y+k1*step/2),k3=rhs(t+step/2,y+k2*step/2),k4=rhs(t+step,y+k3*step);
+      y=Math.max(0,y+step*(k1+2*k2+2*k3+k4)/6);
+      t+=step;
     }
     return {t,y};
   }
   function routeStorage({tEnd,dt,storage0,inflow,stageOfStorage,outflow,outflowComponents,onRow,tailSeconds=1800,maxStorage=Infinity}){
-    const rows=[];let vin=0,vout=0,stateExceeded=false;
+    const rows=[];let stateExceeded=false;
+    const totalTime=tEnd+tailSeconds;
+    const snapshot=(t,s)=>{const h=stageOfStorage(s),qi=inflow(t),qo=outflow(h),components=outflowComponents?outflowComponents(h):undefined,row={t,qi,qo,h,s,components};rows.push(row);if(onRow)onRow(row);return row;};
     const result=rk4Scalar({
-      tEnd:tEnd+tailSeconds,dt,y0:storage0,
+      tEnd:totalTime,dt,y0:storage0,
       rhs:(t,s)=>inflow(t)-outflow(stageOfStorage(Math.max(0,s))),
       stop:(t,s)=>{if(s>maxStorage+Math.max(1e-9,Math.abs(maxStorage)*1e-10)){stateExceeded=true;return true;}return false;},
-      onStep:(t,s)=>{const h=stageOfStorage(s),qi=inflow(t),qo=outflow(h),components=outflowComponents?outflowComponents(h):undefined,row={t,qi,qo,h,s,components};rows.push(row);vin+=qi*dt;vout+=qo*dt;if(onRow)onRow(row);return row;}
+      onStep:snapshot
     });
+    if(!stateExceeded&&result.t>=totalTime-1e-9)snapshot(totalTime,result.y);
+    let vin=0,vout=0;
+    for(let i=1;i<rows.length;i++){const a=rows[i-1],b=rows[i],step=b.t-a.t;vin+=(a.qi+b.qi)*step/2;vout+=(a.qo+b.qo)*step/2;}
     return {rows,vin,vout,finalStorage:result.y,residual:vin-vout-result.y+storage0,stateExceeded,maxStorage};
   }
   /*
