@@ -21,6 +21,7 @@ console.log('interactive authority guard: passed');
 
 const core=fs.readFileSync('dist/routing-core.js','utf8');
 if(!/routeStorage/.test(core)||!/rk4Scalar/.test(core)||!/rectangularOpeningDischarge/.test(core))throw new Error('Interactive routing must expose the authoritative RK4 core');
+if(!/function routeDesignCandidate\(p\)[\s\S]*?DetentionRoutingCore\.routeStorage/.test(app))throw new Error('Optimization candidates must use the same authoritative routing core as displayed results');
 console.log('shared RK4 core guard: passed');
 
 const Core=require('./dist/routing-core.js');
