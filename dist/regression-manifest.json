@@ -1,6 +1,14 @@
 {
   "schema": "detention-routing-regression/v1",
   "interactive_routing_core": "software-i-rk4-v1",
+  "interactive_numerical_configuration": {
+    "method": "RK4 state routing",
+    "declared_timestep_seconds": 2,
+    "convergence_reference_seconds": 0.5,
+    "peak_discharge_relative_tolerance": 0.001,
+    "peak_stage_relative_tolerance": 0.001,
+    "peak_time_tolerance_seconds": 2
+  },
   "core_equivalence_regression": "regression_176.js",
   "fixture_suite": "fixed laboratory regression fixtures",
   "cases": 176,

@@ -34,3 +34,18 @@ console.log('rectangular-opening transition guard: passed');
 const bounded=Core.routeStorage({tEnd:10,dt:1,storage0:0,maxStorage:2,inflow:()=>1,stageOfStorage:s=>s,outflow:()=>0});
 if(!bounded.stateExceeded||bounded.rows.some(row=>row.s>2))throw new Error('Stage-storage ceiling must stop routing before an undefined state is reported');
 console.log('stage-storage hard-boundary guard: passed');
+
+function convergenceRoute(dt){
+  return Core.routeStorage({
+    tEnd:3600,dt,storage0:0,tailSeconds:1800,
+    inflow:t=>t<=1800?.12*t/1800:t<=3600?.12*(1-(t-1800)/1800):0,
+    stageOfStorage:s=>s/180,
+    outflow:h=>1.7*.2*Math.pow(Math.max(h,0),1.5)
+  });
+}
+function maxRow(rows,key){return rows.reduce((a,b)=>b[key]>a[key]?b:a,rows[0]);}
+const c2=convergenceRoute(2),c1=convergenceRoute(1),c05=convergenceRoute(.5);
+const q2=maxRow(c2.rows,'qo').qo,q05=maxRow(c05.rows,'qo').qo,h2=maxRow(c2.rows,'h').h,h05=maxRow(c05.rows,'h').h;
+if(Math.abs(q2-q05)/q05>0.001||Math.abs(h2-h05)/h05>0.001||Math.abs(maxRow(c2.rows,'qo').t-maxRow(c05.rows,'qo').t)>2)throw new Error('The declared 2 s routing step does not meet the convergence guard against 0.5 s');
+if(Math.abs(maxRow(c1.rows,'qo').qo-q05)/q05>0.0001)throw new Error('Intermediate 1 s routing result is not converging toward the 0.5 s reference');
+console.log('2 s RK4 timestep-convergence guard: passed');
