@@ -39,6 +39,8 @@
   document.querySelector('.charts').insertAdjacentElement('afterend',optResult);optResult.appendChild($('optout'));
   const optChart=document.createElement('div');optChart.className='chart';optChart.id='optChartBox';optChart.innerHTML='<h3>Optimization candidates</h3><canvas id="optchart" width="620" height="300"></canvas><div class="meta">Horizontal: candidate plan area. Vertical: maximum detained storage. Green: feasible; gray: constraint failed; red ring: selected discrete constrained optimum.</div>';
   document.querySelector('.charts').insertAdjacentElement('afterend',optChart);
+  const componentChart=document.createElement('div');componentChart.className='chart hide';componentChart.id='componentChartBox';componentChart.innerHTML='<h3 id="componentChartTitle">Outlet-component hydrographs</h3><canvas id="componentQchart" width="620" height="300"></canvas><div class="meta" id="componentChartNote"></div>';
+  optChart.insertAdjacentElement('beforebegin',componentChart);
 
   function pairs() {
     if ($('storageMode').value === 'constant') return null;
@@ -55,20 +57,23 @@
   function hOfS(s,p) { return p.storageMode==='constant' ? s/p.area : interpolate(s,p.table,1,0); }
   function coefficientAt(h,p) { if(p.coeffMode!=='table')return {cw:p.cw,cd:p.cd,cr:p.riserCr,rcd:p.riserCd};const a=p.coeffTable;if(h<=a[0][0])return {cw:a[0][1],cd:a[0][2],cr:a[0][3],rcd:a[0][4]};if(h>=a.at(-1)[0]){const z=a.at(-1);return {cw:z[1],cd:z[2],cr:z[3],rcd:z[4]};}for(let i=1;i<a.length;i++)if(h<=a[i][0]){const r=(h-a[i-1][0])/(a[i][0]-a[i-1][0]);return {cw:a[i-1][1]+r*(a[i][1]-a[i-1][1]),cd:a[i-1][2]+r*(a[i][2]-a[i-1][2]),cr:a[i-1][3]+r*(a[i][3]-a[i-1][3]),rcd:a[i-1][4]+r*(a[i][4]-a[i-1][4])};} }
   function circularSegment(y,D){const r=D/2,yy=Math.max(0,Math.min(y,D));if(yy<=0)return {a:0,zc:0};const th=2*Math.acos((r-yy)/r),a=.5*r*r*(th-Math.sin(th));const zc=yy===D?r:Math.max(0,r-4*r*Math.pow(Math.sin(th/2),3)/(3*(th-Math.sin(th))));return {a,zc};}
-  function outflowPhysical(h,p) {
+  function outflowComponentsPhysical(h,p) {
     const c=coefficientAt(h,p);
-    let q=0;
-    if(p.weir&&h>p.crest)q+=c.cw*p.bw*Math.pow(h-p.crest,1.5);
-    if(p.ori&&h>p.invert){const y=h-p.invert,bw=p.ao/p.oriH;q+=window.DetentionRoutingCore.rectangularOpeningDischarge({head:y,height:p.oriH,width:bw,cw:c.cw,cd:c.cd,g});}
-    if(p.riser&&h>p.riserCrest){const inlet=c.cr*Math.PI*p.riserD*Math.pow(h-p.riserCrest,1.5);const shaft=c.rcd*Math.PI*p.riserD*p.riserD/4*Math.sqrt(2*g*Math.max(0,h-p.riserInvert));q+=Math.min(inlet,shaft);}
-    if(p.pipe&&h>p.pipeInvert){const seg=circularSegment(h-p.pipeInvert,p.pipeD);q+=p.pipeCd*seg.a*Math.sqrt(2*g*Math.max(0,h-(p.pipeInvert+seg.zc)));}
-    return q;
+    const component={weir:0,rectangularOpening:0,riser:0,pipe:0};
+    if(p.weir&&h>p.crest)component.weir=c.cw*p.bw*Math.pow(h-p.crest,1.5);
+    if(p.ori&&h>p.invert){const y=h-p.invert,bw=p.ao/p.oriH;component.rectangularOpening=window.DetentionRoutingCore.rectangularOpeningDischarge({head:y,height:p.oriH,width:bw,cw:c.cw,cd:c.cd,g});}
+    if(p.riser&&h>p.riserCrest){const inlet=c.cr*Math.PI*p.riserD*Math.pow(h-p.riserCrest,1.5);const shaft=c.rcd*Math.PI*p.riserD*p.riserD/4*Math.sqrt(2*g*Math.max(0,h-p.riserInvert));component.riser=Math.min(inlet,shaft);}
+    if(p.pipe&&h>p.pipeInvert){const seg=circularSegment(h-p.pipeInvert,p.pipeD);component.pipe=p.pipeCd*seg.a*Math.sqrt(2*g*Math.max(0,h-(p.pipeInvert+seg.zc)));}
+    return component;
+  }
+  function outflowPhysical(h,p) {
+    return Object.values(outflowComponentsPhysical(h,p)).reduce((sum,q)=>sum+q,0);
   }
   function routePhysical(p) {
     if(!window.DetentionRoutingCore)throw new Error('Authoritative RK4 routing core did not load.');
     const dt=2,T=p.dur*60,s0=sOfH(p.h0,p);
     const maxStorage=p.storageMode==='table'?p.table.at(-1)[1]:Infinity;
-    return window.DetentionRoutingCore.routeStorage({tEnd:T,dt,storage0:s0,inflow:t=>inflow(t,p),stageOfStorage:s=>hOfS(Math.max(0,s),p),outflow:h=>outflowPhysical(h,p),tailSeconds:Math.max(1800,p.dur*30),maxStorage});
+    return window.DetentionRoutingCore.routeStorage({tEnd:T,dt,storage0:s0,inflow:t=>inflow(t,p),stageOfStorage:s=>hOfS(Math.max(0,s),p),outflow:h=>outflowPhysical(h,p),outflowComponents:h=>outflowComponentsPhysical(h,p),tailSeconds:Math.max(1800,p.dur*30),maxStorage});
   }
   function readInputs() {
     const p={qp:num('qp'),dur:num('dur'),shape:$('shape').value,area:num('area'),h0:num('h0'),weir:$('weirOn').checked,cw:num('cw'),bw:num('bw'),crest:num('crest'),ori:$('oriOn').checked,cd:num('cd'),ao:num('ao'),oriH:num('oriH'),invert:num('invert'),riser:$('riserOn').checked,riserCrest:num('riserCrest'),riserInvert:num('riserInvert'),riserD:num('riserD'),riserCr:num('riserCr'),riserCd:num('riserCd'),pipe:$('pipeOn').checked,pipeD:num('pipeD'),pipeCd:num('pipeCd'),pipeInvert:num('pipeInvert'),storageMode:$('storageMode').value,coeffMode:$('coeffMode').value,tpeak:num('tpeak'),recess:num('recess'),rise:num('rise'),plateau:num('plateau')};
@@ -244,6 +249,11 @@
     const value=entered?(en?'Free-surface → crown transition':'自由出流 → 滿口轉換'):(en?'Free-surface opening':'自由出流開口');
     const meaning=entered?(en?'Discharge is continuous at the opening crown; verify the transition relation against the specific structure before final design.':'開口頂部流量已採連續轉換；最終設計前仍須依特定構造驗證轉換關係。'):(en?'Water level remains below the opening crown.':'水位維持於開口頂部以下。');
     $('metricbody').insertAdjacentHTML('beforeend',`<tr><td>${label}</td><td>${value}</td><td>${meaning}</td></tr>`);
+  };
+  /* Compound outlets retain the component record; total discharge remains their exact sum. */
+  const renderWithComponentRecord=renderPhysical;
+  renderPhysical=function(){renderWithComponentRecord();if(!last)return;const active=[last.p.weir&&['weir',appEnglish?'Weir component':'堰流分量','#2563eb'],last.p.ori&&['rectangularOpening',appEnglish?'Rectangular-opening component':'矩形開口分量','#c2410c'],last.p.riser&&['riser',appEnglish?'Riser component':'豎井分量','#15803d'],last.p.pipe&&['pipe',appEnglish?'Pipe component':'圓管分量','#7c3aed']].filter(Boolean),panel=$('componentChartBox');if(active.length<2){panel.classList.add('hide');return;}panel.classList.remove('hide');$('componentChartTitle').textContent=appEnglish?'Outlet-component hydrographs':'出口構造分量歷線';$('componentChartNote').textContent=appEnglish?'Component curves sum to total routed outflow at every time step. Compound outlets remain research-only until independently validated.':'各分量曲線於每一時間步加總為總路由出流。複合出口完成獨立驗證前，僅供研究檢視。';const dm=num('displayMin'),shown=(!Number.isFinite(dm)||dm<=0)?last.r.rows:last.r.rows.filter(z=>z.t<=dm*60);draw('componentQchart',shown.map(z=>({...z,...z.components})),active.map(v=>v[0]),active.map(v=>v[2]),active.map(v=>v[1]),appEnglish?'Component discharge (m³/s)':'出口分量流量（m³/s）');
+    active.forEach(([key,label])=>{const row=last.r.rows.reduce((peak,z)=>!peak||((z.components?.[key]||0)>(peak.components?.[key]||0))?z:peak,null),q=row.components?.[key]||0,t=row.t/60;const meaning=appEnglish?'Peak component discharge; activation/controlling time = '+t.toFixed(1)+' min.':'分量尖峰流量；啟動／控制時刻 = '+t.toFixed(1)+' 分鐘。';$('metricbody').insertAdjacentHTML('beforeend',`<tr><td>${label}</td><td>${q.toFixed(4)} m³/s</td><td>${meaning}</td></tr>`);});
   };
   $('run').onclick=renderPhysical;$('optimize').onclick=()=>{optimizePhysical();localizeOptimization();};
   setLanguage(appEnglish);
