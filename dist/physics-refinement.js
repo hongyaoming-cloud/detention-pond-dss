@@ -238,4 +238,17 @@
   };
   $('run').onclick=renderPhysical;$('optimize').onclick=()=>{optimizePhysical();localizeOptimization();};
   setLanguage(appEnglish);
+  /* Release gate: only the laboratory-validated passive weir OR rectangular-opening envelope can produce a design decision. */
+  function enforceValidatedEnvelope(){
+    const variableCoefficient=$('coeffMode')&&$('coeffMode').value==='table';
+    const extension=$('riserOn').checked||$('pipeOn').checked||variableCoefficient||($('weirOn').checked&&$('oriOn').checked);
+    const opt=$('optimize'),run=$('run');
+    if(extension){
+      opt.disabled=true;
+      const st=$('status');st.className='status warn';st.innerHTML='<strong>'+(appEnglish?'Exploratory extension — no design decision':'探索性擴充功能——不可作設計決策')+'</strong>'+(appEnglish?'Riser, circular-opening/pipe, variable-coefficient tables, and compound-outlet configurations are outside the fixed 176-case validation envelope. Routing may be inspected for research development, but optimization and a final engineering recommendation are disabled until independent validation is completed.':'豎井、圓形開口／圓管、變動係數表與複合出口不在固定 176 組驗證範圍內。可供研究開發檢視路由結果，但在完成獨立驗證前，系統停用最佳化與正式工程建議。');
+    }else if(run&&!run.disabled){opt.disabled=false;}
+  }
+  ['weirOn','oriOn','riserOn','pipeOn','coeffMode'].forEach(id=>$(id).addEventListener('change',()=>setTimeout(enforceValidatedEnvelope,0)));
+  const checkedRender=renderPhysical;renderPhysical=function(){checkedRender();enforceValidatedEnvelope();};
+  $('run').onclick=renderPhysical;enforceValidatedEnvelope();
 })();
