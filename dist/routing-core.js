@@ -24,5 +24,24 @@
     });
     return {rows,vin,vout,finalStorage:result.y,residual:vin-vout-result.y+storage0};
   }
-  return {version:'software-i-rk4-v1',rk4Scalar,routeStorage};
+  /*
+   * A vertical rectangular opening is a free-surface opening below its crown.
+   * Above the crown, the incremental pressure-driven discharge is anchored to
+   * the free-surface value at the crown.  This avoids a non-physical jump in
+   * discharge when the governing regime switches while retaining the user's
+   * Cw and Cd conventions.  It is an engineering transition relation, not a
+   * substitute for a structure-specific calibration.
+   */
+  function rectangularOpeningDischarge({head,height,width,cw,cd,g=9.80665}){
+    if(!(head>0&&height>0&&width>=0))return 0;
+    const freeHead=Math.min(head,height);
+    const qFree=cw*width*Math.pow(freeHead,1.5);
+    if(head<=height)return qFree;
+    const qAtCrown=cw*width*Math.pow(height,1.5);
+    const area=width*height;
+    const crownCentreHead=height/2;
+    const centreHead=Math.max(crownCentreHead,head-height/2);
+    return qAtCrown+cd*area*(Math.sqrt(2*g*centreHead)-Math.sqrt(2*g*crownCentreHead));
+  }
+  return {version:'software-i-rk4-v1',rk4Scalar,routeStorage,rectangularOpeningDischarge};
 });

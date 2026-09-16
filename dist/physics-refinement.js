@@ -59,7 +59,7 @@
     const c=coefficientAt(h,p);
     let q=0;
     if(p.weir&&h>p.crest)q+=c.cw*p.bw*Math.pow(h-p.crest,1.5);
-    if(p.ori&&h>p.invert){const y=h-p.invert,hh=Math.min(y,p.oriH),bw=p.ao/p.oriH;q+=y<p.oriH?c.cw*bw*Math.pow(hh,1.5):c.cd*p.ao*Math.sqrt(2*g*Math.max(0,h-(p.invert+p.oriH/2)));}
+    if(p.ori&&h>p.invert){const y=h-p.invert,bw=p.ao/p.oriH;q+=window.DetentionRoutingCore.rectangularOpeningDischarge({head:y,height:p.oriH,width:bw,cw:c.cw,cd:c.cd,g});}
     if(p.riser&&h>p.riserCrest){const inlet=c.cr*Math.PI*p.riserD*Math.pow(h-p.riserCrest,1.5);const shaft=c.rcd*Math.PI*p.riserD*p.riserD/4*Math.sqrt(2*g*Math.max(0,h-p.riserInvert));q+=Math.min(inlet,shaft);}
     if(p.pipe&&h>p.pipeInvert){const seg=circularSegment(h-p.pipeInvert,p.pipeD);q+=p.pipeCd*seg.a*Math.sqrt(2*g*Math.max(0,h-(p.pipeInvert+seg.zc)));}
     return q;
@@ -235,6 +235,14 @@
     const extra=en?`<tr><td>Near-peak flatness FPI95</td><td>${tr.fpi.toFixed(3)}</td><td>95% near-peak duration / routed-record duration</td></tr><tr><td>Median-volume time</td><td>${(tr.t50/60).toFixed(1)} min</td><td>Bulk timing measure</td></tr><tr><td>Discharge-centroid time</td><td>${(tr.centroid/60).toFixed(1)} min</td><td>Bulk timing measure</td></tr>`:`<tr><td>近洪峰平坦指標 FPI95</td><td>${tr.fpi.toFixed(3)}</td><td>95% 近洪峰持續時間／路由歷線時間</td></tr><tr><td>中位體積時間</td><td>${(tr.t50/60).toFixed(1)} 分鐘</td><td>體積時間指標</td></tr><tr><td>出流重心時間</td><td>${(tr.centroid/60).toFixed(1)} 分鐘</td><td>體積時間指標</td></tr>`;
     $('metricbody').innerHTML=rows+extra;
     if(tr.fpi>.12&&!last.p.riser&&!last.p.pipe&&!(last.p.weir&&last.p.ori)){const st=$('status');st.className='status warn';st.innerHTML='<strong>'+(en?'Verify timing interpretation':'請檢核時間判讀')+'</strong>'+(en?'The near-peak interval is broad. Do not use a single sampled peak time alone; report FPI95 together with median-volume or centroid time.':'近洪峰區間較寬；不可只用單一取樣洪峰時刻，應同時報告 FPI95 與中位體積時間或出流重心時間。');}
+  };
+  /* Make the rectangular-opening regime explicit in the engineering record. */
+  const renderWithOpeningRegime=renderPhysical;
+  renderPhysical=function(){renderWithOpeningRegime();if(!last||!last.p.ori)return;const crown=last.p.invert+last.p.oriH,entered=last.e.hp.h>=crown,en=appEnglish;
+    const label=en?'Rectangular-opening regime':'矩形開口出流狀態';
+    const value=entered?(en?'Free-surface → crown transition':'自由出流 → 滿口轉換'):(en?'Free-surface opening':'自由出流開口');
+    const meaning=entered?(en?'Discharge is continuous at the opening crown; verify the transition relation against the specific structure before final design.':'開口頂部流量已採連續轉換；最終設計前仍須依特定構造驗證轉換關係。'):(en?'Water level remains below the opening crown.':'水位維持於開口頂部以下。');
+    $('metricbody').insertAdjacentHTML('beforeend',`<tr><td>${label}</td><td>${value}</td><td>${meaning}</td></tr>`);
   };
   $('run').onclick=renderPhysical;$('optimize').onclick=()=>{optimizePhysical();localizeOptimization();};
   setLanguage(appEnglish);

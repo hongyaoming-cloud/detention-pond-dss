@@ -19,5 +19,14 @@ if(/setTimeout\(optimizePhysical/.test(app))throw new Error('Interactive app mus
 console.log('interactive authority guard: passed');
 
 const core=fs.readFileSync('dist/routing-core.js','utf8');
-if(!/routeStorage/.test(core)||!/rk4Scalar/.test(core))throw new Error('Interactive routing must expose the authoritative RK4 core');
+if(!/routeStorage/.test(core)||!/rk4Scalar/.test(core)||!/rectangularOpeningDischarge/.test(core))throw new Error('Interactive routing must expose the authoritative RK4 core');
 console.log('shared RK4 core guard: passed');
+
+const Core=require('./dist/routing-core.js');
+const opening={height:.20,width:.30,cw:1.70,cd:.62};
+const eps=1e-8;
+const qBelow=Core.rectangularOpeningDischarge({...opening,head:opening.height-eps});
+const qCrown=Core.rectangularOpeningDischarge({...opening,head:opening.height});
+const qAbove=Core.rectangularOpeningDischarge({...opening,head:opening.height+eps});
+if(Math.abs(qCrown-qBelow)>2e-7||Math.abs(qAbove-qCrown)>2e-7||qAbove<qCrown)throw new Error('Rectangular-opening free-to-submerged transition must be continuous and non-decreasing');
+console.log('rectangular-opening transition guard: passed');
