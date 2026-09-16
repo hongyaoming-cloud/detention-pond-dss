@@ -221,5 +221,21 @@
   Object.assign(bilingual,{
     'Triangular event - tested-range demonstration':'三角形事件——測試範圍示範','Long-duration event - timing-verification demonstration':'長延時事件——時間判讀驗證示範','User-defined event - applicability review':'使用者自訂事件——適用性檢視','Peak inflow Qp (m3/s)':'入流尖峰 Qp（m³/s）','Event duration T (min)':'事件延時 T（分鐘）','Event shape':'入流形狀','Imported hydrograph (minutes, m3/s; one pair per line)':'匯入歷線（分鐘、m³/s；每列一組）','Time must increase from zero. The last pair defines event duration.':'時間應自零起遞增；最後一組資料定義事件延時。','Plan area A (m2)':'平面面積 A（m²）','Initial water level H0 (m)':'初始水位 H0（m）','Weir coefficient Cw':'堰流係數 Cw','Weir width b (m)':'堰寬 b（m）','Weir crest elevation (m)':'堰頂高程（m）','Orifice coefficient Cd':'孔口流量係數 Cd','Orifice area Ao (m2)':'孔口面積 Ao（m²）','Orifice invert elevation (m)':'孔口底高程（m）','Time to peak Tp (min)':'洪峰到達時間 Tp（分鐘）','Recession time Tr (min)':'退水時間 Tr（分鐘）','Rising time (min)':'上升時間（分鐘）','Plateau duration (min)':'平頂持續時間（分鐘）','Total event duration T (min; calculated)':'總事件延時 T（分鐘；自動計算）','Triangular input mode':'三角形入流設定','Tp and Tr':'Tp 與 Tr','Tp and Tp/Tr':'Tp 與 Tp/Tr 比值','Ratio Tp/Tr':'Tp/Tr 比值','Riser crest elevation (m)':'豎井堰頂高程（m）','Shaft invert elevation (m)':'豎井底高程（m）','Shaft diameter D (m)':'豎井直徑 D（m）','Riser coefficient Cr':'豎井係數 Cr','Shaft discharge coefficient Cd':'豎井出流係數 Cd','Weir only':'僅堰流','Orifice only':'僅孔口','Vertical riser only':'僅豎井','Weir + orifice':'堰流＋孔口','Weir + riser':'堰流＋豎井','Orifice + riser':'孔口＋豎井','Weir + orifice + riser':'堰流＋孔口＋豎井','Standard search: up to two outlet dimensions':'標準搜尋：最多變動兩個出口尺寸','Advanced full search: all three outlet dimensions':'進階完整搜尋：同時變動三個出口尺寸','Minimum required detention volume Smax':'最小所需滯洪量 Smax','Minimum plan area A':'最小平面面積 A','Minimum b (m)':'最小堰寬 b（m）','Maximum b (m)':'最大堰寬 b（m）','Minimum Ao (m2)':'最小孔口面積 Ao（m²）','Maximum Ao (m2)':'最大孔口面積 Ao（m²）','Minimum D (m)':'最小豎井直徑 D（m）','Maximum D (m)':'最大豎井直徑 D（m）','Allowable peak outflow (m3/s)':'容許出流尖峰（m³/s）','Allowable water level (m)':'容許水位（m）','Find discrete constrained optimum':'尋找離散受限最佳解','Dimensionless decision support and design optimization':'無因次決策支援與設計最佳化','Full routed record':'完整路由歷線'
   });
+  /* Timing-identifiability record: retained with every routed result, not only point peak time. */
+  function timingRecord(rows, peakOut){
+    const dt=rows.length>1?rows[1].t-rows[0].t:0;
+    const total=rows.reduce((s,z)=>s+z.qo*dt,0);
+    let cum=0,t50=0,m1=0,near=0;
+    rows.forEach(z=>{const v=z.qo*dt;cum+=v;m1+=z.t*v;if(cum>=total/2&&!t50)t50=z.t;if(z.qo>=.95*peakOut)near+=dt;});
+    return {fpi:near/Math.max(rows.at(-1).t,1),t50,centroid:total?m1/total:0,near};
+  }
+  const renderWithValidatedTiming=renderPhysical;
+  renderPhysical=function(){renderWithValidatedTiming();if(!last)return;const tr=timingRecord(last.r.rows,last.e.pout.qo),en=appEnglish;
+    const rows=[...(document.querySelectorAll('#metricbody tr'))].map(x=>x.outerHTML).join('');
+    const extra=en?`<tr><td>Near-peak flatness FPI95</td><td>${tr.fpi.toFixed(3)}</td><td>95% near-peak duration / routed-record duration</td></tr><tr><td>Median-volume time</td><td>${(tr.t50/60).toFixed(1)} min</td><td>Bulk timing measure</td></tr><tr><td>Discharge-centroid time</td><td>${(tr.centroid/60).toFixed(1)} min</td><td>Bulk timing measure</td></tr>`:`<tr><td>近洪峰平坦指標 FPI95</td><td>${tr.fpi.toFixed(3)}</td><td>95% 近洪峰持續時間／路由歷線時間</td></tr><tr><td>中位體積時間</td><td>${(tr.t50/60).toFixed(1)} 分鐘</td><td>體積時間指標</td></tr><tr><td>出流重心時間</td><td>${(tr.centroid/60).toFixed(1)} 分鐘</td><td>體積時間指標</td></tr>`;
+    $('metricbody').innerHTML=rows+extra;
+    if(tr.fpi>.12&&!last.p.riser&&!last.p.pipe&&!(last.p.weir&&last.p.ori)){const st=$('status');st.className='status warn';st.innerHTML='<strong>'+(en?'Verify timing interpretation':'請檢核時間判讀')+'</strong>'+(en?'The near-peak interval is broad. Do not use a single sampled peak time alone; report FPI95 together with median-volume or centroid time.':'近洪峰區間較寬；不可只用單一取樣洪峰時刻，應同時報告 FPI95 與中位體積時間或出流重心時間。');}
+  };
+  $('run').onclick=renderPhysical;$('optimize').onclick=()=>{optimizePhysical();localizeOptimization();};
   setLanguage(appEnglish);
 })();
