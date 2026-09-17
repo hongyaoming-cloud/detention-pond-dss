@@ -1,0 +1,12 @@
+{
+  "records_compared": 1298,
+  "outflow_rmse_m3_s": 0.0,
+  "outflow_mae_m3_s": 0.0,
+  "outflow_nse": 1.0,
+  "peak_outflow_error_percent": 0.0,
+  "peak_time_error_s": 0.0,
+  "maximum_storage_error_percent": 0.0,
+  "maximum_head_error_m": 0.0,
+  "pass": true,
+  "acceptance": "peak outflow and maximum storage <=0.5%; peak time <=0.25 s after back-transformation"
+}

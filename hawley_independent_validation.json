@@ -1,0 +1,44 @@
+{
+  "source": "Hawley monitoring-data workbook, Figure 5 post-retrofit lookup data and Figure 6 held-out monitored events",
+  "validation_scope": "screening of known-inflow S(H)-Q(H) storage routing only; no generic physical-outlet geometry validation",
+  "admissibility": {
+    "status": "not accepted as a formal independent validation dataset for this application",
+    "reason": "Figure 5 has no event-date key that joins its S(H)/Q(H) records to Figure 6's monitored events. The outlet geometry and coefficient history are also not supplied. The numerical comparisons are therefore retained as a reproducible data-consistency screen, not reported as a model-validation pass or failure."
+  },
+  "lookup_points": {
+    "storage": 127,
+    "outflow": 127
+  },
+  "events": {
+    "2014-04-02": {
+      "records": 121,
+      "duration_hr": 30.0,
+      "peak_inflow_m3s": 0.579999,
+      "peak_observed_outflow_m3s": 0.15,
+      "peak_simulated_outflow_m3s": 0.172068,
+      "peak_error_percent": 14.712,
+      "peak_timing_error_min": -915.0,
+      "nse": -1.7397,
+      "kge": -0.3807,
+      "rmse_m3s": 0.063958,
+      "pbias_percent": -70.223,
+      "simulated_peak_level_m": 0.7475,
+      "initial_storage_m3": 2.076
+    },
+    "2014-06-04": {
+      "records": 120,
+      "duration_hr": 29.75,
+      "peak_inflow_m3s": 0.579999,
+      "peak_observed_outflow_m3s": 0.112,
+      "peak_simulated_outflow_m3s": 0.172068,
+      "peak_error_percent": 53.632,
+      "peak_timing_error_min": -60.0,
+      "nse": -0.8022,
+      "kge": 0.2837,
+      "rmse_m3s": 0.035288,
+      "pbias_percent": -0.516,
+      "simulated_peak_level_m": 0.7475,
+      "initial_storage_m3": 0.952
+    }
+  }
+}
