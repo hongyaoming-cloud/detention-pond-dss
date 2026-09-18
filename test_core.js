@@ -59,3 +59,10 @@ const q2=maxRow(c2.rows,'qo').qo,q05=maxRow(c05.rows,'qo').qo,h2=maxRow(c2.rows,
 if(Math.abs(q2-q05)/q05>0.001||Math.abs(h2-h05)/h05>0.001||Math.abs(maxRow(c2.rows,'qo').t-maxRow(c05.rows,'qo').t)>2)throw new Error('The declared 2 s routing step does not meet the convergence guard against 0.5 s');
 if(Math.abs(maxRow(c1.rows,'qo').qo-q05)/q05>0.0001)throw new Error('Intermediate 1 s routing result is not converging toward the 0.5 s reference');
 console.log('2 s RK4 timestep-convergence guard: passed');
+
+/* First-principles decision guard: event storage is measured above S0 and an
+   optimum must satisfy a declared drain-down condition. */
+if(!/deltaS=Math\.max\(0,e\.hp\.s-r\.rows\[0\]\.s\)/.test(app))throw new Error('Decision support must report event-added storage above S0');
+if(!/remaining<=drainLimit/.test(app)||!/p\.drainHours\*3600/.test(app))throw new Error('Optimization must enforce the declared drain-down constraint');
+if(!/x\.slice\(1,5\)\.some\(v=>v<0\)/.test(app))throw new Error('Coefficient tables must reject negative discharge coefficients');
+console.log('event-storage, drain-down, and non-negative-coefficient guard: passed');
