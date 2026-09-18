@@ -45,6 +45,10 @@ const accounting=Core.routeStorage({tEnd:10,dt:3,storage0:0,inflow:()=>1,stageOf
 if(accounting.rows.at(-1).t!==10||Math.abs(accounting.vin-10)>1e-12||Math.abs(accounting.residual)>1e-12)throw new Error('Routing record and mass accounting must cover the same exact time interval');
 console.log('time-interval accounting guard: passed');
 
+const timedSample=Core.routeStorage({tEnd:10,dt:3,storage0:0,inflow:()=>1,stageOfStorage:s=>s,outflow:()=>0,tailSeconds:20,sampleTimes:[14]});
+if(timedSample.samples.length!==1||timedSample.samples[0].t!==14||Math.abs(timedSample.samples[0].s-14)>1e-12)throw new Error('Declared drain-down checks must retain the exact requested time state');
+console.log('exact drain-down sample guard: passed');
+
 const componentRoute=Core.routeStorage({tEnd:2,dt:1,storage0:1,inflow:()=>0,stageOfStorage:s=>s,outflow:h=>h+h/2,outflowComponents:h=>({weir:h,rectangularOpening:h/2})});
 if(componentRoute.rows.some(row=>Math.abs(row.qo-(row.components.weir+row.components.rectangularOpening))>1e-12))throw new Error('Recorded outlet components must sum exactly to total outflow');
 console.log('compound-outlet component-record guard: passed');
@@ -68,6 +72,8 @@ console.log('2 s RK4 timestep-convergence guard: passed');
    optimum must satisfy a declared drain-down condition. */
 if(!/deltaS=Math\.max\(0,e\.hp\.s-r\.rows\[0\]\.s\)/.test(app))throw new Error('Decision support must report event-added storage above S0');
 if(!/remaining<=drainLimit/.test(app)||!/p\.drainHours\*3600/.test(app))throw new Error('Optimization must enforce the declared drain-down constraint');
+if(!/sampleTimes:\[T\+p\.drainHours\*3600\]/.test(app)||!/storageAtDrain\(r,p\)/.test(app))throw new Error('Drain-down reporting must use the exact Te + Td state, not the routed tail endpoint');
+if(!/hlim>=last\.p\.h0/.test(app)||!/hlim<=hUpper/.test(app))throw new Error('Optimization must reject physically invalid allowable levels');
 if(!/x\.slice\(1,5\)\.some\(v=>v<0\)/.test(app))throw new Error('Coefficient tables must reject negative discharge coefficients');
 if(!/Basin floor elevation Hfloor/.test(app)||!/p\.area\*Math\.max\(0,h-p\.floor\)/.test(app))throw new Error('Constant-area storage must use an explicit basin-floor datum');
 if(!/evaluateFirstPrinciples/.test(app)||!/eventEligible/.test(app))throw new Error('Event response descriptors must be qualified against the initial hydraulic state');
