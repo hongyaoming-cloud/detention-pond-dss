@@ -16,20 +16,22 @@
     }
     return {t,y};
   }
-  function routeStorage({tEnd,dt,storage0,inflow,stageOfStorage,outflow,outflowComponents,onRow,tailSeconds=1800,maxStorage=Infinity}){
+  function routeStorage({tEnd,dt,storage0,inflow,stageOfStorage,outflow,outflowComponents,onRow,tailSeconds=1800,minStorage=0,maxStorage=Infinity}){
     const rows=[];let stateExceeded=false;
     const totalTime=tEnd+tailSeconds;
-    const snapshot=(t,s)=>{const h=stageOfStorage(s),qi=inflow(t),qo=outflow(h),components=outflowComponents?outflowComponents(h):undefined,row={t,qi,qo,h,s,components};rows.push(row);if(onRow)onRow(row);return row;};
+    const boundedStorage=s=>Math.min(maxStorage,Math.max(minStorage,s));
+    const snapshot=(t,s)=>{const sb=boundedStorage(s),h=stageOfStorage(sb),qi=inflow(t),qo=outflow(h),components=outflowComponents?outflowComponents(h):undefined,row={t,qi,qo,h,s:sb,components};rows.push(row);if(onRow)onRow(row);return row;};
     const result=rk4Scalar({
       tEnd:totalTime,dt,y0:storage0,
-      rhs:(t,s)=>inflow(t)-outflow(stageOfStorage(Math.max(0,s))),
+      rhs:(t,s)=>inflow(t)-outflow(stageOfStorage(boundedStorage(s))),
       stop:(t,s)=>{if(s>maxStorage+Math.max(1e-9,Math.abs(maxStorage)*1e-10)){stateExceeded=true;return true;}return false;},
       onStep:snapshot
     });
     if(!stateExceeded&&result.t>=totalTime-1e-9)snapshot(totalTime,result.y);
     let vin=0,vout=0;
     for(let i=1;i<rows.length;i++){const a=rows[i-1],b=rows[i],step=b.t-a.t;vin+=(a.qi+b.qi)*step/2;vout+=(a.qo+b.qo)*step/2;}
-    return {rows,vin,vout,finalStorage:result.y,residual:vin-vout-result.y+storage0,stateExceeded,maxStorage};
+    const finalStorage=boundedStorage(result.y);
+    return {rows,vin,vout,finalStorage,residual:vin-vout-finalStorage+storage0,stateExceeded,maxStorage,minStorage};
   }
   /*
    * A vertical rectangular opening is a free-surface opening below its crown.

@@ -37,6 +37,10 @@ const bounded=Core.routeStorage({tEnd:10,dt:1,storage0:0,maxStorage:2,inflow:()=
 if(!bounded.stateExceeded||bounded.rows.some(row=>row.s>2))throw new Error('Stage-storage ceiling must stop routing before an undefined state is reported');
 console.log('stage-storage hard-boundary guard: passed');
 
+const floorBounded=Core.routeStorage({tEnd:10,dt:1,storage0:0,minStorage:0,maxStorage:10,inflow:()=>0,stageOfStorage:s=>100+s,outflow:()=>1,tailSeconds:0});
+if(floorBounded.rows.some(row=>row.s<0||row.h<100)||floorBounded.finalStorage<0)throw new Error('Storage routing must preserve the declared lower storage boundary and vertical datum');
+console.log('storage-floor datum guard: passed');
+
 const accounting=Core.routeStorage({tEnd:10,dt:3,storage0:0,inflow:()=>1,stageOfStorage:s=>s,outflow:()=>0,tailSeconds:0});
 if(accounting.rows.at(-1).t!==10||Math.abs(accounting.vin-10)>1e-12||Math.abs(accounting.residual)>1e-12)throw new Error('Routing record and mass accounting must cover the same exact time interval');
 console.log('time-interval accounting guard: passed');
@@ -65,4 +69,7 @@ console.log('2 s RK4 timestep-convergence guard: passed');
 if(!/deltaS=Math\.max\(0,e\.hp\.s-r\.rows\[0\]\.s\)/.test(app))throw new Error('Decision support must report event-added storage above S0');
 if(!/remaining<=drainLimit/.test(app)||!/p\.drainHours\*3600/.test(app))throw new Error('Optimization must enforce the declared drain-down constraint');
 if(!/x\.slice\(1,5\)\.some\(v=>v<0\)/.test(app))throw new Error('Coefficient tables must reject negative discharge coefficients');
+if(!/Basin floor elevation Hfloor/.test(app)||!/p\.area\*Math\.max\(0,h-p\.floor\)/.test(app))throw new Error('Constant-area storage must use an explicit basin-floor datum');
+if(!/evaluateFirstPrinciples/.test(app)||!/eventEligible/.test(app))throw new Error('Event response descriptors must be qualified against the initial hydraulic state');
+if(!/caseSelect=replace\('case'\)/.test(app))throw new Error('Standard-case changes must use the authoritative routing controller');
 console.log('event-storage, drain-down, and non-negative-coefficient guard: passed');
