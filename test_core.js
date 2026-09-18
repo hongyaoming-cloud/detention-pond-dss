@@ -72,4 +72,7 @@ if(!/x\.slice\(1,5\)\.some\(v=>v<0\)/.test(app))throw new Error('Coefficient tab
 if(!/Basin floor elevation Hfloor/.test(app)||!/p\.area\*Math\.max\(0,h-p\.floor\)/.test(app))throw new Error('Constant-area storage must use an explicit basin-floor datum');
 if(!/evaluateFirstPrinciples/.test(app)||!/eventEligible/.test(app))throw new Error('Event response descriptors must be qualified against the initial hydraulic state');
 if(!/caseSelect=replace\('case'\)/.test(app))throw new Error('Standard-case changes must use the authoritative routing controller');
+if(!/e\.lagEvent=eventEligible/.test(app)||!/if\(eventEligible\)\{e\.qratio=e\.qratioEvent;e\.lag=e\.lagEvent;\}/.test(app))throw new Error('Event peak ratio and lag must use the same initial-state increment baseline');
+if(!/id="freeDischarge"/.test(app)||!/Free-discharge boundary not confirmed/.test(app))throw new Error('Design optimization must require an explicit free-discharge boundary condition');
+if(!/function dimensionlessControls/.test(app)||!/ΠQ\(Href\)/.test(app)||!/ΠS\(Href\)/.test(app))throw new Error('Decision record must retain declared dimensionless control parameters');
 console.log('event-storage, drain-down, and non-negative-coefficient guard: passed');
