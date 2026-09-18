@@ -1,0 +1,25 @@
+{
+  "case_id": "C-005",
+  "group": "C",
+  "inflow_family": "Trapezoidal",
+  "physical_outlet": "Overflow weir",
+  "outlet_size_cm": 5.0,
+  "initial_absolute_head_m": 0.07735,
+  "relative_head_reference": "0 m = the observed initial head; output Qout is incremental Q(H0+h)-Q(H0)",
+  "time_scaling": {
+    "factor": 240.0,
+    "meaning": "one laboratory second equals four model minutes; Qin and Qout are divided by 240, while head and storage are unchanged",
+    "comparison_back_transform": "multiply cross-model discharge by 240 and divide cross-model time in minutes by 4 to recover laboratory units"
+  },
+  "integration": {
+    "software_i": "RK4, dt=0.1 s",
+    "cross_model_interval_min": 1
+  },
+  "comparison_outputs": [
+    "relative head",
+    "incremental outflow",
+    "maximum storage",
+    "mass-balance residual"
+  ],
+  "not_a_claim": "This package tests numerical routing equivalence. It does not validate HEC-HMS/SWMM hydraulic outlet coefficients or provide field validation."
+}
