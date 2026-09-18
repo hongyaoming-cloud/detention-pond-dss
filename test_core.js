@@ -74,5 +74,8 @@ if(!/evaluateFirstPrinciples/.test(app)||!/eventEligible/.test(app))throw new Er
 if(!/caseSelect=replace\('case'\)/.test(app))throw new Error('Standard-case changes must use the authoritative routing controller');
 if(!/e\.lagEvent=eventEligible/.test(app)||!/if\(eventEligible\)\{e\.qratio=e\.qratioEvent;e\.lag=e\.lagEvent;\}/.test(app))throw new Error('Event peak ratio and lag must use the same initial-state increment baseline');
 if(!/id="freeDischarge"/.test(app)||!/Free-discharge boundary not confirmed/.test(app))throw new Error('Design optimization must require an explicit free-discharge boundary condition');
-if(!/function dimensionlessControls/.test(app)||!/ΠQ\(Href\)/.test(app)||!/ΠS\(Href\)/.test(app))throw new Error('Decision record must retain declared dimensionless control parameters');
+if(!/function dimensionlessControls/.test(app)||!/ΠQ\(Href\)/.test(app)||!/ΠS,Δ\(Href\)/.test(app))throw new Error('Decision record must retain declared dimensionless control parameters');
+const modules=fs.readFileSync('dist/module-shell.js','utf8');
+if(!/designReady=ready&&yes\('freeDischarge'\)/.test(modules))throw new Error('Design optimization must require a confirmed free-discharge boundary');
+if(!/RQ\/RT=withheld \(non-zero event baseline\)/.test(app))throw new Error('Reports must withhold event ratios for non-zero baselines');
 console.log('event-storage, drain-down, and non-negative-coefficient guard: passed');
