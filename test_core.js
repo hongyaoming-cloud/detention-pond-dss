@@ -77,5 +77,7 @@ if(!/id="freeDischarge"/.test(app)||!/Free-discharge boundary not confirmed/.tes
 if(!/function dimensionlessControls/.test(app)||!/ΠQ\(Href\)/.test(app)||!/ΠS,Δ\(Href\)/.test(app))throw new Error('Decision record must retain declared dimensionless control parameters');
 const modules=fs.readFileSync('dist/module-shell.js','utf8');
 if(!/designReady=ready&&yes\('freeDischarge'\)/.test(modules))throw new Error('Design optimization must require a confirmed free-discharge boundary');
+if(!/extension=riser\|\|pipe\|\|variable\|\|\(weir&&ori\)/.test(modules)||!/designReady=ready&&yes\('freeDischarge'\)&&!extension/.test(modules))throw new Error('Exploratory outlet configurations must not re-enable design optimization');
+if(!/guide\.id='userGuide'/.test(modules)||!/Start here/.test(modules)||!/建議操作順序/.test(modules))throw new Error('The user workflow guide must be present in both languages');
 if(!/RQ\/RT=withheld \(non-zero event baseline\)/.test(app))throw new Error('Reports must withhold event ratios for non-zero baselines');
 console.log('event-storage, drain-down, and non-negative-coefficient guard: passed');
