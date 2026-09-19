@@ -55,5 +55,7 @@
     const centreHead=Math.max(crownCentreHead,head-height/2);
     return qAtCrown+cd*area*(Math.sqrt(2*g*centreHead)-Math.sqrt(2*g*crownCentreHead));
   }
-  return {version:'software-i-rk4-v1',rk4Scalar,routeStorage,rectangularOpeningDischarge};
+  /* This is the only production time integrator.  Interactive routing,
+     constrained search, and release tests must all call this same API. */
+  return Object.freeze({version:'software-i-rk4-v1',authority:'DetentionRoutingCore.routeStorage',rk4Scalar,routeStorage,rectangularOpeningDischarge});
 });

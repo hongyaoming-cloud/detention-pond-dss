@@ -24,11 +24,14 @@ if(!/Reproducible Run Record/.test(app)||!/Q_rectangular_opening_m3s/.test(app)|
 console.log('interactive authority guard: passed');
 
 const core=fs.readFileSync('dist/routing-core.js','utf8');
+const qa=fs.readFileSync('dist/quality-assurance.js','utf8');
 if(!/routeStorage/.test(core)||!/rk4Scalar/.test(core)||!/rectangularOpeningDischarge/.test(core))throw new Error('Interactive routing must expose the authoritative RK4 core');
 if(!/function routeDesignCandidate\(p\)[\s\S]*?DetentionRoutingCore\.routeStorage/.test(app))throw new Error('Optimization candidates must use the same authoritative routing core as displayed results');
+if(!/DSSAuthority/.test(qa)||!/formalDesignAllowed/.test(qa)||!/internal_developer_quality_assurance/.test(qa))throw new Error('Release must retain a single-authority declaration, formal-design safety guard, and anonymous internal QA record');
 console.log('shared RK4 core guard: passed');
 
 const Core=require('./dist/routing-core.js');
+if(Core.authority!=='DetentionRoutingCore.routeStorage'||!Object.isFrozen(Core))throw new Error('Routing core must declare and freeze its single authoritative production API');
 const opening={height:.20,width:.30,cw:1.70,cd:.62};
 const eps=1e-8;
 const qBelow=Core.rectangularOpeningDischarge({...opening,head:opening.height-eps});
