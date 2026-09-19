@@ -35,7 +35,22 @@
     'Screening item':'篩選項目','screened':'已篩選',
     'This is a conditional discrete screening result under the declared bounds. It is not a continuous global optimum or final engineering-design validation.':'此為宣告範圍下的條件式離散篩選結果；不是連續全域最佳解，也不是最終工程設計驗證。'
   });
-  let en=true;
+  Object.assign(zh,{
+    'Free-discharge evidence record (required for constrained screening)':'自由出流證據紀錄（受限篩選必填）',
+    'Screening-limit basis (required for constrained screening)':'篩選限制依據（受限篩選必填）',
+    'Drawing / field inspection / calculation record identifier; checker; date':'圖說／現地檢查／計算紀錄識別碼；檢核者；日期',
+    'Source and applicability of Qallow, Hallow, Td, and residual limit; checker; date':'Qallow、Hallow、Td 與殘留限制的來源及適用性；檢核者；日期',
+    'These records are preserved in the run report. They document user-provided evidence; the software does not independently verify tailwater, backwater, or project design criteria.':'這些紀錄會保留於執行報告，用以記載使用者提出的證據；軟體不會獨立驗證尾水、回水或專案設計準則。',
+    'Outlet hydraulic boundary':'出口水力邊界',
+    'Free-discharge boundary confirmed':'已確認自由出流邊界',
+    'Required evidence for constrained screening':'受限篩選所需物理證據',
+    'Tailwater remains below every controlling outlet.':'尾水位低於每一控制出口。',
+    'No downstream backwater or pipe-friction control modifies Qout(H).':'下游回水或管摩阻控制不改變 Qout(H)。',
+    'No outlet is submerged over the routed water-level range.':'在路由水位範圍內，出口未被淹沒。',
+    'No gate, pump, or operational control changes the stated outlet law.':'閘門、抽水或操作控制不改變所宣告的出口定律。',
+    'These four checks document why Qout = Qout(H) is applicable. Until all are checked, routing remains exploratory and constrained screening is locked.':'此四項檢核記錄 Qout = Qout(H) 的適用理由；未全部勾選前，路由僅供探索性檢視，受限篩選維持鎖定。'
+  });
+  let en=false;
   function apply(){const reverse=Object.fromEntries(Object.entries(zh).map(([a,b])=>[b,a]));const map=en?reverse:zh;const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode()){const s=n.nodeValue.trim();if(map[s])n.nodeValue=n.nodeValue.replace(s,map[s]);}document.documentElement.lang=en?'en':'zh-Hant';try{appEnglish=en;}catch(_){/* The core language state is unavailable only before the routing extension loads. */}document.title=en?'Detention Pond Routing Decision Support':'滯洪池路由決策支援系統';btn.textContent=en?'中文':'English';}
   btn.onclick=()=>{en=!en;if(window.__dssSetLanguage)window.__dssSetLanguage(en);apply();}; apply();
   /* Translate only after the two known render actions; never observe the whole page. */
