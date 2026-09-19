@@ -1,5 +1,5 @@
-/* Release-quality layer: documents the single runtime authority, keeps formal
-   design inside the validated envelope, and provides an anonymized internal QA
+/* Release-quality layer: documents the single runtime authority, keeps
+   constrained design screening within validated structural types, and provides an anonymized internal QA
    checklist. It neither changes inputs nor solves the hydraulic equations. */
 (() => {
   const $=id=>document.getElementById(id), zh=()=>document.documentElement.lang==='zh-Hant';
@@ -7,9 +7,9 @@
     title:'品質保證與內部操作測試',
     authority:'單一權威演算來源',
     authorityText:'所有互動路由、設計搜尋與固定回歸測試均以 DetentionRoutingCore.routeStorage（RK4；Δt = 2 s）為唯一時間積分器。教學與品質保證層不會改寫控制方程。',
-    verified:'正式設計模式：已驗證範圍內',
-    blocked:'正式設計模式：已鎖定',
-    verifiedText:'已確認自由出流，且目前僅使用單一被動堰流或單一矩形孔口。可進行受限設計搜尋；仍須由工程師確認係數、基準面與適用條件。',
+    verified:'設計篩選模式：結構型式與邊界條件符合',
+    blocked:'設計篩選模式：已鎖定',
+    verifiedText:'已確認自由出流，且目前僅使用單一被動堰流或單一矩形開口。可進行受限路由篩選；176 組回歸未定義所有輸入的通用數值範圍，最終設計仍須由工程師確認個案係數、基準面、適用條件與獨立驗證。',
     blockedText:'目前設定含未驗證構造、複合出口、變動係數或未確認自由出流；路由僅供研究檢視，正式最佳化已鎖定。',
     qa:'研究團隊內部操作測試（不蒐集個人資料）',
     qaLead:'每位測試者以同一腳本逐項勾選。此紀錄用於開發品質保證，不代表學生或外部工程師的可用性研究。',
@@ -20,9 +20,9 @@
     title:'Quality assurance and internal operation testing',
     authority:'Single authoritative calculation path',
     authorityText:'Interactive routing, design search, and fixed regression testing use DetentionRoutingCore.routeStorage (RK4; Δt = 2 s) as their sole time integrator. Teaching and QA layers never rewrite the governing equation.',
-    verified:'Formal design mode: within validated envelope',
-    blocked:'Formal design mode: locked',
-    verifiedText:'Free discharge is confirmed and the setting uses one passive weir or one rectangular opening only. Constrained search is available; the engineer must still confirm coefficients, datum, and applicability.',
+    verified:'Design screening: structural type and boundary conditions eligible',
+    blocked:'Design screening: locked',
+    verifiedText:'Free discharge is confirmed and the setting uses one passive weir or one rectangular opening only. Constrained routing screening is available; the 176-case regression does not define universal numeric input ranges, and final design still requires engineering confirmation of project coefficients, datum, applicability, and independent verification.',
     blockedText:'The setting includes an unverified structure, compound outlet, variable coefficients, or unconfirmed free discharge. Routing is research inspection only and formal optimization is locked.',
     qa:'Research-team internal operation test (no personal data)',
     qaLead:'Each tester follows the same script and checks each item. This record is development quality assurance, not a student or external-engineer usability study.',

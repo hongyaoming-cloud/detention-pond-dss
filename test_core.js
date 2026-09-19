@@ -19,16 +19,19 @@ if(count(/function renderPhysical\(/g)!==1)throw new Error('Interactive app must
 if(count(/function optimizePhysical\(/g)!==1)throw new Error('Interactive app must declare exactly one authoritative optimizePhysical function');
 if(/setTimeout\(optimizePhysical/.test(app))throw new Error('Interactive app must not auto-run optimization during startup');
 if(!/window\.__dssAuthoritativeRender=\(\)=>renderPhysical\(\)/.test(app)||!/function render\(\)\{if\(!window\.__dssAuthoritativeRender\)return;return window\.__dssAuthoritativeRender\(\);\}/.test(page))throw new Error('Legacy page handlers must be bridged to the authoritative renderer and must not solve hydraulics independently');
-if(/function route\(/.test(page)||/oldRoute=route/.test(page)||!/Legacy presentation creates this section[\s\S]*?\$\('optimize'\)\.onclick=\(\)=>render\(\)/.test(page))throw new Error('The page scaffold must not retain a duplicate hydraulic router or a legacy optimization search handler');
+if(/function route\(/.test(page)||/oldRoute=route/.test(page)||/route\(p\)/.test(page)||!/Run constrained design screening/.test(page))throw new Error('The page scaffold must not retain a duplicate hydraulic router or a legacy optimization search handler');
 if(!/window\.__dssSetLanguage=setLanguage/.test(app)||!/window\.__dssSetLanguage\)window\.__dssSetLanguage\(en\)/.test(language))throw new Error('Language switching must re-render dynamic results through the authoritative bilingual controller');
 if(!/Reproducible Run Record/.test(app)||!/Q_rectangular_opening_m3s/.test(app)||!/Stage-storage boundary/.test(app))throw new Error('Run record must retain numerical, boundary, and component-outflow information');
 console.log('interactive authority guard: passed');
 
 const core=fs.readFileSync('dist/routing-core.js','utf8');
 const qa=fs.readFileSync('dist/quality-assurance.js','utf8');
+const cross=fs.readFileSync('dist/cross-model-compare.js','utf8');
 if(!/routeStorage/.test(core)||!/rk4Scalar/.test(core)||!/rectangularOpeningDischarge/.test(core))throw new Error('Interactive routing must expose the authoritative RK4 core');
 if(!/function routeDesignCandidate\(p\)[\s\S]*?DetentionRoutingCore\.routeStorage/.test(app))throw new Error('Optimization candidates must use the same authoritative routing core as displayed results');
 if(!/DSSAuthority/.test(qa)||!/formalDesignAllowed/.test(qa)||!/internal_developer_quality_assurance/.test(qa))throw new Error('Release must retain a single-authority declaration, formal-design safety guard, and anonymous internal QA record');
+if(/within validated envelope/.test(qa)||!/does not define universal numeric input ranges/.test(qa))throw new Error('Design screening language must not overclaim a universal validated input range');
+if((cross.match(/async function compare/g)||[]).length!==1||/compare=async function/.test(cross))throw new Error('External cross checking must retain one comparison implementation');
 console.log('shared RK4 core guard: passed');
 
 const Core=require('./dist/routing-core.js');
