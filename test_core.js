@@ -95,11 +95,14 @@ if(!/Basin floor elevation Hfloor/.test(app)||!/p\.area\*Math\.max\(0,h-p\.floor
 if(!/evaluateFirstPrinciples/.test(app)||!/eventEligible/.test(app))throw new Error('Event response descriptors must be qualified against the initial hydraulic state');
 if(!/caseSelect=replace\('case'\)/.test(app))throw new Error('Standard-case changes must use the authoritative routing controller');
 if(!/e\.lagEvent=eventEligible/.test(app)||!/if\(eventEligible\)\{e\.qratio=e\.qratioEvent;e\.lag=e\.lagEvent;\}/.test(app))throw new Error('Event peak ratio and lag must use the same initial-state increment baseline');
-if(!/id="freeDischarge"/.test(app)||!/Free-discharge boundary not confirmed/.test(app))throw new Error('Design optimization must require an explicit free-discharge boundary condition');
+if(!/id="freeDischarge"/.test(app)||!/freeDischargeEvidenceComplete/.test(app)||!/freeTailwater/.test(app)||!/freeBackwater/.test(app)||!/freeSubmergence/.test(app)||!/freeOperation/.test(app))throw new Error('Constrained screening must require documented free-discharge evidence, not one unchecked assertion');
+if(!/showInputGuidance/.test(app)||!/aria-invalid/.test(app))throw new Error('Input errors must identify a correction target for the user');
+const teaching=fs.readFileSync('dist/teaching-assistant.js','utf8');
+if(!/window\.confirm/.test(teaching)||!/snapshot\(\)/.test(teaching)||!/teachRestore/.test(teaching)||!/freeTailwater/.test(teaching))throw new Error('Teaching examples must save the working case, require confirmation, and not assert free-discharge evidence');
 if(!/function dimensionlessControls/.test(app)||!/ΠQ\(Href\)/.test(app)||!/ΠS,Δ\(Href\)/.test(app))throw new Error('Decision record must retain declared dimensionless control parameters');
 const modules=fs.readFileSync('dist/module-shell.js','utf8');
-if(!/designReady=ready&&yes\('freeDischarge'\)/.test(modules))throw new Error('Design optimization must require a confirmed free-discharge boundary');
-if(!/extension=riser\|\|pipe\|\|variable\|\|\(weir&&ori\)/.test(modules)||!/designReady=ready&&yes\('freeDischarge'\)&&!extension/.test(modules))throw new Error('Exploratory outlet configurations must not re-enable design optimization');
+if(!/freeEvidence=yes\('freeDischarge'\)&&\['freeTailwater','freeBackwater','freeSubmergence','freeOperation'\]\.every\(yes\)/.test(modules)||!/designReady=ready&&freeEvidence&&!extension/.test(modules))throw new Error('Constrained screening must require complete free-discharge evidence');
+if(!/extension=riser\|\|pipe\|\|variable\|\|\(weir&&ori\)/.test(modules)||!/designReady=ready&&freeEvidence&&!extension/.test(modules))throw new Error('Exploratory outlet configurations must not re-enable constrained screening');
 if(!/guide\.id='userGuide'/.test(modules)||!/Start here/.test(modules)||!/建議操作順序/.test(modules))throw new Error('The user workflow guide must be present in both languages');
 if(!/RQ\/RT=withheld \(non-zero event baseline\)/.test(app))throw new Error('Reports must withhold event ratios for non-zero baselines');
 console.log('event-storage, drain-down, and non-negative-coefficient guard: passed');
