@@ -103,6 +103,8 @@ if(!/evaluateFirstPrinciples/.test(app)||!/eventEligible/.test(app))throw new Er
 if(!/caseSelect=replace\('case'\)/.test(app))throw new Error('Standard-case changes must use the authoritative routing controller');
 if(!/e\.lagEvent=eventEligible/.test(app)||!/if\(eventEligible\)\{e\.qratio=e\.qratioEvent;e\.lag=e\.lagEvent;\}/.test(app))throw new Error('Event peak ratio and lag must use the same initial-state increment baseline');
 if(!/id="freeDischarge"/.test(app)||!/freeDischargeEvidenceComplete/.test(app)||!/freeTailwater/.test(app)||!/freeBackwater/.test(app)||!/freeSubmergence/.test(app)||!/freeOperation/.test(app))throw new Error('Constrained screening must require documented free-discharge evidence, not one unchecked assertion');
+if(!/screeningEvidenceRecordComplete/.test(app)||!/freeEvidenceRecord/.test(app)||!/screeningLimitRecord/.test(app)||!/Screening-limit basis/.test(app))throw new Error('Constrained screening must retain traceable free-discharge evidence and limit-basis records');
+if(/function renderPhysicalLegacy/.test(app))throw new Error('Retired render paths must not remain alongside the authoritative renderer');
 if(!/showInputGuidance/.test(app)||!/aria-invalid/.test(app))throw new Error('Input errors must identify a correction target for the user');
 const teaching=fs.readFileSync('dist/teaching-assistant.js','utf8');
 if(!/window\.confirm/.test(teaching)||!/snapshot\(\)/.test(teaching)||!/teachRestore/.test(teaching)||!/freeTailwater/.test(teaching))throw new Error('Teaching examples must save the working case, require confirmation, and not assert free-discharge evidence');
