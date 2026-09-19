@@ -37,6 +37,11 @@ const bounded=Core.routeStorage({tEnd:10,dt:1,storage0:0,maxStorage:2,inflow:()=
 if(!bounded.stateExceeded||bounded.rows.some(row=>row.s>2))throw new Error('Stage-storage ceiling must stop routing before an undefined state is reported');
 console.log('stage-storage hard-boundary guard: passed');
 
+const stoppedBeforeDrain=Core.routeStorage({tEnd:10,dt:1,storage0:0,maxStorage:2,inflow:()=>1,stageOfStorage:s=>s,outflow:()=>0,sampleTimes:[5]});
+if(!stoppedBeforeDrain.stateExceeded||stoppedBeforeDrain.samples.length!==0)throw new Error('A hard S(H) stop before Te + Td must not fabricate a drawdown sample');
+if(!/function storageAtDrain\(r,p\).*return row\?row\.s:null/.test(app)||!/r\.stateExceeded\|\|drainStorage===null/.test(app)||!/Not evaluated/.test(app))throw new Error('A truncated S(H) route must be reported as not evaluated, without extrapolation or an exception');
+console.log('truncated drawdown decision guard: passed');
+
 const floorBounded=Core.routeStorage({tEnd:10,dt:1,storage0:0,minStorage:0,maxStorage:10,inflow:()=>0,stageOfStorage:s=>100+s,outflow:()=>1,tailSeconds:0});
 if(floorBounded.rows.some(row=>row.s<0||row.h<100)||floorBounded.finalStorage<0)throw new Error('Storage routing must preserve the declared lower storage boundary and vertical datum');
 console.log('storage-floor datum guard: passed');
