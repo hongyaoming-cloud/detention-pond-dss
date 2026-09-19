@@ -13,6 +13,28 @@
   };
   Object.assign(zh,{'Rectangular opening':'矩形開口','Opening coefficient Cd':'開口流量係數 Cd','Opening area Ao (m2)':'開口面積 Ao（m²）','Opening height a (m)':'開口高度 a（m）','Opening width b = Ao/a (m)':'開口寬度 b = Ao/a（m）','Opening invert elevation (m)':'開口底高程（m）','Circular pipe outlet':'圓管出口','Pipe diameter Dp (m)':'圓管直徑 Dp（m）','Pipe discharge coefficient Cd,p':'圓管流量係數 Cd,p','Pipe invert elevation (m)':'圓管底高程（m）','Variable-coefficient source':'變動係數來源','Apply Taiwan guidance range template (editable)':'套用臺灣設計指引範圍範本（可編輯）','International laboratory-data workspace':'國際試驗資料工作表','Coefficient-table citation / test record':'係數表引用資料／試驗紀錄','Source URL':'來源網址','Fixed values are preliminary screening settings. Select field-calibrated value to enter a project-specific coefficient.':'固定值僅供初步檢核；選擇現場校正值後可輸入專案專屬係數。','Each source template is an editable engineering starting table, not a universal curve. Linear interpolation is applied at every routing time step. H must increase; end-row coefficients apply outside the table.':'每個來源範本均為可編輯的工程起始表，並非通用曲線。每一演算時間步均採線性內插；H 必須遞增，表外採端點係數。','For a variable curve, retain the exact citation and URL in the calculation record. Replace every template value with a source-supported or field-calibrated value before final design.':'變動曲線的計算紀錄必須保留完整引用資料與網址。最終設計前，應以有出處或現地校正的係數取代所有範本值。','Coefficient references and applicability':'係數文獻與適用條件'});
   Object.assign(zh,{'Design screening and constrained routing':'受限設計篩選與路由','Run constrained design screening':'執行受限設計篩選','This constrained routing screen is conditional on the declared inflow, storage relation, outlet law, limits, and search bounds. It is not a final engineering-design validation.':'本受限路由篩選取決於所宣告的入流、蓄水關係、出口律、限制與搜尋邊界；它不是最終工程設計驗證。'});
+  Object.assign(zh,{
+    'Constrained design screening':'受限設計篩選',
+    '5. Constrained design screening':'5. 受限設計篩選',
+    'Dimensionless decision support and constrained screening':'無因次決策支援與受限篩選',
+    'Outlet configuration for constrained screening':'受限篩選的出口組合',
+    'Formal screening is limited to one passive weir or one rectangular opening under confirmed free discharge. Other choices are retained only for research inspection and keep screening locked.':'正式篩選僅限已確認自由出流下的單一被動堰流或單一矩形開口。其他選項僅保留供研究檢視，並維持篩選鎖定。',
+    'Passive weir only — formal screening':'僅被動堰流——可正式篩選',
+    'Rectangular opening only — formal screening':'僅矩形開口——可正式篩選',
+    'Vertical riser only — research inspection (screening locked)':'僅豎井——研究檢視（篩選鎖定）',
+    'Weir + rectangular opening — research inspection (screening locked)':'堰流＋矩形開口——研究檢視（篩選鎖定）',
+    'Weir + riser — research inspection (screening locked)':'堰流＋豎井——研究檢視（篩選鎖定）',
+    'Rectangular opening + riser — research inspection (screening locked)':'矩形開口＋豎井——研究檢視（篩選鎖定）',
+    'Weir + opening + riser — research inspection (screening locked)':'堰流＋開口＋豎井——研究檢視（篩選鎖定）',
+    'Screening resolution':'篩選解析度','Screening objective':'篩選目標',
+    'Standard discrete screen: up to two outlet dimensions':'標準離散篩選：最多變動兩個出口尺寸',
+    'Advanced discrete screen: all three outlet dimensions':'進階離散篩選：同時變動三個出口尺寸',
+    'Screen weir width b':'篩選堰寬 b','Screen opening area Ao':'篩選開口面積 Ao','Screen riser diameter D (research inspection only)':'篩選豎井直徑 D（僅研究檢視）',
+    'Declared screening bounds':'宣告篩選邊界','Constrained screening dimensions':'受限篩選尺寸','Constrained screening cases':'受限篩選案例',
+    'Selected feasible constrained-screening case — routed':'選定可行受限篩選案例——已完成路由',
+    'Screening item':'篩選項目','screened':'已篩選',
+    'This is a conditional discrete screening result under the declared bounds. It is not a continuous global optimum or final engineering-design validation.':'此為宣告範圍下的條件式離散篩選結果；不是連續全域最佳解，也不是最終工程設計驗證。'
+  });
   let en=true;
   function apply(){const reverse=Object.fromEntries(Object.entries(zh).map(([a,b])=>[b,a]));const map=en?reverse:zh;const w=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);let n;while(n=w.nextNode()){const s=n.nodeValue.trim();if(map[s])n.nodeValue=n.nodeValue.replace(s,map[s]);}document.documentElement.lang=en?'en':'zh-Hant';try{appEnglish=en;}catch(_){/* The core language state is unavailable only before the routing extension loads. */}document.title=en?'Detention Pond Routing Decision Support':'滯洪池路由決策支援系統';btn.textContent=en?'中文':'English';}
   btn.onclick=()=>{en=!en;if(window.__dssSetLanguage)window.__dssSetLanguage(en);apply();}; apply();

@@ -31,6 +31,8 @@ if(!/routeStorage/.test(core)||!/rk4Scalar/.test(core)||!/rectangularOpeningDisc
 if(!/function routeDesignCandidate\(p\)[\s\S]*?DetentionRoutingCore\.routeStorage/.test(app))throw new Error('Optimization candidates must use the same authoritative routing core as displayed results');
 if(!/DSSAuthority/.test(qa)||!/formalDesignAllowed/.test(qa)||!/internal_developer_quality_assurance/.test(qa))throw new Error('Release must retain a single-authority declaration, formal-design safety guard, and anonymous internal QA record');
 if(/within validated envelope/.test(qa)||!/does not define universal numeric input ranges/.test(qa))throw new Error('Design screening language must not overclaim a universal validated input range');
+if(!/Formal screening is limited to one passive weir or one rectangular opening/.test(app)||!/research inspection \(screening locked\)/.test(app))throw new Error('The interface must identify formal-screening eligibility before users select research-only outlets');
+if(!/Selected feasible constrained-screening case — routed/.test(app)||!/not a continuous global optimum or final engineering-design validation/.test(app))throw new Error('Screening results must not be presented as final design or global optimization');
 if((cross.match(/async function compare/g)||[]).length!==1||/compare=async function/.test(cross))throw new Error('External cross checking must retain one comparison implementation');
 console.log('shared RK4 core guard: passed');
 
