@@ -17,17 +17,18 @@
     }
     return {t,y};
   }
-  function routeStorage({tEnd,dt,storage0,inflow,stageOfStorage,outflow,outflowComponents,onRow,tailSeconds=1800,minStorage=0,maxStorage=Infinity,sampleTimes=[]}){
+  function routeStorage({tEnd,dt,storage0,inflow,stageOfStorage,outflow,outflowComponents,onRow,tailSeconds=1800,minStorage=0,maxStorage=Infinity,sampleTimes=[],landOn=[]}){
     const rows=[];let stateExceeded=false;
     const totalTime=tEnd+tailSeconds;
     const boundedStorage=s=>Math.min(maxStorage,Math.max(minStorage,s));
     const snapshot=(t,s)=>{const sb=boundedStorage(s),h=stageOfStorage(sb),qi=inflow(t),qo=outflow(h),components=outflowComponents?outflowComponents(h):undefined,row={t,qi,qo,h,s:sb,components};rows.push(row);if(onRow)onRow(row);return row;};
     const requestedSamples=sampleTimes.filter(t=>Number.isFinite(t)&&t>=0&&t<=totalTime);
+    const requestedLandings=[tEnd,...landOn,...requestedSamples].filter(t=>Number.isFinite(t)&&t>=0&&t<=totalTime).sort((a,b)=>a-b).filter((t,i,a)=>i===0||Math.abs(t-a[i-1])>1e-9);
     const result=rk4Scalar({
       tEnd:totalTime,dt,y0:storage0,
       rhs:(t,s)=>inflow(t)-outflow(stageOfStorage(boundedStorage(s))),
       stop:(t,s)=>{if(s>maxStorage+Math.max(1e-9,Math.abs(maxStorage)*1e-10)){stateExceeded=true;return true;}return false;},
-      onStep:snapshot,landOn:requestedSamples
+      onStep:snapshot,landOn:requestedLandings
     });
     if(!stateExceeded&&result.t>=totalTime-1e-9)snapshot(totalTime,result.y);
     let vin=0,vout=0;

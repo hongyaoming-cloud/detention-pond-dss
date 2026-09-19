@@ -65,6 +65,11 @@ const timedSample=Core.routeStorage({tEnd:10,dt:3,storage0:0,inflow:()=>1,stageO
 if(timedSample.samples.length!==1||timedSample.samples[0].t!==14||Math.abs(timedSample.samples[0].s-14)>1e-12)throw new Error('Declared drain-down checks must retain the exact requested time state');
 console.log('exact drain-down sample guard: passed');
 
+const sharpEvent=Core.routeStorage({tEnd:.1,dt:2,storage0:0,tailSeconds:0,landOn:[.05],inflow:t=>t<=.05?.01*t/.05:t<=.1?.01*(1-(t-.05)/.05):0,stageOfStorage:s=>s,outflow:()=>0});
+if(Math.abs(sharpEvent.vin-.0005)>1e-12||!sharpEvent.rows.some(r=>Math.abs(r.t-.05)<1e-12)||!sharpEvent.rows.some(r=>Math.abs(r.t-.1)<1e-12))throw new Error('Event endpoints and prescribed inflow breakpoints must be exact RK4 landing times, even below the nominal timestep');
+if(!/function inflowLandmarks\(p\)/.test(app)||!/landOn:inflowLandmarks\(p\)/.test(app))throw new Error('Interactive and screening routes must pass event breakpoints to the authoritative core');
+console.log('event-breakpoint landing guard: passed');
+
 const componentRoute=Core.routeStorage({tEnd:2,dt:1,storage0:1,inflow:()=>0,stageOfStorage:s=>s,outflow:h=>h+h/2,outflowComponents:h=>({weir:h,rectangularOpening:h/2})});
 if(componentRoute.rows.some(row=>Math.abs(row.qo-(row.components.weir+row.components.rectangularOpening))>1e-12))throw new Error('Recorded outlet components must sum exactly to total outflow');
 console.log('compound-outlet component-record guard: passed');
@@ -99,6 +104,7 @@ if(!/id="freeDischarge"/.test(app)||!/freeDischargeEvidenceComplete/.test(app)||
 if(!/showInputGuidance/.test(app)||!/aria-invalid/.test(app))throw new Error('Input errors must identify a correction target for the user');
 const teaching=fs.readFileSync('dist/teaching-assistant.js','utf8');
 if(!/window\.confirm/.test(teaching)||!/snapshot\(\)/.test(teaching)||!/teachRestore/.test(teaching)||!/freeTailwater/.test(teaching))throw new Error('Teaching examples must save the working case, require confirmation, and not assert free-discharge evidence');
+if(/Math\.max\(r\.vin,1\)/.test(app)||/Math\.max\(z\.vin,1\)/.test(app)||/Math\.max\(r\.vin,1\)/.test(page)||!/function relativeMassResidual\(r\)/.test(app)||!/massRatio=Number\.isFinite\(r\.vin\)&&r\.vin>0\?Math\.abs\(r\.residual\)\/r\.vin:Infinity/.test(page))throw new Error('Mass-balance status and constrained screening must use actual cumulative inflow, never a fixed one-cubic-metre denominator');
 if(!/function dimensionlessControls/.test(app)||!/ΠQ\(Href\)/.test(app)||!/ΠS,Δ\(Href\)/.test(app))throw new Error('Decision record must retain declared dimensionless control parameters');
 const modules=fs.readFileSync('dist/module-shell.js','utf8');
 if(!/freeEvidence=yes\('freeDischarge'\)&&\['freeTailwater','freeBackwater','freeSubmergence','freeOperation'\]\.every\(yes\)/.test(modules)||!/designReady=ready&&freeEvidence&&!extension/.test(modules))throw new Error('Constrained screening must require complete free-discharge evidence');
