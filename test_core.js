@@ -12,10 +12,14 @@ for(const [name,p] of Object.entries(cases)){const r=route(p),q=peak(r.rows,'qo'
 /* Release guard: the interactive application may expose only one formal renderer and optimizer. */
 const fs=require('fs');
 const app=fs.readFileSync('dist/physics-refinement.js','utf8');
+const page=fs.readFileSync('dist/index.html','utf8');
+const language=fs.readFileSync('dist/language-final.js','utf8');
 const count=(pattern)=>(app.match(pattern)||[]).length;
 if(count(/function renderPhysical\(/g)!==1)throw new Error('Interactive app must declare exactly one authoritative renderPhysical function');
 if(count(/function optimizePhysical\(/g)!==1)throw new Error('Interactive app must declare exactly one authoritative optimizePhysical function');
 if(/setTimeout\(optimizePhysical/.test(app))throw new Error('Interactive app must not auto-run optimization during startup');
+if(!/window\.__dssAuthoritativeRender=\(\)=>renderPhysical\(\)/.test(app)||!/function render\(\)\{if\(!window\.__dssAuthoritativeRender\)return;return window\.__dssAuthoritativeRender\(\);\}/.test(page))throw new Error('Legacy page handlers must be bridged to the authoritative renderer and must not solve hydraulics independently');
+if(!/window\.__dssSetLanguage=setLanguage/.test(app)||!/window\.__dssSetLanguage\)window\.__dssSetLanguage\(en\)/.test(language))throw new Error('Language switching must re-render dynamic results through the authoritative bilingual controller');
 if(!/Reproducible Run Record/.test(app)||!/Q_rectangular_opening_m3s/.test(app)||!/Stage-storage boundary/.test(app))throw new Error('Run record must retain numerical, boundary, and component-outflow information');
 console.log('interactive authority guard: passed');
 
