@@ -19,6 +19,7 @@ if(count(/function renderPhysical\(/g)!==1)throw new Error('Interactive app must
 if(count(/function optimizePhysical\(/g)!==1)throw new Error('Interactive app must declare exactly one authoritative optimizePhysical function');
 if(/setTimeout\(optimizePhysical/.test(app))throw new Error('Interactive app must not auto-run optimization during startup');
 if(!/window\.__dssAuthoritativeRender=\(\)=>renderPhysical\(\)/.test(app)||!/function render\(\)\{if\(!window\.__dssAuthoritativeRender\)return;return window\.__dssAuthoritativeRender\(\);\}/.test(page))throw new Error('Legacy page handlers must be bridged to the authoritative renderer and must not solve hydraulics independently');
+if(/function route\(/.test(page)||/oldRoute=route/.test(page)||!/Legacy presentation creates this section[\s\S]*?\$\('optimize'\)\.onclick=\(\)=>render\(\)/.test(page))throw new Error('The page scaffold must not retain a duplicate hydraulic router or a legacy optimization search handler');
 if(!/window\.__dssSetLanguage=setLanguage/.test(app)||!/window\.__dssSetLanguage\)window\.__dssSetLanguage\(en\)/.test(language))throw new Error('Language switching must re-render dynamic results through the authoritative bilingual controller');
 if(!/Reproducible Run Record/.test(app)||!/Q_rectangular_opening_m3s/.test(app)||!/Stage-storage boundary/.test(app))throw new Error('Run record must retain numerical, boundary, and component-outflow information');
 console.log('interactive authority guard: passed');
