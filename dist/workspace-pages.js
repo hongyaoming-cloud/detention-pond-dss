@@ -14,7 +14,12 @@
   const host=document.createElement('div');host.id='workspacePageHost';
   const pages=new Map();
   ['route','screen','evidence','learn'].forEach(id=>{const page=document.createElement('section');page.className='workspace-page';page.dataset.page=id;pages.set(id,page);host.appendChild(page);});
-  work.insertBefore(tabs,work.firstChild);work.insertBefore(host,tabs.nextSibling);
+  work.insertBefore(host,work.firstChild);
+  function mountTabs(){
+    const nav=document.getElementById('moduleNavContent');if(!nav)return;
+    const before=nav.querySelector('.module-link')||nav.firstChild;
+    nav.insertBefore(tabs,before);
+  }
   const move=(id,page)=>{const el=document.getElementById(id);if(el)pages.get(page).appendChild(el);};
   ['userGuide','mod-inflow','mod-storage','mod-outlet','mod-routing'].forEach(id=>move(id,'route'));
   const contract=work.querySelector('.principle-contract');if(contract)pages.get('route').insertBefore(contract,pages.get('route').firstChild);
@@ -23,6 +28,7 @@
   move('teachingAssistant','learn');move('qualityAssurance','learn');
   let active='route';
   function draw(){
+    mountTabs();
     const t=labels();tabs.innerHTML=t.map(([id,title,sub])=>`<button type="button" class="workspace-tab${id===active?' active':''}" data-page="${id}" aria-selected="${id===active}"><span>${title}</span><small>${sub}</small></button>`).join('');
     tabs.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>activate(b.dataset.page)));
     pages.forEach((page,id)=>{page.hidden=id!==active;});
@@ -39,7 +45,7 @@
   },true);
   document.getElementById('run')?.addEventListener('click',()=>window.setTimeout(()=>activate('evidence'),120));
   document.getElementById('lang')?.addEventListener('click',()=>window.setTimeout(draw,0));
-  const style=document.createElement('style');style.textContent=`#workspacePageTabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 16px}.workspace-tab{min-height:62px;border:1px solid #b9d4df;border-radius:7px;background:#fff;color:#123247;text-align:left;padding:9px 10px;cursor:pointer;font:inherit}.workspace-tab span{display:block;font-weight:700;font-size:14px}.workspace-tab small{display:block;color:#526a78;font-size:12px;margin-top:2px}.workspace-tab:hover{background:#eef8fb;border-color:#0b557d}.workspace-tab.active{background:#0b557d;color:#fff;border-color:#0b557d;box-shadow:0 2px 6px #0b557d33}.workspace-tab.active small{color:#dbeef5}.workspace-page[hidden]{display:none!important}.workspace-page>.module-card,.workspace-page>#teachingAssistant,.workspace-page>#qualityAssurance{margin-top:0;margin-bottom:18px}.workspace-page>#mod-evaluation{margin-top:0}@media(max-width:850px){#workspacePageTabs{grid-template-columns:1fr 1fr}.workspace-tab{min-height:58px}}`;document.head.appendChild(style);
+  const style=document.createElement('style');style.textContent=`#workspacePageTabs{display:grid;gap:5px;margin:0 0 12px}.workspace-tab{border:1px solid #b9d4df;border-radius:5px;background:#fff;color:#123247;text-align:left;padding:8px 9px;cursor:pointer;font:inherit}.workspace-tab span{display:block;font-weight:700;font-size:14px}.workspace-tab small{display:block;color:#526a78;font-size:11px;margin-top:1px}.workspace-tab:hover{background:#eef8fb;border-color:#0b557d}.workspace-tab.active{background:#0b557d;color:#fff;border-color:#0b557d}.workspace-tab.active small{color:#dbeef5}.workspace-page[hidden]{display:none!important}.workspace-page>.module-card,.workspace-page>#teachingAssistant,.workspace-page>#qualityAssurance{margin-top:0;margin-bottom:18px}.workspace-page>#mod-evaluation{margin-top:0}@media(max-width:850px){#workspacePageTabs{grid-column:1/-1;grid-template-columns:1fr 1fr}.workspace-tab{min-height:54px}}`;document.head.appendChild(style);
   draw();
   window.DSSWorkspacePages=Object.freeze({activate,active:()=>active});
 })();
