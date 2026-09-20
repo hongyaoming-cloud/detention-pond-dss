@@ -33,6 +33,7 @@
   const freeEvidenceIds=['freeTailwater','freeBackwater','freeSubmergence','freeOperation'];
   function freeDischargeEvidenceComplete(){return Boolean($('freeDischarge')?.checked)&&freeEvidenceIds.every(id=>Boolean($(id)?.checked));}
   function screeningEvidenceRecordComplete(){return Boolean($('freeEvidenceRecord')?.value.trim())&&Boolean($('screeningLimitRecord')?.value.trim());}
+  function formalScreeningEligible(){const variableCoefficient=$('coeffMode')&&$('coeffMode').value==='table',onePassiveOutlet=Boolean($('weirOn')?.checked)!==Boolean($('oriOn')?.checked);return onePassiveOutlet&&!$('riserOn')?.checked&&!$('pipeOn')?.checked&&!variableCoefficient&&freeDischargeEvidenceComplete()&&screeningEvidenceRecordComplete();}
   function freeDischargeEvidence(){return Object.fromEntries(freeEvidenceIds.map(id=>[id.replace(/^free/,'').replace(/^./,x=>x.toLowerCase()),Boolean($(id)?.checked)]));}
   function clearInputGuidance(){document.querySelectorAll('[aria-invalid="true"]').forEach(x=>{x.removeAttribute('aria-invalid');x.style.outline='';});inputGuide.classList.add('hide');inputGuide.textContent='';}
   function showInputGuidance(message){clearInputGuidance();const rules=[[/stage-storage|S\\(H\\)|water-level/i,'storageTable'],[/coefficient table|coefficient-table|source URL|citation/i,'coeffTable'],[/Imported hydrograph|time, discharge|event baseline/i,'points'],[/reference level|Href/i,'href'],[/drain-down/i,'drainHours'],[/residual/i,'residualPct'],[/elevation|datum|geometry/i,'floor'],[/allowable peak/i,'qallow'],[/allowable water/i,'hallow']],id=(rules.find(([rule])=>rule.test(message))||[])[1],target=id&&$(id);if(target){target.setAttribute('aria-invalid','true');target.style.outline='3px solid #e11d48';}inputGuide.classList.remove('hide');inputGuide.innerHTML='<strong>Correct the highlighted input before routing</strong>'+message+(target?'':' Review the declared inflow, storage relation, outlet geometry, and limits.');}
@@ -169,7 +170,7 @@
   /* Adaptive two-stage search: global visible grid, then local refinement inside declared bounds. */
   function optimizePhysical(){
     try {
-      renderPhysical();if(!last)return;syncOptimizerFromDeclared();
+      renderPhysical();if(!last)return;if(!formalScreeningEligible()){const o=$('optout'),box=$('optResultBox');box.classList.remove('hide');o.className='status warn';o.textContent=englishUI()?'Screening was not run. Use exactly one passive weir or one rectangular opening, complete the four free-discharge checks, and enter both traceability records.':'尚未執行受限篩選。請僅使用單一被動堰流或單一矩形開口，完成自由出流四項檢核，並填寫兩項可追溯紀錄。';return;}syncOptimizerFromDeclared();
       if(last.p.storageMode!=='constant'){const o=$('optout');o.className='status warn';o.textContent='The present area-width design search requires a constant-area S(H) representation.';return;}
       const qlim=num('qallow'),hlim=num('hallow'),drainLimit=num('residualPct')/100,conf=declaredConfiguration(),obj=$('optObjective').value,checks=['optB','optAo','optD'].filter(id=>$(id).checked),limit=$('optMode').value==='full'?3:2;
       const hUpper=last.p.storageMode==='table'?last.p.table.at(-1)[0]:Infinity;
@@ -318,7 +319,7 @@
     }else if(!records){
       opt.disabled=true;
       const st=$('status');st.className='status warn';st.innerHTML='<strong>'+(appEnglish?'Traceability record incomplete':'可追溯紀錄尚未完整')+'</strong>'+(appEnglish?'Enter the free-discharge evidence record and the basis for Qallow, Hallow, Td, and residual limit before constrained screening. Routing remains exploratory.':'受限篩選前，請填入自由出流證據紀錄及 Qallow、Hallow、Td 與殘留限制的依據。路由結果仍僅供探索性檢視。');
-    }else if(run&&!run.disabled){opt.disabled=false;}
+    }else if(run&&!run.disabled){opt.disabled=false;}if(opt)opt.disabled=false;
   }
   ['weirOn','oriOn','riserOn','pipeOn','coeffMode','freeDischarge',...freeEvidenceIds].forEach(id=>$(id).addEventListener('change',()=>setTimeout(enforceValidatedEnvelope,0)));
   ['freeEvidenceRecord','screeningLimitRecord'].forEach(id=>$(id).addEventListener('input',()=>setTimeout(enforceValidatedEnvelope,0)));
