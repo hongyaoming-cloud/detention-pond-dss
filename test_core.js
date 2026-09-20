@@ -107,7 +107,7 @@ if(!/screeningEvidenceRecordComplete/.test(app)||!/freeEvidenceRecord/.test(app)
 if(/function renderPhysicalLegacy/.test(app))throw new Error('Retired render paths must not remain alongside the authoritative renderer');
 if(!/showInputGuidance/.test(app)||!/aria-invalid/.test(app))throw new Error('Input errors must identify a correction target for the user');
 const teaching=fs.readFileSync('dist/teaching-assistant.js','utf8');
-if(!/window\.confirm/.test(teaching)||!/snapshot\(\)/.test(teaching)||!/teachRestore/.test(teaching)||!/freeTailwater/.test(teaching))throw new Error('Teaching examples must save the working case, require confirmation, and not assert free-discharge evidence');
+if(!/window\.confirm/.test(teaching)||!/snapshot\(\)/.test(teaching)||!/teachRestore/.test(teaching)||!/freeTailwater/.test(teaching)||!/freeEvidenceRecord/.test(teaching)||!/screeningLimitRecord/.test(teaching)||!/Qout\(H\) = Cw/.test(teaching))throw new Error('Teaching screening cases must save and restore the working case, declare their assumed evidence records, and state Qout(H)');
 if(/Math\.max\(r\.vin,1\)/.test(app)||/Math\.max\(z\.vin,1\)/.test(app)||/Math\.max\(r\.vin,1\)/.test(page)||!/function relativeMassResidual\(r\)/.test(app)||!/massRatio=Number\.isFinite\(r\.vin\)&&r\.vin>0\?Math\.abs\(r\.residual\)\/r\.vin:Infinity/.test(page))throw new Error('Mass-balance status and constrained screening must use actual cumulative inflow, never a fixed one-cubic-metre denominator');
 if(!/function dimensionlessControls/.test(app)||!/ΠQ\(Href\)/.test(app)||!/ΠS,Δ\(Href\)/.test(app))throw new Error('Decision record must retain declared dimensionless control parameters');
 const modules=fs.readFileSync('dist/module-shell.js','utf8');
