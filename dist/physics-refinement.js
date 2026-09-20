@@ -311,15 +311,12 @@
     const free=freeDischargeEvidenceComplete(),records=screeningEvidenceRecordComplete();
     const opt=$('optimize'),run=$('run');
     if(extension){
-      opt.disabled=true;
       const st=$('status');st.className='status warn';st.innerHTML='<strong>'+(appEnglish?'Research inspection only — constrained screening locked':'僅供研究檢視——受限篩選鎖定')+'</strong>'+(appEnglish?'Riser, circular-opening/pipe, variable-coefficient tables, and compound-outlet configurations are outside the fixed 176-case validation envelope. Routing may be inspected for research development, but constrained screening and final engineering-design conclusions are disabled until independent validation is completed.':'豎井、圓形開口／圓管、變動係數表與複合出口不在固定 176 組驗證範圍內。可供研究開發檢視路由結果，但在完成獨立驗證前，系統停用受限篩選與最終工程設計結論。');
     }else if(!free){
-      opt.disabled=true;
       const st=$('status');st.className='status warn';st.innerHTML='<strong>'+(appEnglish?'Free-discharge evidence incomplete':'自由出流證據尚未完整')+'</strong>'+(appEnglish?'Document tailwater, backwater/friction, submergence, and operational-control checks before Qout = Qout(H) can support constrained screening. Routing remains exploratory.':'在 Qout = Qout(H) 可作受限篩選前，請完成尾水、回水／摩阻、淹沒與操作控制的逐項檢核。路由結果仍僅供探索性檢視。');
     }else if(!records){
-      opt.disabled=true;
       const st=$('status');st.className='status warn';st.innerHTML='<strong>'+(appEnglish?'Traceability record incomplete':'可追溯紀錄尚未完整')+'</strong>'+(appEnglish?'Enter the free-discharge evidence record and the basis for Qallow, Hallow, Td, and residual limit before constrained screening. Routing remains exploratory.':'受限篩選前，請填入自由出流證據紀錄及 Qallow、Hallow、Td 與殘留限制的依據。路由結果仍僅供探索性檢視。');
-    }else if(run&&!run.disabled){opt.disabled=false;}if(opt)opt.disabled=false;
+    }if(opt)opt.disabled=false;
   }
   ['weirOn','oriOn','riserOn','pipeOn','coeffMode','freeDischarge',...freeEvidenceIds].forEach(id=>$(id).addEventListener('change',()=>setTimeout(enforceValidatedEnvelope,0)));
   ['freeEvidenceRecord','screeningLimitRecord'].forEach(id=>$(id).addEventListener('input',()=>setTimeout(enforceValidatedEnvelope,0)));
@@ -370,11 +367,11 @@
   /* Replace legacy controls once: old inline and listener bindings cannot issue a second routing or search. */
   function installAuthoritativeControls(){
     const replace=id=>{const old=$(id),fresh=old.cloneNode(true);old.replaceWith(fresh);return fresh;};
-    const run=replace('run'),opt=replace('optimize'),caseSelect=replace('case');
-    /* cloneNode preserves the obsolete disabled attribute from the pre-authority
-       button.  The action stays available; optimizePhysical() is the sole place
-       that decides whether the formal screen may produce a result. */
-    opt.disabled=false;opt.removeAttribute('disabled');let running=false;
+    const run=replace('run'),caseSelect=replace('case'),oldOpt=$('optimize');
+    /* Build a new action instead of cloning it: a cloned element can preserve
+       a disabled attribute set by an earlier, retired gate.  Eligibility is
+       checked only inside optimizePhysical(), after the user invokes it. */
+    const opt=document.createElement('button');opt.type='button';opt.id='optimize';opt.className='run';opt.textContent=oldOpt.textContent;oldOpt.replaceWith(opt);let running=false;
     const execute=()=>{if(running)return;running=true;try{renderPhysical();enforceValidatedEnvelope();}finally{running=false;}};
     run.addEventListener('click',execute);
     opt.addEventListener('click',()=>{if(opt.disabled||running)return;running=true;try{renderPhysical();enforceValidatedEnvelope();if(!opt.disabled){optimizePhysical();localizeOptimization();}}finally{running=false;}});
