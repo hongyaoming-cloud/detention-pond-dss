@@ -17,6 +17,7 @@ const language=fs.readFileSync('dist/language-final.js','utf8');
 const count=(pattern)=>(app.match(pattern)||[]).length;
 if(count(/function renderPhysical\(/g)!==1)throw new Error('Interactive app must declare exactly one authoritative renderPhysical function');
 if(count(/function optimizePhysical\(/g)!==1)throw new Error('Interactive app must declare exactly one authoritative optimizePhysical function');
+if(!/const \$ = id => document\.getElementById\(id\);\s*\/\*[\s\S]*?\*\/\s*let appEnglish=true;/.test(app))throw new Error('Language state must be initialized before any startup render or constrained screening action');
 if(/setTimeout\(optimizePhysical/.test(app))throw new Error('Interactive app must not auto-run optimization during startup');
 if(!/window\.__dssAuthoritativeRender=\(\)=>renderPhysical\(\)/.test(app)||!/function render\(\)\{if\(!window\.__dssAuthoritativeRender\)return;return window\.__dssAuthoritativeRender\(\);\}/.test(page))throw new Error('Legacy page handlers must be bridged to the authoritative renderer and must not solve hydraulics independently');
 if(/function route\(/.test(page)||/oldRoute=route/.test(page)||/route\(p\)/.test(page)||!/Run constrained design screening/.test(page))throw new Error('The page scaffold must not retain a duplicate hydraulic router or a legacy optimization search handler');
