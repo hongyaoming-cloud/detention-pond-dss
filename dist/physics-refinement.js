@@ -370,7 +370,11 @@
   /* Replace legacy controls once: old inline and listener bindings cannot issue a second routing or search. */
   function installAuthoritativeControls(){
     const replace=id=>{const old=$(id),fresh=old.cloneNode(true);old.replaceWith(fresh);return fresh;};
-    const run=replace('run'),opt=replace('optimize'),caseSelect=replace('case');let running=false;
+    const run=replace('run'),opt=replace('optimize'),caseSelect=replace('case');
+    /* cloneNode preserves the obsolete disabled attribute from the pre-authority
+       button.  The action stays available; optimizePhysical() is the sole place
+       that decides whether the formal screen may produce a result. */
+    opt.disabled=false;opt.removeAttribute('disabled');let running=false;
     const execute=()=>{if(running)return;running=true;try{renderPhysical();enforceValidatedEnvelope();}finally{running=false;}};
     run.addEventListener('click',execute);
     opt.addEventListener('click',()=>{if(opt.disabled||running)return;running=true;try{renderPhysical();enforceValidatedEnvelope();if(!opt.disabled){optimizePhysical();localizeOptimization();}}finally{running=false;}});

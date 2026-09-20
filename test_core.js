@@ -115,5 +115,6 @@ if(!/freeEvidence=yes\('freeDischarge'\)&&\['freeTailwater','freeBackwater','fre
 if(!/extension=riser\|\|pipe\|\|variable\|\|\(weir&&ori\)/.test(modules)||!/designReady=ready&&freeEvidence&&!extension/.test(modules))throw new Error('Exploratory outlet configurations must not re-enable constrained screening');
 if(!/guide\.id='userGuide'/.test(modules)||!/Start here/.test(modules)||!/建議操作順序/.test(modules))throw new Error('The user workflow guide must be present in both languages');
 if(!/function currentScreeningGate\(\)/.test(modules)||!/document\.getElementById\('optimize'\)/.test(modules)||!/onePassiveOutlet/.test(modules)||!/dataset\.screeningEligible/.test(modules)||!/formalScreeningEligible/.test(app)||!/Screening was not run/.test(app))throw new Error('The visible constrained-screening button must remain clickable and reject ineligible cases inside the authoritative search path');
+if(!/opt\.disabled=false;opt\.removeAttribute\('disabled'\)/.test(app))throw new Error('The authoritative control replacement must remove a stale disabled screen button attribute');
 if(!/RQ\/RT=withheld \(non-zero event baseline\)/.test(app))throw new Error('Reports must withhold event ratios for non-zero baselines');
 console.log('event-storage, drain-down, and non-negative-coefficient guard: passed');
