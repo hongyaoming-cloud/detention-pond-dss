@@ -374,7 +374,10 @@
     const opt=document.createElement('button');opt.type='button';opt.id='optimize';opt.className='run';opt.textContent=oldOpt.textContent;oldOpt.replaceWith(opt);let running=false;
     const execute=()=>{if(running)return;running=true;try{renderPhysical();enforceValidatedEnvelope();}finally{running=false;}};
     run.addEventListener('click',execute);
-    opt.addEventListener('click',()=>{if(running)return;running=true;try{window.__dssRunScreening?.();}finally{running=false;}});
+    /* The authoritative controller binds the final action directly.  Do not
+       route this through a separately scheduled UI bridge: that creates a
+       window in which the visible button exists but its bridge does not. */
+    opt.addEventListener('click',()=>{if(running)return;running=true;try{renderPhysical();enforceValidatedEnvelope();optimizePhysical();localizeOptimization();}finally{running=false;}});
     caseSelect.addEventListener('change',()=>{const v=caseSelect.value;if(v==='tri'){$('shape').value='tri';$('qp').value='.120';$('dur').value='60';$('h0').value='0';$('floor').value='0';$('crest').value='0';$('weirOn').checked=true;$('oriOn').checked=false;}else if(v==='long'){$('shape').value='long';$('qp').value='.120';$('dur').value='120';$('h0').value='0';$('floor').value='0';$('crest').value='0';$('weirOn').checked=true;$('oriOn').checked=false;}else{$('shape').value='custom';$('points').value='0, 0\n25, 0.10\n50, 0.10\n75, 0';}$('custombox').classList.toggle('hide',$('shape').value!=='custom');syncOptimizerFromDeclared();execute();});
   }
   /* This must run after the two legacy presentation scripts load; it deliberately owns the final controls. */
