@@ -17,8 +17,17 @@
   work.insertBefore(host,work.firstChild);
   function mountTabs(){
     const nav=document.getElementById('moduleNavContent');if(!nav)return;
-    const before=nav.querySelector('.module-link')||nav.firstChild;
+    const before=nav.querySelector('.module-link')||nav.querySelector('#workspaceModuleNav')||nav.querySelector('.future-caption')||null;
     nav.insertBefore(tabs,before);
+  }
+  function organizeSidebar(){
+    const nav=document.getElementById('moduleNavContent');if(!nav)return;
+    let detail=nav.querySelector('#workspaceModuleNav');
+    if(!detail){detail=document.createElement('div');detail.id='workspaceModuleNav';nav.insertBefore(detail,nav.querySelector('.future-caption')||null);}
+    [...nav.children].filter(el=>el!==tabs&&el.matches?.('.module-link')).forEach(el=>detail.appendChild(el));
+    const show={route:new Set(['mod-inflow','mod-storage','mod-outlet','mod-routing']),screen:new Set(['mod-optimization']),evidence:new Set(['mod-evaluation']),learn:new Set(['teachingNavButton'])}[active];
+    detail.querySelectorAll('.module-link').forEach(link=>{const key=link.dataset.target||link.id;link.hidden=!show?.has(key);});
+    detail.hidden=!show?.size;
   }
   const move=(id,page)=>{const el=document.getElementById(id);if(el)pages.get(page).appendChild(el);};
   ['userGuide','mod-inflow','mod-storage','mod-outlet','mod-routing'].forEach(id=>move(id,'route'));
@@ -32,6 +41,7 @@
     const t=labels();tabs.innerHTML=t.map(([id,title,sub])=>`<button type="button" class="workspace-tab${id===active?' active':''}" data-page="${id}" aria-selected="${id===active}"><span>${title}</span><small>${sub}</small></button>`).join('');
     tabs.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>activate(b.dataset.page)));
     pages.forEach((page,id)=>{page.hidden=id!==active;});
+    organizeSidebar();
   }
   function activate(id){if(!pages.has(id))return;active=id;draw();pages.get(id).scrollIntoView({behavior:'smooth',block:'start'});}
   const modulePage={
@@ -45,7 +55,7 @@
   },true);
   document.getElementById('run')?.addEventListener('click',()=>window.setTimeout(()=>activate('evidence'),120));
   document.getElementById('lang')?.addEventListener('click',()=>window.setTimeout(draw,0));
-  const style=document.createElement('style');style.textContent=`#workspacePageTabs{display:grid;gap:5px;margin:0 0 12px}.workspace-tab{border:1px solid #b9d4df;border-radius:5px;background:#fff;color:#123247;text-align:left;padding:8px 9px;cursor:pointer;font:inherit}.workspace-tab span{display:block;font-weight:700;font-size:14px}.workspace-tab small{display:block;color:#526a78;font-size:11px;margin-top:1px}.workspace-tab:hover{background:#eef8fb;border-color:#0b557d}.workspace-tab.active{background:#0b557d;color:#fff;border-color:#0b557d}.workspace-tab.active small{color:#dbeef5}.workspace-page[hidden]{display:none!important}.workspace-page>.module-card,.workspace-page>#teachingAssistant,.workspace-page>#qualityAssurance{margin-top:0;margin-bottom:18px}.workspace-page>#mod-evaluation{margin-top:0}@media(max-width:850px){#workspacePageTabs{grid-column:1/-1;grid-template-columns:1fr 1fr}.workspace-tab{min-height:54px}}`;document.head.appendChild(style);
+  const style=document.createElement('style');style.textContent=`#workspacePageTabs{display:grid;gap:5px;margin:0 0 12px}.workspace-tab{border:1px solid #b9d4df;border-radius:5px;background:#fff;color:#123247;text-align:left;padding:8px 9px;cursor:pointer;font:inherit}.workspace-tab span{display:block;font-weight:700;font-size:14px}.workspace-tab small{display:block;color:#526a78;font-size:11px;margin-top:1px}.workspace-tab:hover{background:#eef8fb;border-color:#0b557d}.workspace-tab.active{background:#0b557d;color:#fff;border-color:#0b557d}.workspace-tab.active small{color:#dbeef5}#workspaceModuleNav{display:grid;gap:5px;margin:0 0 12px;padding:8px;border:1px solid #d6e3e8;border-radius:6px;background:#f8fbfc}#workspaceModuleNav .module-link{margin:0;background:#fff}.workspace-page[hidden]{display:none!important}.workspace-page>.module-card,.workspace-page>#teachingAssistant,.workspace-page>#qualityAssurance{margin-top:0;margin-bottom:18px}.workspace-page>#mod-evaluation{margin-top:0}@media(max-width:850px){#workspacePageTabs,#workspaceModuleNav{grid-column:1/-1;grid-template-columns:1fr 1fr}.workspace-tab{min-height:54px}}`;document.head.appendChild(style);
   draw();
   window.DSSWorkspacePages=Object.freeze({activate,active:()=>active});
 })();
