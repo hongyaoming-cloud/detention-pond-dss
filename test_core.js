@@ -122,3 +122,5 @@ if(!/function continuousNumericalSearch\(\)/.test(app)||!/low-discrepancy/.test(
 if(!/RQ\/RT=withheld \(non-zero event baseline\)/.test(app))throw new Error('Reports must withhold event ratios for non-zero baselines');
 console.log('event-storage, drain-down, and non-negative-coefficient guard: passed');
 if(!/\['freeDischarge','freeTailwater'/.test(modules))throw new Error('Screening gate must require the free-discharge boundary confirmation used by formalScreeningEligible()');
+if(!/const p=problems\.find\(x=>x\.status==='阻擋'\)\|\|problems\[0\]/.test(fs.readFileSync('dist/diagnostic-guide.js','utf8')))throw new Error('Next step must point to a blocking item before any warning item');
+if(!/const map=document\.documentElement\.lang!=='zh-Hant'\?/.test(fs.readFileSync('dist/physics-refinement.js','utf8'))||!/'Peak outflow \/ allowable','出流尖峰／容許值'/.test(fs.readFileSync('dist/physics-refinement.js','utf8')))throw new Error('Screening result must be localized in the visible UI language');
