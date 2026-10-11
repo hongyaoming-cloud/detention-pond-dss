@@ -1,0 +1,138 @@
+[
+ {
+  "lang": "en",
+  "name": "A eligible",
+  "before": {
+   "disabled": false,
+   "eligible": "true",
+   "gate": "",
+   "gateFix": false
+  },
+  "after": {
+   "optout": "Selected feasible constrained-screening case — routed The program evaluated the full visible grid, then performed 2 local refinement passes inside the declared size bounds. The plots above are rerouted with this selected screening case. No screened outlet dimension remains at a declared bound. Scree",
+   "step1": "Step 1 | Computation status Pass Screening completed",
+   "step3": "Step 3 | Next step The current result meets the declared conditions; final engineering-design validation is still required.",
+   "fix": 0
+  },
+  "errs": []
+ },
+ {
+  "lang": "en",
+  "name": "B missing free-discharge evidence",
+  "before": {
+   "disabled": false,
+   "eligible": "false",
+   "gate": "正式受限篩選尚未就緒：缺少自由出流邊界確認。 前往修正",
+   "gateFix": true
+  },
+  "after": {
+   "optout": "Screening was not run. Use exactly one passive weir or one rectangular opening, complete the four free-discharge checks, and enter both traceability records.",
+   "step1": "Step 1 | Computation status Check Not yet run",
+   "step3": "Step 3 | Next step Blocked: Four free-discharge evidence checks; Missing: free-discharge boundary confirmation (Free-discharge boundary confirmed), tailwater evidence, backwater/pipe-friction evidence, submergence evidence, operational-control evidence. Go to fix: Four free-discharge evidence checks",
+   "fix": 2
+  },
+  "errs": []
+ },
+ {
+  "lang": "en",
+  "name": "C no feasible case (Qallow 0.010)",
+  "before": {
+   "disabled": false,
+   "eligible": "true",
+   "gate": "",
+   "gateFix": false
+  },
+  "after": {
+   "optout": "No feasible screening case was found within the declared physical bounds and discrete screening domain. Dominant constraints observed: peak-outflow limit, maximum-water-level limit, drain-down residual limit. Consider pond area, weir width, or opening area only with engineering basis; do not relax Q",
+   "step1": "Step 1 | Computation status Blocked No feasible solution",
+   "step3": "Step 3 | Next step Blocked: no feasible solution within the declared range. Dominant limits: peak-outflow limit, maximum-level limit, drain-down residual limit. Adjust the corresponding variable only on an engineering basis, or complete the S(H) data; do not relax Qallow or Hallow arbitrarily. Go to fix: peak-outflow limit Go to fix: maximum-level limit Go to fix: drain-down residual limit",
+   "fix": 6
+  },
+  "errs": []
+ },
+ {
+  "lang": "en",
+  "name": "D research outlet (weir + opening)",
+  "before": {
+   "disabled": false,
+   "eligible": "false",
+   "gate": "此出口型式不適用正式受限設計篩選；請使用單一被動堰流或單一矩形開口。 前往修正",
+   "gateFix": true
+  },
+  "after": {
+   "optout": "Screening was not run. Use exactly one passive weir or one rectangular opening, complete the four free-discharge checks, and enter both traceability records.",
+   "step1": "Step 1 | Computation status Check Not yet run",
+   "step3": "Step 3 | Next step Blocked: Outlet type eligible for formal screening; This outlet type is outside the 176-case validated scope; constrained screening stays locked. Go to fix: Outlet type eligible for formal screening",
+   "fix": 2
+  },
+  "errs": []
+ },
+ {
+  "lang": "zh",
+  "name": "A eligible",
+  "before": {
+   "disabled": false,
+   "eligible": "true",
+   "gate": "",
+   "gateFix": false
+  },
+  "after": {
+   "optout": "選定可行受限篩選案例——已完成路由 系統先完成完整可見網格搜尋，再進行 2 輪局部細化；上方圖形已依此選定篩選案例重新路由。 所有已篩選出口尺寸均未停留於宣告邊界。 篩選項目 結果 工程判讀 出口組合 僅被動堰流——可正式篩選 僅列出的出口構造啟用。 池面積 A 460 m² 於宣告的 20 m² 網格中選得。 堰寬 b 0.53 m 已篩選 事件新增滯洪量 ΔSmax 92.0 m³ 相對於初始蓄水量 S0 的最大新增蓄水。 Te + Td 排空殘留 0.07 / 1.00% 事件新增蓄水殘留必須符合宣告的排空約束。 出流尖峰／容許值 0.0798 / 0.0800 m³/s 符合出流尖峰限",
+   "step1": "步驟 1｜計算狀態 通過 受限篩選完成",
+   "step3": "步驟 3｜下一步 目前結果符合已宣告條件；仍須完成最終工程設計驗證。",
+   "fix": 0
+  },
+  "errs": []
+ },
+ {
+  "lang": "zh",
+  "name": "B missing free-discharge evidence",
+  "before": {
+   "disabled": false,
+   "eligible": "false",
+   "gate": "正式受限篩選尚未就緒：缺少自由出流邊界確認。 前往修正",
+   "gateFix": true
+  },
+  "after": {
+   "optout": "尚未執行受限篩選。請僅使用單一被動堰流或單一矩形開口，完成自由出流四項檢核，並填寫兩項可追溯紀錄。",
+   "step1": "步驟 1｜計算狀態 注意 尚未執行",
+   "step3": "步驟 3｜下一步 阻擋：自由出流四項佐證；缺少：自由出流邊界確認（已確認自由出流邊界）、尾水位佐證、回水／管摩阻佐證、淹沒佐證、操作控制佐證。 前往修正：自由出流四項佐證",
+   "fix": 2
+  },
+  "errs": []
+ },
+ {
+  "lang": "zh",
+  "name": "C no feasible case (Qallow 0.010)",
+  "before": {
+   "disabled": false,
+   "eligible": "true",
+   "gate": "",
+   "gateFix": false
+  },
+  "after": {
+   "optout": "阻擋：在宣告的物理邊界與離散篩選範圍內找不到可行篩選案例。主導限制：出流尖峰限制、最高水位限制、排空殘留限制。請僅依工程依據調整池面積、堰寬或開口面積；不得任意放寬 Qallow 或 Hallow。",
+   "step1": "步驟 1｜計算狀態 阻擋 無可行解",
+   "step3": "步驟 3｜下一步 阻擋：在目前宣告範圍內無可行解。主導限制：出流尖峰限制、最高水位限制、排空殘留限制。請依工程依據調整對應變數，或補足 S(H) 資料；不得任意放寬 Qallow 或 Hallow。 前往修正：出流尖峰限制 前往修正：最高水位限制 前往修正：排空殘留限制",
+   "fix": 6
+  },
+  "errs": []
+ },
+ {
+  "lang": "zh",
+  "name": "D research outlet (weir + opening)",
+  "before": {
+   "disabled": false,
+   "eligible": "false",
+   "gate": "此出口型式不適用正式受限設計篩選；請使用單一被動堰流或單一矩形開口。 前往修正",
+   "gateFix": true
+  },
+  "after": {
+   "optout": "尚未執行受限篩選。請僅使用單一被動堰流或單一矩形開口，完成自由出流四項檢核，並填寫兩項可追溯紀錄。",
+   "step1": "步驟 1｜計算狀態 注意 尚未執行",
+   "step3": "步驟 3｜下一步 阻擋：出口型式適用正式篩選；此出口型式不在 176 組驗證範圍內，受限篩選維持鎖定。 前往修正：出口型式適用正式篩選",
+   "fix": 2
+  },
+  "errs": []
+ }
+]
