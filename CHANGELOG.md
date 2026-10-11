@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.0.2 (2026-10-11)
+
+Rename only. No change to the routing core, screening, optimization or any routed value.
+
+- The software is renamed from "Software I" to PondGate in the interface (`dist/`), README, CITATION.cff and Zenodo metadata.
+- Interface references to a planned "Software II" are replaced by neutral wording ("future extensions"; multi-pond systems "are outside the scope of PondGate").
+- Benchmark data files and audit scripts keep their original names (`software_i_*`) so that archived results stay traceable.
+
+Checks: see `audit/rename_v1_0_2/`.
+
 ## v1.0.1 (2026-10-11)
 
 Display-only correction. No change to the routing core, screening, optimization or any routed value.

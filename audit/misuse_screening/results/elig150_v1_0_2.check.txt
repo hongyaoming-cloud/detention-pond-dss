@@ -1,0 +1,3 @@
+cases 150
+outcomes {('eligible', 'rejected/other'): 46, ('eligible', 'no-feasible'): 90, ('eligible', 'feasible'): 14}
+no violations
