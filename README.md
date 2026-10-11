@@ -1,5 +1,7 @@
 # Software I: detention-pond routing decision-support system
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23296722.svg)](https://doi.org/10.5281/zenodo.23296722)
+
 Software I is a browser-based, event-scale routing system for **one detention pond with a known inflow hydrograph**.
 It integrates the level-pool (storage-continuity) equation with a fixed-step fourth-order Runge–Kutta (RK4) scheme,
 keeps a reproducible record of every run, and turns a routed curve into a design statement only when the statement
@@ -67,7 +69,10 @@ Experiments* (Version 1.0). Zenodo. https://doi.org/10.5281/zenodo.22673729
 
 ## Citation
 
-See `CITATION.cff`. A software DOI will be added here when the release is archived on Zenodo.
+Hong, Y.-M. (2026). *Software I: detention-pond routing decision-support system* (Version 1.0.0). Zenodo.
+https://doi.org/10.5281/zenodo.23296722
+
+The concept DOI https://doi.org/10.5281/zenodo.23296721 always resolves to the latest version. See also `CITATION.cff`.
 
 ## Licence
 

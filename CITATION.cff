@@ -5,6 +5,7 @@ title: "Software I: detention-pond routing decision-support system"
 version: "1.0.0"
 date-released: "2026-10-11"
 license: MIT
+doi: "10.5281/zenodo.23296722"
 repository-code: "https://github.com/hongyaoming-cloud/detention-pond-dss"
 authors:
   - family-names: Hong
