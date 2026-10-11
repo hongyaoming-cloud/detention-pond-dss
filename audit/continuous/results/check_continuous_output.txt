@@ -1,0 +1,10 @@
+cases 104 (randomized 100 + targeted 4 )
+eligible (oracle) 42
+stats {'requests reaching handler': 104}
+feasible request wall time ms: n=5 min=19908 median=22443 max=25545
+outcomes:
+   ('forced', 'ineligible', 'rejected(not run)') 62
+   ('normal', 'eligible', 'feasible') 5
+   ('normal', 'eligible', 'no-feasible') 37
+   ('normal', 'ineligible', 'no action (button disabled)') 62
+no violations

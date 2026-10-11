@@ -1,0 +1,11 @@
+cases 104 result events compared 42 (kind, mode, limits, A, b, Ao, Hmax, Qmax, residual; exact equality)
+feasibility/selected-design/button differences: 0
+cases whose gate text changed (display only): 23 [0, 3, 9, 10, 17, 18, 20, 29, 35, 39, 45, 55, 56, 66, 75, 81, 84, 94, 95, 96, 100, 101, 102]
+9 OLD 連續模式已就緒：將以同一權威 RK4 搜尋 A＋b。 | 此出口型式不適用進階連續最佳化；請改回單一被動堰流或單一矩形開口，鎖定不會解除。 前往修正 | fix True
+9 NEW 連續模式已鎖定：已選用隨水位變動係數表；連續模式僅適用固定係數 | 已選用隨水位變動係數表；進階連續最佳化僅適用固定係數；請將係數模式改為固定係數，鎖定不會解除。 前往修正 | fix True
+100 OLD Continuous mode locked: four free-discharge checks are incomplete |  | fix False
+100 NEW Continuous mode locked: free-discharge boundary confirmation is not ticked | Free-discharge boundary confirmation is not ticked Go to fix | fix True
+101 OLD 連續模式已鎖定：未完成四項自由出流檢核 |  | fix False
+101 NEW 連續模式已鎖定：未勾選「已確認自由出流邊界」 | 未勾選「已確認自由出流邊界」 前往修正 | fix True
+102 OLD Continuous mode ready: A + b will be searched with the authoritative RK4 router. | This outlet configuration is not eligible for continuous optimization ; use one passive weir or one rectangular opening. The lock remains in effect. Go to fix | fix True
+102 NEW Continuous mode locked: water-level-dependent coefficient table is selected; continuous mode requires a fixed coefficient | A water-level-dependent coefficient table is selected; continuous optimization requires a fixed coefficient; set the coefficient mode to Fixed coefficient. The lock remains in effect. Go to fix | fix True

@@ -1,0 +1,31 @@
+{
+  "scipy": "1.17.1",
+  "numpy": "2.4.6",
+  "python": "3.11.15",
+  "rtol": 1e-10,
+  "atol": 1e-12,
+  "segments_restarted_at_Qin_nodes": 1918,
+  "runs": {
+    "scipy_DOP853_table": {
+      "vin_exact": 1.2891228624999997,
+      "vout_exact": 1.2695401246472582,
+      "s_end": 0.01958273785273493,
+      "residual_exact": 6.630113125183357e-15,
+      "nfev": 67691
+    },
+    "scipy_LSODA_table": {
+      "vin_exact": 1.2891228624999997,
+      "vout_exact": 1.2695401095274181,
+      "s_end": 0.01958273783996697,
+      "residual_exact": 1.51326146370645e-08,
+      "nfev": 38979
+    },
+    "scipy_DOP853_analytic": {
+      "vin_exact": 1.2891228624999997,
+      "vout_exact": 1.2695372709483266,
+      "s_end": 0.019585591551666864,
+      "residual_exact": 6.300515664747763e-15,
+      "nfev": 64076
+    }
+  }
+}
