@@ -1,0 +1,28 @@
+{
+  "case": "E-W1 A-005",
+  "source_files": {
+    "qin_raw.csv": "4eabf850a0d402150e5838ef28c47ea2ea512e27b204c52b0bc00c492370adf8",
+    "hec_hms_storage_discharge.csv": "d305a0b11a46e7d60701bbc2949d87af1e4c79746239f1462cac63b2fa5d2273",
+    "hec_hms_elevation_storage.csv": "ba7f18592b671f6d4b811390b6d3e2722b40472ad6ba8187380580b2ce21b754",
+    "case_metadata.json": "28a0ee311e14ab715e5ed346374e97e7856bbc9f3ad07150ecbc4b82a0bc95ef"
+  },
+  "scale_factor": 240,
+  "original_step_s": 0.25,
+  "hec_hms_step_min": 1,
+  "original_last_observed_inflow_s": 977.25,
+  "post_record_inflow_assumption": "zero after 977.25 s",
+  "comparison_window_s": [
+    0,
+    977.25
+  ],
+  "full_output_window_s": [
+    0,
+    1078.25
+  ],
+  "inflow_volume_m3": 1.2891228625,
+  "inflow_volume_grid_m3": 1.2891228625,
+  "inflow_volume_equivalent_m3": 1.2891228625,
+  "rating_rows": 161,
+  "inflow_rows": 4314,
+  "status": "INPUT_PREPARED_NO_HEC_HMS_RUN"
+}

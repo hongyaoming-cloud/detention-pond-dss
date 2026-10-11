@@ -2,7 +2,7 @@
 (() => {
   const work=document.querySelector('.module-workspace'); if(!work)return;
   const zh=()=>document.documentElement.lang==='zh-Hant', pages=new Map(),host=document.createElement('div'),tabs=document.createElement('nav');
-  host.id='workspacePageHost';tabs.id='workspacePageTabs';tabs.setAttribute('aria-label','Software I pages');
+  host.id='workspacePageHost';tabs.id='workspacePageTabs';tabs.setAttribute('aria-label','PondGate pages');
   ['route','screen','evidence','learn'].forEach(id=>{const page=document.createElement('section');page.className='workspace-page';page.dataset.page=id;pages.set(id,page);host.appendChild(page);});work.insertBefore(host,work.firstChild);
   const move=(id,page)=>{const el=document.getElementById(id);if(el)pages.get(page).appendChild(el);};
   ['userGuide','mod-inflow','mod-storage','mod-outlet','mod-routing'].forEach(id=>move(id,'route'));const contract=work.querySelector('.principle-contract');if(contract)pages.get('route').insertBefore(contract,pages.get('route').firstChild);

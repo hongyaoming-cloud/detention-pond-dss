@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "PondGate: detention-pond routing decision-support system"
+version: "1.0.2"
+date-released: "2026-10-11"
+license: MIT
+doi: "10.5281/zenodo.23296721"
+repository-code: "https://github.com/hongyaoming-cloud/detention-pond-dss"
+authors:
+  - family-names: Hong
+    given-names: Yao-Ming
+    affiliation: "Department of Natural Resources and Environmental Studies, and Carbon Neutrality Research Center, National Dong Hwa University, Hualien 974301, Taiwan"
+keywords:
+  - detention pond
+  - level-pool routing
+  - flood routing
+  - decision support
+  - RK4
+  - reproducibility
+references:
+  - type: dataset
+    title: "Raw Hydrographs, Numerical Reruns, and Identifiability Metrics for 176 Detention Pond Routing Experiments"
+    authors:
+      - family-names: Hong
+        given-names: Yao-Ming
+    year: 2026
+    publisher:
+      name: Zenodo
+    doi: "10.5281/zenodo.22673729"

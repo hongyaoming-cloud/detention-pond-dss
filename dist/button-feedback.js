@@ -31,7 +31,7 @@
     if(button.id==='run')return isZh()?'已收到「執行路由與評估」；正在以 RK4 計算，完成後請查看右側結果。':'Routing and evaluation received; RK4 calculation is running and the result will appear at right.';
     if(button.id==='optimize')return isZh()?'已收到「執行受限設計篩選」；正在檢查條件並計算候選案例。':'Constrained screening received; checking conditions and evaluating candidate cases.';
     if(button.id==='continuousGlobal')return isZh()?'已收到「連續數值搜尋」；正在進行受限範圍內的研究檢視。':'Continuous numerical search received; running the bounded research inspection.';
-    if(button.id==='lang')return isZh()?'正在切換展示語言。':'Switching the display language.';
+    if(button.id==='lang')return isZh()?'Switching the display language.':'正在切換展示語言。'; /* message in the target language */
     if(/下載|download/i.test(l))return isZh()?'已開始準備下載；請查看瀏覽器的下載項目。':'Preparing the download; check your browser downloads.';
     if(button.dataset.target)return isZh()?'已移至所選功能區塊。':'Moved to the selected function section.';
     return (isZh()?'已收到操作：':'Action received: ')+l+(isZh()?'。請查看畫面更新。':'. Check the updated panel.');
