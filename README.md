@@ -20,9 +20,12 @@ The interface is bilingual (English / Traditional Chinese).
 
 ## Version
 
-This repository state is **v1.0.0**, identical in application code to commit `334304c`
-(the version described in the accompanying software paper). Release additions are documentation, licence,
-citation metadata and the `audit/` folder; no file under `dist/` was changed.
+This repository state is **v1.0.1**. It differs from v1.0.0 (commit `334304c`, the version first described in the
+accompanying software paper) only in display text: the screening-gate guidance, the on-screen run-record panel,
+the E-W1 A-005 benchmark panel and one status message now appear in English in the English interface
+(`dist/module-shell.js`, `dist/button-feedback.js`, `dist/index.html`, `dist/language-final.js` and the new
+`dist/language-en-fallback.js`). The routing core, screening, optimization and all routed values are unchanged;
+the 176-case regression and every audit give the same results. See `CHANGELOG.md`.
 
 ## Running the software
 
@@ -52,8 +55,11 @@ A Python implementation of the same regression is in `regression_176.py` (NumPy)
 
 | Folder | Content |
 | --- | --- |
-| `audit/misuse_screening/` | Randomized misuse audit of constrained screening (300 random + 150 eligible sessions, headless Chromium via Playwright) and its invariant checker; results for `334304c`. |
+| `audit/misuse_screening/` | Randomized misuse audit of constrained screening (300 random + 150 eligible sessions, headless Chromium via Playwright) and its invariant checker; results for `334304c` and for v1.0.1 (`*_v1_0_1*`, identical outcomes, no violations). |
 | `audit/continuous/` | Misuse audit (104 sessions), scenario runs and an independent Node re-implementation of continuous optimization; results for `334304c`. |
+| `audit/cross_engine_groups/` | Four-group (A/B/C/D-005) cross-check against SciPy and a +1% Cd negative control. |
+| `audit/scenarios_334304c/`, `audit/scenarios_v1_0_1/` | Four scripted scenarios in English and Chinese on `334304c` and on v1.0.1 (same decisions). |
+| `audit/language_v1_0_1/` | English-interface scan for Chinese text: 0 hits on v1.0.1, 57 on `334304c` (negative control); Chinese round-trip check. |
 | `audit/cross_engine/` | E-W1 A-005 cross-engine comparison: Software I reference, SciPy `solve_ivp` (DOP853, LSODA), HEC-HMS 4.13 native outputs, EPA SWMM 5.2.4 values. |
 
 Browser audits: `npm install playwright`, start the static server on a port, then for example
@@ -69,10 +75,10 @@ Experiments* (Version 1.0). Zenodo. https://doi.org/10.5281/zenodo.22673729
 
 ## Citation
 
-Hong, Y.-M. (2026). *Software I: detention-pond routing decision-support system* (Version 1.0.0). Zenodo.
-https://doi.org/10.5281/zenodo.23296722
+Hong, Y.-M. (2026). *Software I: detention-pond routing decision-support system* (Version 1.0.1). Zenodo.
+https://doi.org/10.5281/zenodo.23296721
 
-The concept DOI https://doi.org/10.5281/zenodo.23296721 always resolves to the latest version. See also `CITATION.cff`.
+This concept DOI always resolves to the latest version; version 1.0.0 is https://doi.org/10.5281/zenodo.23296722. See also `CITATION.cff`.
 
 ## Licence
 

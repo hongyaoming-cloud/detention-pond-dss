@@ -1,0 +1,291 @@
+{
+ "lang": "en",
+ "errs": [],
+ "hits": [
+  {
+   "stage": "ineligible-gate",
+   "id": "buttonFeedback",
+   "text": "正在切換展示語言。"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "本次可追溯紀錄（唯讀）"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "模式與執行時間"
+  },
+  {
+   "stage": "routed",
+   "id": "runTraceability",
+   "text": "：探索性路由；執行時間：2026-10-11T12:45:03.683Z。"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "入流 Qin(t)"
+  },
+  {
+   "stage": "routed",
+   "id": "runTraceability",
+   "text": "：0.120 m³/s；輸入來源：未提供；單位：m³/s。 固定平面積 S(H)；面積 180.00 m²；輸入來源：未提供；單位：m、m³。 單一堰流 Qou"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "：0.00 m；輸入來源：未提供；單位：m。"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "自由出流四項佐證狀態"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "：已完成：尾水位；已完成：回水／管摩阻；已完成：淹沒；已完成：操作控制。佐證紀錄：record。"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "RK4 與時間步長設定"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "：RK4；時間步長 Δt = 2 s。"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "限制條件"
+  },
+  {
+   "stage": "continuous",
+   "id": "runTraceability",
+   "text": "：Hallow=1.000 m；Qallow=0.0800 m³/s；排空時間=24.00 h；殘量=1.00 %；限制依據：basis。"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "本輪結果摘要"
+  },
+  {
+   "stage": "routed",
+   "id": "runTraceability",
+   "text": "：最高水位 0.413 m；尖峰出流 0.0903 m³/s；排空殘留 未提供。"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "適用界線與工程責任警語"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "：僅適用於已宣告入流、S(H)、Qout(H) 與限制條件下的本輪計算；不等同現地工程驗證或最終工程設計，工程責任仍須由合格專業人員完成。"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "本區僅讀取目前工作階段的真實狀態；不寫入、儲存、下載、匯出、上傳或傳輸資料。"
+  },
+  {
+   "stage": "ew1",
+   "id": "mod-evaluation",
+   "text": "Fixed laboratory regression suite / 固定實驗回歸測試"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005Export",
+   "text": "E‑W1 A‑005 比較結果"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005Export",
+   "text": "僅顯示本輪真實 RK4 基準結果；輸入變更或任何新 run 後會立即失效。"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005Download",
+   "text": "匯出 DSS comparison_results CSV"
+  },
+  {
+   "stage": "blocked",
+   "id": "ew1A005ExportStatus",
+   "text": "尚無本輪 E‑W1 A‑005 結果。"
+  },
+  {
+   "stage": "screened",
+   "id": "runTraceability",
+   "text": "：探索性路由；執行時間：2026-10-11T12:45:19.225Z。"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "：0.120 m³/s；輸入來源：未提供；單位：m³/s。 固定平面積 S(H)；面積 460.00 m²；輸入來源：未提供；單位：m、m³。 單一堰流 Qou"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "：最高水位 0.200 m；尖峰出流 0.0798 m³/s；排空殘留 未提供。"
+  },
+  {
+   "stage": "continuous",
+   "id": "runTraceability",
+   "text": "：進階連續最佳化（A+b）；執行時間：2026-10-11T12:45:44.784Z。"
+  },
+  {
+   "stage": "continuous",
+   "id": "runTraceability",
+   "text": "：0.120 m³/s；輸入來源：未提供；單位：m³/s。 固定平面積 S(H)；面積 346.88 m²；輸入來源：未提供；單位：m、m³。 單一堰流 Qou"
+  },
+  {
+   "stage": "continuous",
+   "id": "runTraceability",
+   "text": "：最高水位 0.265 m；尖峰出流 0.0799 m³/s；排空殘留 0.07 %。"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "：探索性路由；執行時間：2026-10-11T12:46:03.749Z。"
+  },
+  {
+   "stage": "ew1",
+   "id": "runTraceability",
+   "text": "：Hallow=1.000 m；Qallow=0.0100 m³/s；排空時間=24.00 h；殘量=1.00 %；限制依據：basis。"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005ExportStatus",
+   "text": "時間步敏感度比較完成；既有 0.250 s 基準與三組個別 comparison_results CSV 均為本輪真實 RK4 結果。"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005Sensitivity",
+   "text": "時間步敏感度比較"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005Sensitivity",
+   "text": "此為數值時間步敏感度，不是工程設計驗證。"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "0.125 s 為本敏感度測試的數值參考，不代表解析真解。完整序列差異僅以共同輸出時刻的真實 RK4 結果計算；不插值、平滑或重新取樣。"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "筆數／實際步長"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "最大 h（m）／時間"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "最大 S（m³）／時間"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "最大 qout（m³/s）／時間"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "入流體積（m³）"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "出流體積（m³）"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "儲量變化（m³）"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "質量殘差（m³）"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "相對 0.125 s：完整序列與峰值差異"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "H：MAE 4.8061e-14；RMSE 7.8342e-14；最大絕對差 2.1405e-13"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "S：MAE 2.1848e-13；RMSE 3.5922e-13；最大絕對差 9.9698e-13"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "Qout：MAE 2.5814e-15；RMSE 4.4862e-15；最大絕對差 1.3397e-14"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "峰值 ΔH/ΔS/Δq=-3.9640e-8/-1.8483e-7/-2.4942e-9；Δt(H/S/q)=-0.125/-0.125/-0.125 s"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "最後補步：0.250 s（僅用於對齊事件終點）"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "H：MAE 1.5833e-6；RMSE 2.1049e-6；最大絕對差 5.8053e-6"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "S：MAE 7.0802e-6；RMSE 9.4427e-6；最大絕對差 2.6625e-5"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "Qout：MAE 7.5066e-8；RMSE 1.0352e-7；最大絕對差 3.5764e-7"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityTable",
+   "text": "峰值 ΔH/ΔS/Δq=-1.0129e-6/-4.7230e-6/-6.3735e-8；Δt(H/S/q)=-0.125/-0.125/-0.125 s"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityDownloads",
+   "text": "下載 comparison_results_dt0125.csv"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityDownloads",
+   "text": "下載 comparison_results_dt0250.csv"
+  },
+  {
+   "stage": "ew1",
+   "id": "ew1A005SensitivityDownloads",
+   "text": "下載 comparison_results_dt0500.csv"
+  },
+  {
+   "stage": "ew1",
+   "id": "buttonFeedback",
+   "text": "Action received: 時間步敏感度比較（0.125／0.250／0.500 s）. Check the updated panel."
+  }
+ ]
+}

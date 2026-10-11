@@ -1,6 +1,6 @@
 {
   "title": "Software I: detention-pond routing decision-support system",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "upload_type": "software",
   "description": "Browser-based, event-scale level-pool (RK4) routing system for a single detention pond with a known inflow hydrograph. It records every run, screens candidate outlet designs only inside a declared eligibility envelope, and blocks non-compliant design statements with a diagnostic and correction guidance. Includes the 176-case laboratory regression, misuse audit scripts and cross-engine (SciPy, HEC-HMS 4.13, EPA SWMM) comparison used in the accompanying software paper. Cross-engine agreement is numerical consistency only, not field calibration.",
   "creators": [
