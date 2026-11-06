@@ -1,6 +1,6 @@
 // Captures the annotated screenshots used by the user manual (dist/manual/<lang>/fNN_*.png).
 // Usage: serve dist/ on a port, then: node docs/capture_manual_figures.js <port>
-// Each figure marks the controls it explains with numbered red boxes; the numbers match the
+// Each figure marks the controls it explains with numbered red boxes (number inside the box, right end); the numbers match the
 // figure notes in dist/help-content.js. Screenshots only read the interface; nothing is computed here.
 const { chromium } = require('playwright'); const path = require('path'); const fs = require('fs');
 const port = process.argv[2] || 8765; const OUT = path.join(__dirname, '..', 'dist', 'manual');
@@ -60,7 +60,7 @@ const ev = (p, id, v) => p.evaluate(([id, v]) => { const e = document.getElement
           const x = r.left + (fixedBox ? 0 : scrollX), y = r.top + (fixedBox ? 0 : scrollY);
           const o = document.createElement('div'); o.style.cssText = `position:${fixedBox ? 'fixed' : 'absolute'};left:${x - 3}px;top:${y - 3}px;width:${r.width + 6}px;height:${r.height + 6}px;border:3px solid #d92d20;border-radius:6px;box-sizing:border-box`;
           layer.appendChild(o);
-          if (!seen[n]) { seen[n] = 1; const c = document.createElement('div'); c.textContent = n; c.style.cssText = `position:${fixedBox ? 'fixed' : 'absolute'};left:${Math.max(0, x - 16)}px;top:${Math.max(0, y - 16)}px;width:26px;height:26px;border-radius:50%;background:#d92d20;color:#fff;font:700 15px/26px sans-serif;text-align:center;box-shadow:0 0 0 2px #fff`; layer.appendChild(c); }
+          if (!seen[n]) { seen[n] = 1; const c = document.createElement('div'); c.textContent = n; c.style.cssText = `position:${fixedBox ? 'fixed' : 'absolute'};left:${el.tagName === 'BUTTON' || r.width < 170 ? x + r.width - 14 : x + r.width - 32}px;top:${el.tagName === 'BUTTON' || r.width < 170 ? y - 16 : r.height < 64 ? y + (r.height - 26) / 2 : y + 4}px;width:26px;height:26px;border-radius:50%;background:#d92d20;color:#fff;font:700 15px/26px sans-serif;text-align:center;box-shadow:0 0 0 2px #fff`; layer.appendChild(c); }
         }
         if (viewportOnly) return { x: 0, y: 0, width: innerWidth, height: innerHeight, viewport: true };
         const r = C.getBoundingClientRect();

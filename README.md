@@ -24,7 +24,7 @@ The interface is bilingual (English / Traditional Chinese). A user manual is in 
 This repository state is **v1.1.0**. It adds help for first-time users and changes no calculation:
 
 - v1.1.0: a "Start here" page with a live next-step hint, seven guided lessons with automatic step checks, an
-  illustrated in-app user manual (also downloadable, and in `docs/USER_MANUAL_*.md`), a glossary, "?" help beside key fields, a list of the fields that block the run
+  illustrated in-app user manual (also downloadable, and in `docs/USER_MANUAL_*.md`), a full step-by-step guide for students in Traditional Chinese (`docs/STUDENT_GUIDE_zh-Hant.md`), a glossary, "?" help beside key fields, a list of the fields that block the run
   button, and an offline rule-based assistant that reads the screen state only (no external AI service, no data
   leaves the browser). It also fixes display defects found in a novice walkthrough (`audit/help_v1_1_0/`).
 
@@ -74,7 +74,7 @@ A Python implementation of the same regression is in `regression_176.py` (NumPy)
 | `audit/scenarios_334304c/`, `audit/scenarios_v1_0_1/` | Four scripted scenarios in English and Chinese on `334304c` and on v1.0.1 (same decisions). |
 | `audit/rename_v1_0_2/` | Rename check for v1.0.2: no "Software I/II" left in either interface (15 hits on v1.0.1, negative control). |
 | `audit/language_v1_0_1/` | English-interface scan for Chinese text: 0 hits on v1.0.1, 57 on `334304c` (negative control); Chinese round-trip check. |
-| `audit/help_v1_1_0/` | v1.1.0 checks: novice walkthrough findings, 35 help-centre, language and unchanged-value checks (three negative controls on v1.0.2), and reruns of the misuse audit and scenarios. |
+| `audit/help_v1_1_0/` | v1.1.0 checks: novice walkthrough findings, 37 help-centre, 58 lesson and 18 student-guide checks, language and unchanged-value checks (three negative controls on v1.0.2), and reruns of the misuse audit and scenarios. |
 | `audit/cross_engine/` | E-W1 A-005 cross-engine comparison: PondGate reference, SciPy `solve_ivp` (DOP853, LSODA), HEC-HMS 4.13 native outputs, EPA SWMM 5.2.4 values. |
 
 Browser audits: `npm install playwright`, start the static server on a port, then for example

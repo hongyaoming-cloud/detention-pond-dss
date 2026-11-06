@@ -75,7 +75,7 @@
       steps: [
         { t: ['模組 1：「標準案例」選「長延時事件」。', 'Module 1: choose "Long-duration event" as the standard case.'], go: 'case', check: () => $('case')?.value === 'long', demo: () => setv('case', 'long') },
         { t: ['按「執行路由與評估」。', 'Press "Run routing and evaluation".'], go: 'run', check: s => count.run > s.run, demo: () => $('run').click() },
-        { t: ['在結果表找「近洪峰平坦指標 FPI95」，並閱讀結果下方的時間判讀提示。', 'Find "Near-peak flatness FPI95" in the table and read the timing note below the results.'], go: 'metricbody', confirm: true },
+        { t: ['在結果表找「尖峰比 RQ」、「近洪峰平坦指標 FPI95」、「中位體積時間」與「出流重心時間」。長延時事件的出流尖峰很平、持續很久（RQ 接近 1），單一峰值時刻不穩定，報告時要同時列出 FPI95 與體積時間指標。', 'In the table, find peak ratio RQ, near-peak flatness FPI95, median-volume time and outflow centroid time. A long event gives a flat, lasting outflow peak (RQ close to 1), so a single peak time is unstable; report FPI95 together with the volume-time measures.'], go: 'metricbody', confirm: true },
         { quiz: { q: ['洪峰很平時，報告時間應該優先使用？', 'For a flat peak, which timing should the report rely on?'], options: [['單一峰值時間', 'the single peak time'], ['體積時間指標（如中位體積時間、出流重心時間）', 'volume-time measures (median-volume time, outflow centroid time)'], ['不需要時間指標', 'no timing measure']], answer: 1, why: ['寬峰時峰值時間對微小擾動很敏感，體積時間指標較穩定。', 'With a broad peak, peak time is sensitive to small changes; volume-time measures are stable.'] } }
       ] },
     { id: 'L4', title: ['練習 4：找出並修正錯誤輸入', 'Lesson 4: find and fix a wrong input'], goal: ['看懂灰色按鈕與紅框，學會修正。', 'Understand the grey button and red outline, and fix the input.'],

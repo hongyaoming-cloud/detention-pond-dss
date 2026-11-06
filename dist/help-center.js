@@ -153,7 +153,7 @@
     { k: ['外部模型', '交叉', 'swmm', 'hec', 'hms', 'cross', 'external'], a: () => ({ manual: 'cross', actions: [['mod-evaluation', T('前往模組 6', 'Go to Module 6')]] }) },
     { k: ['隱私', '個資', '傳送', '上傳到', '資料會', '外流', '金鑰', 'privacy', 'private', 'send', 'leave', 'server', 'api key'], a: () => ({ text: T('不會傳送任何資料。計算、說明與本助理都在您的瀏覽器內執行；本助理是離線規則式說明，不連線到任何外部 AI 服務。', 'Nothing is sent. Calculation, help and this assistant all run in your browser. This assistant is an offline rule-based guide and does not connect to any external AI service.') }) },
     { k: ['設計核准', '直接用', '最終設計', '核定', '可以用來設計', 'final design', 'approve', 'approval', 'use for design'], a: () => ({ text: T('不行。PondGate 的結果只在您宣告的入流、S(H)、出口律與限制條件下成立，不是最終工程設計，也不是現地驗證。工程責任仍由合格專業人員承擔。', 'No. PondGate results hold only under your declared inflow, S(H), outlet law and limits. They are not a final engineering design or field validation. A qualified engineer remains responsible.') }) },
-    { k: ['手冊', '說明書', '說明', 'manual', 'guide', 'help'], a: () => ({ text: T('完整使用手冊在「開始這裡」頁的「使用手冊」分頁，也可以下載成 HTML 檔。', 'The full user manual is in the "User manual" tab of "Start here", and can be downloaded as an HTML file.'), actions: [['help:manual', T('打開使用手冊', 'Open the user manual')]] }) },
+    { k: ['手冊', '說明書', '說明', 'manual', 'guide', 'help'], a: () => ({ text: T('「開始這裡」頁有兩份手冊：「使用手冊（精簡版）」，以及給學生一步一步跟著做的「完整版操作手冊」（繁體中文，附截圖、檢核表與練習題），兩份都可以下載。', 'The "Start here" page has two manuals: the short user manual, and a full step-by-step guide for students (Traditional Chinese, with screenshots, a checklist and exercises). Both can be downloaded.'), actions: [['help:manual', T('打開使用手冊', 'Open the user manual')]] }) },
     { k: ['你好', '嗨', '哈囉', '您好', 'hello', 'hi', 'hey'], a: () => ({ text: T('您好，我是 PondGate 的離線說明助理。可以問我「下一步要做什麼」、「為什麼按鈕不能按」、「Qallow 是什麼」等問題。我不會改動您的輸入，也不做工程判斷。', 'Hello, I am the PondGate offline help assistant. Ask me "what should I do next", "why is the button grey" or "what is Qallow". I never change your inputs and I do not make engineering judgements.') }) }
   ];
   function answer(raw) {
@@ -185,6 +185,7 @@
   style.textContent = `
 #helpCenter{border:1px solid #c9dbe3;border-radius:8px;background:#fff;padding:16px 18px;color:#102a43}
 #helpCenter h2{margin:0 0 4px;font-size:22px;color:#0b3c5d}#helpCenter .hc-lead{margin:0 0 12px;color:#425b6d}
+.sg .sg-fig{margin:12px 0}.sg .sg-fig img{max-width:100%;border:1px solid #c9dbe3;border-radius:6px}.sg figcaption{font-weight:700}.sg .sg-notes{font-size:14px;margin:4px 0}.sg .sg-k{font-weight:700;color:#0b557d;margin:8px 0 2px}.sg h4{color:#0b3c5d;margin:18px 0 4px}.sg .sg-tw{overflow-x:auto}.sg .sg-t{border-collapse:collapse;font-size:14px}.sg .sg-t th,.sg .sg-t td{border:1px solid #c9dbe3;padding:3px 6px;text-align:left;vertical-align:top}.sg .sg-tt{font-weight:700;margin:10px 0 4px}.sg .sg-check{list-style:none;padding-left:0}
 .hc-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 14px;border-bottom:1px solid #d6e3e8;padding-bottom:8px}
 .hc-tab{border:1px solid #b9d4df;background:#f6fafc;color:#123247;border-radius:5px;padding:7px 12px;font:inherit;font-size:15px;cursor:pointer}
 .hc-tab.active{background:#0b557d;color:#fff;border-color:#0b557d}
@@ -242,7 +243,7 @@
       .map(g => `<div class="hc-term"><b>${esc(term(g))}</b>（${esc(zh() ? g.te : g.tz)}）<br>${esc(def(g))} <button type="button" class="hc-link" data-hc-go="${esc(g.target)}">${T('看欄位', 'Show field')}</button></div>`).join('') || `<p>${T('找不到符合的名詞。', 'No matching term.')}</p>`;
   }
   function renderPage() {
-    const tabs = [['start', T('開始這裡', 'Start here')], ['lessons', T('引導練習', 'Guided lessons')], ['manual', T('使用手冊', 'User manual')], ['glossary', T('名詞表', 'Glossary')], ['assistant', T('AI 助理', 'AI assistant')]];
+    const tabs = [['start', T('開始這裡', 'Start here')], ['lessons', T('引導練習', 'Guided lessons')], ['manual', T('使用手冊（精簡版）', 'User manual (short)')], ['guide', T('完整版操作手冊', 'Full step-by-step guide')], ['glossary', T('名詞表', 'Glossary')], ['assistant', T('AI 助理', 'AI assistant')]];
     const steps = T([['1 設定入流', '模組 1：尖峰流量與歷線形狀。', 'mod-inflow'], ['2 設定池與出口', '模組 2–3：池面積、池底高程、堰或開口。', 'mod-storage'], ['3 執行路由', '模組 4：按「執行路由與評估」。', 'run'], ['4 讀結果、存紀錄', '模組 6：先看質量平衡，再看尖峰與水位。', 'mod-evaluation'], ['5（選用）受限篩選', '模組 5：需有自由出流證據。', 'mod-optimization']],
       [['1 Set the inflow', 'Module 1: peak discharge and hydrograph shape.', 'mod-inflow'], ['2 Set pond and outlet', 'Modules 2–3: area, floor elevation, weir or opening.', 'mod-storage'], ['3 Run routing', 'Module 4: press "Run routing and evaluation".', 'run'], ['4 Read and record', 'Module 6: check mass balance first, then peaks and levels.', 'mod-evaluation'], ['5 (optional) Screening', 'Module 5: needs free-discharge evidence.', 'mod-optimization']]);
     const panes = {
@@ -252,6 +253,7 @@
         <div class="hc-actions"><button type="button" class="hc-btn primary" data-hc-go="run">${T('用示範案例跑一次', 'Run the demonstration case')}</button><button type="button" class="hc-btn" data-hc-go="help:lessons">${T('開始引導練習（7 個案例）', 'Start the guided lessons (7 cases)')}</button><button type="button" class="hc-btn" data-hc-go="teachingAssistant">${T('打開教學案例', 'Open the teaching case')}</button><button type="button" class="hc-btn" data-hc-open="drawer">${T('問 AI 助理', 'Ask the AI assistant')}</button></div>`,
       lessons: '<div id="hcLessons"></div>',
       manual: `<div class="hc-actions" style="margin-bottom:8px"><button type="button" class="hc-btn" id="hcManualDl">${T('下載使用手冊（HTML）', 'Download the user manual (HTML)')}</button></div><div class="hc-man">${manualHtml(false)}</div>`,
+      guide: guidePane(),
       glossary: `<div class="hc-gloss"><input id="hcGlossFilter" type="search" placeholder="${T('輸入名詞搜尋，例如 Qallow、自由出流', 'Search a term, for example Qallow or free discharge')}"><div id="hcGlossList">${glossHtml('')}</div></div>`,
       assistant: `<p>${T('AI 助理是<b>離線規則式</b>說明：它在您的瀏覽器內，依關鍵字與目前畫面狀態回答操作與名詞問題。它不連線到外部 AI 服務、不傳送資料、不改動輸入，也不做工程判斷。', 'The AI assistant is an <b>offline rule-based</b> guide. It runs in your browser and answers operation and terminology questions from keywords and the current screen state. It does not connect to an external AI service, send data, change inputs or make engineering judgements.')}</p><div class="hc-actions"><button type="button" class="hc-btn primary" data-hc-open="drawer">${T('打開 AI 助理', 'Open the AI assistant')}</button></div>`
     };
@@ -262,6 +264,7 @@
   box.addEventListener('click', e => {
     const t = e.target.closest('[data-hc-tab]'); if (t) { activeTab = t.dataset.hcTab; renderPage(); }
     if (e.target.closest('#hcManualDl')) downloadManual();
+    if (e.target.closest('#hcGuideDl')) downloadGuide();
   });
   box.addEventListener('input', e => { if (e.target.id === 'hcGlossFilter') $('hcGlossList').innerHTML = glossHtml(e.target.value); });
   async function downloadManual() {
@@ -271,6 +274,55 @@
     const html = `<!doctype html><html lang="${zh() ? 'zh-Hant' : 'en'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${T('PondGate 使用手冊 v1.1.0', 'PondGate user manual v1.1.0')}</title><style>body{font-family:system-ui,sans-serif;max-width:860px;margin:24px auto;padding:0 16px;line-height:1.6;color:#102a43}h1{color:#0b3c5d}h2{color:#0b557d;border-bottom:1px solid #d6e3e8;padding-bottom:4px;margin-top:28px}code{background:#eef4f7;padding:1px 4px}dt{font-weight:700;margin-top:8px}figure{margin:14px 0}figure img{max-width:100%;border:1px solid #c9dbe3;border-radius:6px}figcaption{font-weight:700;margin-top:4px}.hc-fig-notes{margin:4px 0 0;font-size:14px}</style></head><body><h1>${T('PondGate 使用手冊（v1.1.0）', 'PondGate user manual (v1.1.0)')}</h1>${manualHtml(true, srcMap)}<h2>${T('名詞表', 'Glossary')}</h2><dl>${G.map(g => `<dt>${esc(term(g))}</dt><dd>${esc(def(g))}</dd>`).join('')}</dl></body></html>`;
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
     a.download = zh() ? 'PondGate_user_manual_v1.1.0_zh-Hant.html' : 'PondGate_user_manual_v1.1.0_en.html'; document.body.appendChild(a); a.click(); a.remove();
+  }
+
+
+  /* ---------- full step-by-step guide (Traditional Chinese, generated by docs/build_student_guide.js) ---------- */
+  const SG = () => window.PondGateStudentGuide;
+  const gSrc = f => `manual/guide/${f}.png`;
+  function guideBody(forFile, srcMap) {
+    const g = SG(); if (!g) return '';
+    const fig = f => `<figure class="sg-fig"><img src="${(srcMap && srcMap[f.file]) || gSrc(f.file)}" loading="lazy" alt="${esc(f.cap)}"><figcaption>圖 ${esc(f.n)}：${esc(f.cap)}</figcaption><ol class="sg-notes">${f.notes.map(([n, l]) => `<li value="${n}">${esc(l)}</li>`).join('')}</ol></figure>`;
+    const table = (title, rows) => `<p class="sg-tt">${esc(title)}</p><div class="sg-tw"><table class="sg-t"><thead><tr>${rows[0].map(x => `<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>${rows.slice(1).map(r => `<tr>${r.map(x => `<td>${esc(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+    const step = s => `<section class="sg-step"><h4>步驟 ${esc(s.n)}　${esc(s.t)}</h4>
+      <p class="sg-k">操作</p><ol>${s.do.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
+      <p class="sg-k">畫面應該出現</p><ul>${s.see.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+      ${s.fix.length ? `<p class="sg-k">如果不一樣</p><ul>${s.fix.map(x => `<li>${esc(x)}</li>`).join('')}</ul>` : ''}
+      ${s.table ? table(s.tableTitle, s.table) : ''}${s.figs.map(fig).join('')}</section>`;
+    const chapter = c => `${c.intro.map(x => `<p>${esc(x)}</p>`).join('')}${c.extra.map(([h, x]) => `<h4>${esc(h)}</h4><p>${esc(x)}</p>`).join('')}${c.steps.map(step).join('')}`;
+    const apps = [
+      ['附錄 A　名詞速查', table('表 A-1　名詞速查', [['名詞', '說明'], ...g.glossary])],
+      ['附錄 B　錯誤訊息與處理', table('表 B-1　常見錯誤訊息', g.errors)],
+      ['附錄 C　學生操作檢核表', `<ul class="sg-check">${g.checklist.map(x => `<li>☐ ${esc(x)}</li>`).join('')}</ul>`],
+      ['附錄 D　課後練習與參考答案', `<ol>${g.exercises.map(([q, a]) => `<li>${esc(q)}<br><b>參考答案：</b>${esc(a)}</li>`).join('')}</ol>`]];
+    if (forFile) return `<nav class="sg-toc"><h2>目錄</h2><ul style="list-style:none;padding-left:0">${g.chapters.map(c => `<li>${esc(c.t)}</li>`).join('')}${apps.map(([h]) => `<li>${esc(h)}</li>`).join('')}</ul></nav>`
+      + g.chapters.map(c => `<h2>${esc(c.t)}</h2>${chapter(c)}`).join('') + apps.map(([h, b]) => `<h2>${esc(h)}</h2>${b}`).join('');
+    return g.chapters.map((c, i) => `<details${i === 0 ? ' open' : ''}><summary>${esc(c.t)}</summary><div>${chapter(c)}</div></details>`).join('')
+      + apps.map(([h, b]) => `<details><summary>${esc(h)}</summary><div>${b}</div></details>`).join('');
+  }
+  function guidePane() {
+    const g = SG(); if (!g) return `<p>${T('完整版操作手冊未載入。', 'The full guide did not load.')}</p>`;
+    const n = g.chapters.reduce((a, c) => a + c.steps.length, 0), f = g.chapters.reduce((a, c) => a + c.steps.reduce((b, s) => b + s.figs.length, 0), 0);
+    return `${zh() ? '' : '<p class="hc-lead">This full step-by-step guide is written in Traditional Chinese for students. The short manual is available in English.</p>'}
+      <p>給學生一步一步跟著做的完整手冊：${g.chapters.length} 章、${n} 個步驟、${f} 張標註截圖，附名詞速查、錯誤訊息表、操作檢核表與課後練習（含參考答案）。文中數值與截圖都是在本版軟體上實際操作取得。</p>
+      <div class="hc-actions" style="margin-bottom:8px"><button type="button" class="hc-btn primary" id="hcGuideDl">下載完整版操作手冊（HTML，可列印成 PDF）</button></div><div class="hc-man sg">${guideBody(false)}</div>`;
+  }
+  const GUIDE_CSS = 'body{font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;max-width:880px;margin:24px auto;padding:0 16px;line-height:1.7;color:#102a43}h1{color:#0b3c5d}h2{color:#0b557d;border-bottom:2px solid #d6e3e8;padding-bottom:4px;margin-top:32px;page-break-before:always}h2:first-of-type{page-break-before:auto}h4{color:#0b3c5d;margin:22px 0 6px}.sg-k{font-weight:700;margin:8px 0 2px;color:#0b557d}.sg-fig{margin:14px 0;page-break-inside:avoid}.sg-fig img{max-width:100%;border:1px solid #c9dbe3;border-radius:6px}figcaption{font-weight:700;margin-top:4px}.sg-notes{margin:4px 0 0;font-size:14px}.sg-tt{font-weight:700;margin:12px 0 4px}.sg-t{border-collapse:collapse;width:100%;font-size:14px}.sg-t th,.sg-t td{border:1px solid #c9dbe3;padding:4px 6px;text-align:left;vertical-align:top}.sg-t th{background:#eef4f7}.sg-check{list-style:none;padding-left:0}.sg-step{page-break-inside:auto}.cover{text-align:center;margin:80px 0 40px}.cover p{color:#486581}';
+  function guideDocument(srcMap) {
+    const g = SG();
+    return `<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(g.title)} v${esc(g.version)}</title><style>${GUIDE_CSS}</style></head><body><div class="cover"><h1>${esc(g.title)}</h1><p>PondGate v${esc(g.version)}｜滯洪池演算與受限設計篩選</p><p>本手冊的數值與截圖都是在本版軟體上逐步實際操作取得。</p></div>${guideBody(true, srcMap)}</body></html>`;
+  }
+  async function guideImages() {
+    const g = SG(), srcMap = {}; const files = g.chapters.flatMap(c => c.steps.flatMap(s => s.figs.map(f => f.file)));
+    await Promise.all(files.map(async file => { try { const r = await fetch(gSrc(file)); if (!r.ok) return; const blob = await r.blob();
+      srcMap[file] = await new Promise(res => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = () => res(null); fr.readAsDataURL(blob); }); } catch (e) { /* image left as a link */ } }));
+    return srcMap;
+  }
+  async function downloadGuide() {
+    if (!SG()) return;
+    const html = guideDocument(await guideImages());
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+    a.download = 'PondGate_student_guide_v1.1.0_zh-Hant.html'; document.body.appendChild(a); a.click(); a.remove();
   }
 
   /* ---------- floating assistant ---------- */
@@ -360,5 +412,5 @@
   $('run') && new MutationObserver(refresh).observe($('run'), { attributes: true, attributeFilter: ['disabled'] });
 
   renderPage(); renderDrawer(); refresh();
-  window.PondGateHelp = Object.freeze({ answer, nextStep, inputProblems, screeningLocks, screeningOutcome, open: openDrawer, close: closeDrawer, go, version: '1.1.0' });
+  window.PondGateHelp = Object.freeze({ guideDocument: async () => guideDocument(await guideImages()), answer, nextStep, inputProblems, screeningLocks, screeningOutcome, open: openDrawer, close: closeDrawer, go, version: '1.1.0' });
 })();

@@ -28,12 +28,35 @@
     ['進階連續最佳化｜全域候選搜尋＋局部精修', 'Advanced continuous optimization | global candidate search + local refinement'],
     ['正式模式可搜尋兩個連續變數：平面面積 A 與單一被動出口尺寸（堰寬 b 或孔口面積 Ao）。每個候選均重跑同一權威 RK4；不回寫原始工作輸入。結果不是已證明的連續全域最優解，亦非最終工程設計驗證。', 'The formal mode can search two continuous variables: plan area A and the size of one passive outlet (weir width b or opening area Ao). Every candidate reruns the same authoritative RK4 and never writes back to the working inputs. The result is not a proven continuous global optimum and is not final engineering-design validation.'],
     ['導覽驗收', 'Navigation acceptance'],
+    ['退水時間（分鐘）', 'Recession time (min)'],
+    ['豎井出流量 = min（豎井入口能力, 豎井管身能力）。兩種能力都以同一水位基準計算。', 'Riser discharge = min(crest-inlet capacity, shaft capacity). Both capacities are reported through the same water-level datum.'],
+    ['內政部國土管理署，下水道工程設施設計規範及解說', 'Taiwan National Land Management Agency, Sewerage System Design and Commentary'],
+    ['：孔口流量係數一般為 0.5–0.6；請依所引用的幾何條件與設計情境使用。', ': reports an orifice coefficient generally 0.5–0.6; use the cited geometry and design context.'],
+    ['桃園市雨水逕流抑制設施設計手冊', 'Taoyuan Rainwater Runoff-Control Facility Design Manual'],
+    ['：提供堰流與孔口設計公式；請確認實際出口幾何。', ': gives weir and orifice design formulations; confirm the exact outlet geometry.'],
+    ['美國墾務局（USBR）孔板試驗報告', 'U.S. Bureau of Reclamation, laboratory orifice-plate report'],
+    ['：依試驗孔板幾何提供實驗係數；只能套用幾何相符的試驗列。', ': gives experimentally obtained coefficients by tested plate geometry; transfer only matching test rows.'],
+    ['美國陸軍工兵團 HEC-HMS 出口構造文件', 'USACE HEC-HMS outlet documentation'],
+    ['：區分自由水面堰流與淹沒孔口流兩種流況。', ': distinguishes free-surface weir and submerged-orifice regimes.'],
+    ['部分充水的圓管以圓弓形開口計算；滿管以圓形孔口計算。尾水與管摩阻回水不在 PondGate 範圍內。', 'A partially wetted pipe is evaluated as a circular-segment opening; a full opening is evaluated as a circular orifice. Tailwater and pipe-friction backwater are outside PondGate.'],
+    ['宣告邊界／固定條件', 'Declared bound / fixed condition'],
+    ['在路由篩選中的角色', 'Role in the routing screen'],
+    ['定義固定面積蓄水幾何。這些是使用者宣告的搜尋邊界，不是通用的已驗證範圍。', 'Defines the constant-area storage geometry. These are user-declared search bounds, not a universal validated range.'],
+    ['請輸入最小值與最大值（預設 0.05–1.00 m）。堰頂高程 P 與係數 Cw 維持固定。', 'Enter a minimum and maximum (default 0.05–1.00 m). Crest elevation P and coefficient Cw remain fixed.'],
+    ['請輸入最小值與最大值（預設 0.005–0.050 m²）。開口底高程與 Cd 維持固定。', 'Enter a minimum and maximum (default 0.005–0.050 m²). Invert elevation and Cd remain fixed.'],
+    ['請輸入最小值與最大值（預設 0.15–0.60 m）。豎井堰頂／底高程與 Cr／Cd 維持固定。', 'Enter a minimum and maximum (default 0.15–0.60 m). Riser crest/invert and Cr/Cd remain fixed.'],
+    ['出流歷線有一段寬平的近洪峰區間。尖峰流量與體積可能穩定，但不可只用單一時點的尖峰時間作協調或預警判斷；請同時報告區間型與體積型時間指標。', 'The response contains a broad near-peak interval. Peak discharge and volume may be stable, but a single point peak time should not be used alone for coordination or warning decisions. Report interval-based and bulk timing evidence.'],
+    ['請檢核時間判讀', 'Verify timing interpretation'],
+    ['數值檢核未解決前請勿使用', 'Do not use until numerical checks are resolved'],
+    ['質量平衡殘差超過實際入流體積的 0.5%。請檢查輸入解析度、蓄水關係與求解設定。', 'The mass-balance residual exceeds 0.5% of actual inflow volume. Review input resolution, storage relation, and solver configuration.'],
+    ['蓄水量必須從 0 開始；水位高程可使用任何宣告的基準。兩欄都必須逐列遞增。表中最高的水位是硬性物理邊界，路由水位超過時會停止計算，不會外插。', 'Storage must begin at 0; water-level elevation may use any declared datum. Both columns must increase. The highest listed level is a hard physical boundary.'],
+    ['使用者自訂／現場試驗係數表', 'User-defined / field test table'],
     ['執行導覽驗收', 'Run navigation acceptance']
   ];
   const ALIAS = [['導覽驗收／Navigation acceptance', 'Navigation acceptance']];
   const toZh = new Map(), toEn = new Map();
   for (const [z, e] of PAIRS) { toZh.set(e, z); toEn.set(z, e); }
-  for (const [z, e] of ALIAS) toEn.set(z, e);
+  for (const [z, e] of ALIAS) { toEn.set(z, e); toZh.set(z, z.split('／')[0]); }
   const zh = () => document.documentElement.lang === 'zh-Hant';
   const skip = el => !el || el.closest('#helpCenter,#helpFab,#helpDrawer,script,style');
   let busy = false;
