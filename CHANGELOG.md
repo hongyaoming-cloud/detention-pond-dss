@@ -9,8 +9,13 @@ Added (`dist/help-content.js`, `dist/help-center.js`, `dist/language-v1-1.js`, `
 - "Start here | help and assistant" page (first item in the left menu) with a live next-step hint that follows the
   screen state: fix inputs, run, read results, screening locks, screening available, feasible result, or blocked.
   A blocked or infeasible state is always reported as blocked, never as pass.
-- In-app user manual in 12 sections (bilingual), downloadable as HTML; the same text is in `docs/USER_MANUAL_zh-Hant.md`
-  and `docs/USER_MANUAL_en.md` (built by `docs/build_manual.js`).
+- In-app user manual in 13 sections (bilingual) with 14 annotated screenshots per language (`dist/manual/`, made by
+  `docs/capture_manual_figures.js`), downloadable as one HTML file with the figures embedded; the same text and figures
+  are in `docs/USER_MANUAL_zh-Hant.md` and `docs/USER_MANUAL_en.md` (built by `docs/build_manual.js`).
+- Seven guided lessons (`dist/guided-lessons.js`): first routing run, own event and pond, long-duration timing, fixing a
+  wrong input, constrained screening, no feasible solution, research-inspection mode. Each step is checked from the
+  screen state; "Show me" performs the step; practice inputs are loaded with consent and the learner's own inputs are
+  restored at the end. Practice evidence is labelled as a teaching assumption.
 - Glossary of 36 terms with search, and "?" buttons beside 20 key fields.
 - A list of the fields that keep "Run routing and evaluation" disabled, with red outlines and jump links. The list
   mirrors the readiness rule in `module-shell.js` (200 random input sets: no mismatch).
@@ -25,11 +30,15 @@ Fixed (display only):
   the English interface (13, including button tooltips) are now shown in the interface language (`language-v1-1.js`); button tooltips follow a language switch (`button-feedback.js`).
 - The three-step check under Module 6 is labelled as the screening/optimization check; after plain routing it says
   screening has not been run instead of "Not yet run" (`diagnostic-guide.js`).
+- After a feasible screening run, the action message said "Screening was not completed" because the result text
+  contains "未停留" (`button-feedback.js`); blocked and feasible results now get their own messages.
+- The screening result is shown in Module 6 while the page stayed on Module 5; the page now moves to the result
+  (`help-center.js`).
 - The internal navigation acceptance test counted the three-step guide card as an extra module and reported a failure
   (also in v1.0.2); it now allows that card under Module 6 (`quality-assurance.js`).
 
 Checks: `release_check.sh` (176-case regression unchanged), misuse audit (300 + 150 sessions) and the four scripted
-scenarios with outcomes identical to v1.0.2, and `audit/help_v1_1_0/help_checks.js` (35 checks). See
+scenarios with outcomes identical to v1.0.2, and `audit/help_v1_1_0/help_checks.js` (37 checks) and `audit/help_v1_1_0/lessons_check.js` (58 checks). See
 `audit/help_v1_1_0/README.md`.
 
 ## v1.0.2 (2026-10-11)

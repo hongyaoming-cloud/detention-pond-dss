@@ -41,7 +41,7 @@
     const text=(status?.textContent||'').replace(/\s+/g,' ').trim();
     if(button.id==='run'&&text)return isZh()?'路由已完成；請閱讀結果表、圖形與工程判讀後再下載紀錄。':'Routing completed; review the table, charts, and engineering interpretation before downloading the record.';
     if((button.id==='optimize'||button.id==='continuousGlobal')&&text){
-      const failed=/cannot|could not|not run|stopped|未|不可|失敗/i.test(text);
+      const ok=/選定可行|Selected feasible|連續最佳化完成|Continuous optimization complete/i.test(text),blockedRes=/^(阻擋|Blocked|No feasible)/i.test(text);if(blockedRes)return (isZh()?'篩選結果：阻擋（無可行解）；請看模組 6 的診斷與修正導引。':'Screening result: blocked (no feasible solution); see the diagnosis and correction links in Module 6.');const failed=!ok&&/cannot|could not|not run|stopped|未完成|未就緒|尚未|不可|失敗/i.test(text);
       return failed?(isZh()?'篩選未完成：':'Screening was not completed: ')+text:(isZh()?'篩選已更新：':'Screening updated: ')+text;
     }
     return null;

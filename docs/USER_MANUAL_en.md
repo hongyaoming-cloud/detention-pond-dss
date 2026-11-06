@@ -20,6 +20,15 @@ PondGate computes how water level, storage and outflow change over time in **one
 - A **?** next to a field label explains that term.
 - Every button press shows a short message at the bottom right.
 
+![Screen layout](../dist/manual/en/f01_layout.png)
+
+**Figure 1. Screen layout**
+
+1. Left menu: start here, Modules 1–6, teaching
+2. Language switch
+3. Help / AI assistant button
+4. Work area
+
 ## 3. Five-minute start with the demonstration case
 
 1. The page opens with the "triangular event" demonstration case. It is not your engineering data.
@@ -28,7 +37,44 @@ PondGate computes how water level, storage and outflow change over time in **one
 4. To practise constrained screening, open "Teaching and internal tests", press "Load teaching example", then open "Constrained screening" and press "Run constrained design screening". The free-discharge ticks in the teaching case are practice assumptions only.
 5. Press "Download reproducible decision-support report" to keep the record.
 
-## 4. Module 1: inflow boundary
+![The "Start here" page](../dist/manual/en/f02_start.png)
+
+**Figure 2. The "Start here" page**
+
+1. Tabs: start here, guided lessons, manual, glossary, AI assistant
+2. Live next-step hint
+3. Five steps with "Go" buttons
+
+## 4. Guided lessons: learn the whole software in seven cases
+
+"Start here → Guided lessons" holds seven lessons from simple to advanced. A lesson panel appears at the top right; each step is ticked automatically when done, then press "Next".
+
+1. First routing run (demonstration case): run, read mass balance, download the report.
+2. Your own event and pond: change Qp, Tp, Tr, area and weir width, and compare.
+3. Long-duration event and peak timing: read FPI95 and use volume-time measures for a broad peak.
+4. Find and fix a wrong input: the grey button and the red outline.
+5. Constrained screening: complete free-discharge evidence and limits, get a feasible result, download the report.
+6. No feasible solution: read the dominant limit and the right response.
+7. Research-inspection mode: which outlet settings lock screening.
+
+"Take me there" jumps to the field; "Show me" does the step for you. A lesson loads practice inputs and can restore yours at the end. Free-discharge ticks and records in the lessons are teaching assumptions, not for real projects.
+
+![Guided-lesson panel](../dist/manual/en/f14_lesson.png)
+
+**Figure 3. Guided-lesson panel**
+
+1. Progress bar and current step
+2. "Take me there" and "Show me"
+3. Press "Next" when the step is done
+
+![Teaching case on the teaching page](../dist/manual/en/f11_teaching.png)
+
+**Figure 4. Teaching case on the teaching page**
+
+1. Load the teaching example that can run screening
+2. Restore the previous case
+
+## 5. Module 1: inflow boundary
 
 - **Standard case**: triangular event, long-duration event, or user-defined event.
 - **Peak inflow Qp** (m³/s) must be greater than 0.
@@ -36,13 +82,33 @@ PondGate computes how water level, storage and outflow change over time in **one
 - **Imported time–discharge pairs**: one pair per line, "time (min), discharge (m³/s)". The first time must be 0, times must increase, discharge must not be negative, and at least two lines are needed. Example: `0, 0`, `25, 0.10`, `50, 0.10`, `75, 0`.
 - Peak discharge alone is not enough. Duration and shape also change the detention volume needed.
 
-## 5. Module 2: storage–water-level state
+![Module 1, inflow boundary](../dist/manual/en/f03_inflow.png)
+
+**Figure 5. Module 1, inflow boundary**
+
+1. Standard case
+2. Peak inflow Qp
+3. Inflow shape
+4. Time to peak Tp (and recession time Tr)
+5. Total duration T (calculated)
+
+## 6. Module 2: storage–water-level state
 
 - **Constant plan area**: S(H) = A × (H − Hfloor). Only the plan area A (m², greater than 0) is needed.
 - **Stage–storage table**: import a .csv or .txt file with two columns: water level (m), then storage (m³). Routing does not extrapolate beyond the table.
 - **Floor elevation Hfloor**, **initial level H0** and every outlet elevation must use **one vertical datum**. For a relative datum set Hfloor = 0. H0 must not be below Hfloor.
 
-## 6. Module 3: outlet hydraulics and free-discharge evidence
+![Module 2, storage–water-level state](../dist/manual/en/f04_storage.png)
+
+**Figure 6. Module 2, storage–water-level state**
+
+1. Storage representation
+2. Floor elevation Hfloor
+3. Import a stage–storage table
+4. Plan area A
+5. Initial level H0
+
+## 7. Module 3: outlet hydraulics and free-discharge evidence
 
 - **Sharp-crested weir**: Qout = Cw × b × (H − P)^1.5. Enter weir coefficient Cw, width b and crest elevation P.
 - **Rectangular opening**: Qout = Cd × Ao × √(2g (H − invert)). Enter Cd, opening area Ao and invert elevation.
@@ -50,13 +116,30 @@ PondGate computes how water level, storage and outflow change over time in **one
 - Coefficients can use presets (for example Cw = 1.70, Cd = 0.62) or a field-calibrated value. Presets suit preliminary screening only.
 - **Free-discharge evidence**: before screening, tick "Free-discharge boundary confirmed" and the four checks (tailwater, backwater or pipe friction, submergence, operational control), and fill in the two records (free-discharge evidence and screening-limit source). **Tick them only when you hold drawings, a field inspection or a calculation that supports them.** The software does not verify these conditions for you.
 
-## 7. Module 4: run routing
+![Module 3, outlet hydraulics and free-discharge evidence](../dist/manual/en/f05_outlet.png)
+
+**Figure 7. Module 3, outlet hydraulics and free-discharge evidence**
+
+1. Enable the sharp-crested weir
+2. Weir coefficient Cw, width b, crest elevation
+3. Rectangular opening (with the weir it is research inspection)
+4. Free-discharge boundary and four checks
+5. Two evidence records
+
+## 8. Module 4: run routing
 
 - Press **"Run routing and evaluation"**. Results appear in Module 6.
 - A **grey** button means a field in Modules 1–3 is not valid. The fields to fix are listed above the button. Click one to jump to it (it is outlined in red).
 - Common causes: Qp of 0 or less, plan area of 0, weir width or coefficient of 0, an outlet below the floor, or no outlet enabled.
 
-## 8. Module 6: reading the results
+![Module 4: hint for a wrong input (Qp = −1)](../dist/manual/en/f06_run_invalid.png)
+
+**Figure 8. Module 4: hint for a wrong input (Qp = −1)**
+
+1. List of fields to fix; click to jump
+2. Run button is grey and disabled
+
+## 9. Module 6: reading the results
 
 - **Check the mass-balance residual ε/Vin first**. It should be close to 0 %. Above 0.5 % the software asks you to resolve the numerical problem first.
 - **Peak outflow Qp,o** and **peak ratio RQ**: a smaller RQ means more peak reduction.
@@ -65,35 +148,84 @@ PondGate computes how water level, storage and outflow change over time in **one
 - Charts: the left chart shows inflow and outflow; the right chart shows water level and storage. "Display duration" sets the time axis.
 - The three-step screening and optimization check covers Module 5 results only. After plain routing it shows "screening not yet run".
 
-## 9. Module 5: constrained screening and continuous optimization
+![Module 6, routing results](../dist/manual/en/f07_results.png)
+
+**Figure 9. Module 6, routing results**
+
+1. Inflow and routed outflow
+2. Water level and storage
+3. Result table (check the mass-balance residual first)
+4. Download the traceable report
+
+## 10. Module 5: constrained screening and continuous optimization
 
 - Opens only with a **single sharp-crested weir** or a **single rectangular opening**, fixed coefficients, the four free-discharge checks and both records complete.
 - Enter the **allowable peak outflow Qallow** (m³/s) and the **allowable water level Hallow** (m). Both should come from a regulation or design criterion and be cited in the screening-limit record.
 - **Maximum drain-down time Td** and **permitted residual percentage**: at Te + Td the event-added storage must not exceed that percentage of ΔSmax.
 - The **reference level Href** only defines the dimensionless groups ΠQ and ΠS. It is not automatically a safety limit.
 - Search bounds: enter minimum and maximum weir width b or opening area Ao. Each selected size is tested at five equally spaced values.
+- After "Run constrained design screening", the page switches to Module 6 to show the result.
 - **Continuous optimization** searches plan area A and one outlet size together between the area bounds. The result is not a proven global optimum.
 - **No feasible solution**: the software shows "Blocked", the dominant limit (peak outflow, maximum level or drain-down residual) and a "Go to fix" link. Change the pond area or outlet size on engineering grounds. **Do not relax Qallow or Hallow just to obtain a solution.**
 
-## 10. Reports and run records
+![Module 5, constrained-screening settings](../dist/manual/en/f08_screening.png)
+
+**Figure 10. Module 5, constrained-screening settings**
+
+1. Allowable outflow Qallow and level Hallow
+2. Outlet combination for screening
+3. Search bounds (minimum and maximum weir width)
+4. Run constrained design screening
+
+![Screening found a feasible case (shown in Module 6)](../dist/manual/en/f09_screen_ok.png)
+
+**Figure 11. Screening found a feasible case (shown in Module 6)**
+
+1. Selected area, weir width and limit checks
+
+![Blocking diagnosis with no feasible solution](../dist/manual/en/f10_blocked.png)
+
+**Figure 12. Blocking diagnosis with no feasible solution**
+
+1. Three-step check: status, conditions, next step
+2. Blocked items with "Go to fix"
+
+## 11. Reports and run records
 
 - The read-only run record in Module 6 lists the inputs, method, results and limits of this run.
 - "Download reproducible decision-support report" saves a text file with inputs, results and scope for your design file.
 - When inputs change, the old result becomes invalid. Run again.
 
-## 11. Comparing with HEC-HMS or SWMM
+## 12. Comparing with HEC-HMS or SWMM
 
 - In Module 6, "External model cross-check", choose the reference hydrograph (the current routing or public benchmark A-005 to D-005) and the external model.
 - Import the external model's **actual simulation result CSV**. The first row holds column names. Required columns are time_s (or time, t) and outflow_m3_s (or qout, qo). A full comparison also needs incremental_storage_m3 (or s, storage).
 - The external model must use the same inflow, initial level, S(H), Q(H), coefficients and timing. Agreement means numerical consistency only, not field validation.
 
-## 12. Frequently asked questions
+![External model cross-check](../dist/manual/en/f13_crossmodel.png)
+
+**Figure 13. External model cross-check**
+
+1. PondGate reference hydrograph
+2. External model (HEC-HMS / SWMM)
+3. Import the external result CSV
+4. Compare external results
+
+## 13. Frequently asked questions
 
 - **The button is grey?** Read the red list above the button and click a field name to fix it.
 - **Screening stays locked?** Check that only one outlet is enabled, coefficients are fixed, and the four free-discharge checks and both records are complete.
 - **"No feasible solution"?** This is a deliberate block: no design within the current bounds meets all limits. Adjust area or outlet size according to the dominant limit, or widen search bounds that you can justify.
 - **Is my data uploaded?** No. Calculation, help and the AI assistant all run in your browser and send nothing.
 - **Can a result serve as design approval?** No. It holds only under the declared conditions and needs a professional's judgement.
+
+![AI assistant (offline)](../dist/manual/en/f12_assistant.png)
+
+**Figure 14. AI assistant (offline)**
+
+1. Common-question buttons
+2. Type a question
+3. Answers and the next-step hint
 
 ## Glossary
 

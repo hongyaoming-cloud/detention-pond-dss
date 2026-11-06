@@ -147,7 +147,7 @@
     { k: ['匯入', 'csv', '上傳', '檔案', '格式', 'import', 'upload', 'file', 'format'], a: () => ({ text: T('三種匯入格式：', 'Three import formats:'), html: T('<ul><li><b>自訂入流</b>（模組 1，入流形狀選「匯入時間—流量對」）：每行「時間（分鐘）, 流量（m³/s）」，第一行時間為 0，時間遞增。</li><li><b>水位—蓄水量表</b>（模組 2）：.csv 或 .txt 兩欄，水位（m）、蓄水量（m³）。</li><li><b>外部模型結果</b>（模組 6）：第一列欄名，time_s 與 outflow_m3_s，完整比較另需 incremental_storage_m3。</li></ul>', '<ul><li><b>Custom inflow</b> (Module 1, shape "Imported time–discharge pairs"): one "time (min), discharge (m³/s)" pair per line, first time 0, times increasing.</li><li><b>Stage–storage table</b> (Module 2): .csv or .txt with two columns, level (m) and storage (m³).</li><li><b>External model result</b> (Module 6): column names in the first row, time_s and outflow_m3_s; a full comparison also needs incremental_storage_m3.</li></ul>') }) },
     { k: ['自由出流', '尾水', '回水', '淹沒', '操作控制', '四項', 'free discharge', 'free-discharge', 'tailwater', 'backwater', 'submerg'], a: () => ({ manual: 'm3', actions: [['freeDischarge', T('前往自由出流檢核', 'Go to the free-discharge checks')]] }) },
     { k: ['係數', 'coefficient'], a: () => ({ text: T('堰流係數 Cw 預設 1.70（臺灣實務矩形銳頂堰），開口流量係數 Cd 預設 0.62（標準銳緣孔口）。預設值只適合初步篩選；有現場校正值時請選「現場校正值」並填入。', 'The weir coefficient Cw preset is 1.70 (Taiwan practice, sharp-crested rectangular weir) and the opening coefficient Cd preset is 0.62 (standard sharp-edged orifice). Presets suit preliminary screening only; choose "Field-calibrated value" when you have one.'), actions: [['cw', T('前往係數欄位', 'Go to the coefficient fields')]] }) },
-    { k: ['練習', '教學', '範例', '示範', '例子', 'practice', 'practise', 'tutorial', 'example', 'demo', 'teaching'], a: () => ({ text: T('「教學與內部測試」頁有四步自學、三題自我檢核，以及可執行受限篩選的教學案例。教學案例中的自由出流勾選只是練習假設。', '"Teaching and internal tests" has a four-step guide, a three-question quiz and a teaching case that can run constrained screening. Its free-discharge ticks are practice assumptions only.'), actions: [['teachingAssistant', T('前往教學頁', 'Go to the teaching page')]] }) },
+    { k: ['練習', '教學', '範例', '示範', '例子', 'practice', 'practise', 'tutorial', 'example', 'demo', 'teaching'], a: () => ({ text: T('「開始這裡 → 引導練習」有 7 個一步一步的練習案例，每一步會自動檢查。「教學與內部測試」頁另有四步自學、三題自我檢核，以及可執行受限篩選的教學案例。教學案例中的自由出流勾選只是練習假設。', '"Start here → Guided lessons" has seven step-by-step lessons, each step checked automatically. "Teaching and internal tests" also has a four-step guide, a three-question quiz and a teaching case that can run constrained screening. Its free-discharge ticks are practice assumptions only.'), actions: [['help:lessons', T('開始引導練習', 'Start the guided lessons')], ['teachingAssistant', T('前往教學頁', 'Go to the teaching page')]] }) },
     { k: ['語言', '英文', '中文', 'language', 'english', 'chinese'], a: () => ({ text: T('右上角的「English／中文」按鈕切換介面語言，輸入值和結果不會改變。', 'The "English / 中文" button at the top right switches the language. Inputs and results do not change.') }) },
     { k: ['可信', '準確', '驗證', '正確嗎', '精度', 'accurate', 'accuracy', 'valid', 'trust', 'reliable', 'verified'], a: () => ({ text: T('每次發版都用 176 組實驗室案例（352 條原始歷線）重跑 RK4 核心，尖峰流量平均絕對相對誤差（MARE）A 2.924 %、B 2.954 %、C 4.104 %、D 4.649 %。與 HEC-HMS、SWMM 的比較只稱「數值一致性」，不是現地校準或普遍驗證；已驗證範圍僅限被動堰流與矩形開口。', 'Each release reruns 176 laboratory cases (352 raw series) through the RK4 core. Peak-discharge MARE: A 2.924 %, B 2.954 %, C 4.104 %, D 4.649 %. Comparison with HEC-HMS and SWMM is numerical consistency only, not field calibration or general validation. The tested envelope covers passive weirs and rectangular openings only.') }) },
     { k: ['外部模型', '交叉', 'swmm', 'hec', 'hms', 'cross', 'external'], a: () => ({ manual: 'cross', actions: [['mod-evaluation', T('前往模組 6', 'Go to Module 6')]] }) },
@@ -201,6 +201,7 @@
 .hc-btn{border:1px solid #0b557d;background:#fff;color:#0b557d;border-radius:5px;padding:5px 10px;font:inherit;font-size:14px;cursor:pointer}.hc-btn.primary{background:#0b557d;color:#fff}
 .hc-man details{border:1px solid #d6e3e8;border-radius:6px;margin:6px 0;background:#fff}.hc-man summary{cursor:pointer;padding:9px 12px;font-weight:700;color:#0b3c5d}
 .hc-man details>div{padding:0 14px 8px}
+.hc-fig{margin:12px 0}.hc-fig img{display:block;max-width:100%;height:auto;border:1px solid #c9dbe3;border-radius:6px}.hc-fig figcaption{font-weight:700;margin-top:5px;color:#0b3c5d}.hc-fig-notes{margin:4px 0 0;padding-left:22px;font-size:14px;color:#334e5e}
 .hc-gloss input{width:100%;box-sizing:border-box;padding:8px 10px;font:inherit;border:1px solid #9eb4c1;border-radius:5px;margin-bottom:8px}
 .hc-term{border-bottom:1px solid #e3ecf0;padding:7px 2px}
 #helpFab{position:fixed;left:16px;bottom:16px;z-index:9998;border:0;border-radius:24px;background:#0b557d;color:#fff;padding:11px 16px;font:inherit;font-size:15px;font-weight:700;box-shadow:0 4px 14px rgba(11,60,93,.3);cursor:pointer}
@@ -226,8 +227,14 @@
   const box = document.createElement('section'); box.id = 'helpCenter'; page?.appendChild(box);
   let activeTab = 'start';
   function showTab(id) { activeTab = id; renderPage(); box.scrollIntoView({ block: 'start' }); }
-  function manualHtml(forFile) {
-    return C.MANUAL.map(s => { const c = zh() ? s.zh : s.en; return forFile ? `<h2>${esc(c.t)}</h2>${c.h}` : `<details${s.id === 'quick' ? ' open' : ''}><summary>${esc(c.t)}</summary><div>${c.h}</div></details>`; }).join('');
+  const FIGS = (C.FIGURES || []).map((f, i) => ({ sec: f[0], file: f[1], cz: f[2], ce: f[3], notes: f[4], n: i + 1 }));
+  const figSrc = f => `manual/${zh() ? 'zh' : 'en'}/${f.file}.png`;
+  function figHtml(f, src) {
+    return `<figure class="hc-fig"><img src="${src || figSrc(f)}" loading="lazy" alt="${esc(T(f.cz, f.ce))}"><figcaption>${T('圖', 'Figure')} ${f.n}${T('：', '. ')}${esc(T(f.cz, f.ce))}</figcaption><ol class="hc-fig-notes">${f.notes.map(x => `<li>${esc(T(x[0], x[1]))}</li>`).join('')}</ol></figure>`;
+  }
+  function manualHtml(forFile, srcMap) {
+    return C.MANUAL.map(s => { const c = zh() ? s.zh : s.en; const figs = FIGS.filter(f => f.sec === s.id).map(f => figHtml(f, srcMap && srcMap[f.file])).join('');
+      return forFile ? `<h2>${esc(c.t)}</h2>${c.h}${figs}` : `<details${s.id === 'quick' ? ' open' : ''}><summary>${esc(c.t)}</summary><div>${c.h}${figs}</div></details>`; }).join('');
   }
   function glossHtml(filter) {
     const f = (filter || '').toLowerCase();
@@ -235,14 +242,15 @@
       .map(g => `<div class="hc-term"><b>${esc(term(g))}</b>（${esc(zh() ? g.te : g.tz)}）<br>${esc(def(g))} <button type="button" class="hc-link" data-hc-go="${esc(g.target)}">${T('看欄位', 'Show field')}</button></div>`).join('') || `<p>${T('找不到符合的名詞。', 'No matching term.')}</p>`;
   }
   function renderPage() {
-    const tabs = [['start', T('開始這裡', 'Start here')], ['manual', T('使用手冊', 'User manual')], ['glossary', T('名詞表', 'Glossary')], ['assistant', T('AI 助理', 'AI assistant')]];
+    const tabs = [['start', T('開始這裡', 'Start here')], ['lessons', T('引導練習', 'Guided lessons')], ['manual', T('使用手冊', 'User manual')], ['glossary', T('名詞表', 'Glossary')], ['assistant', T('AI 助理', 'AI assistant')]];
     const steps = T([['1 設定入流', '模組 1：尖峰流量與歷線形狀。', 'mod-inflow'], ['2 設定池與出口', '模組 2–3：池面積、池底高程、堰或開口。', 'mod-storage'], ['3 執行路由', '模組 4：按「執行路由與評估」。', 'run'], ['4 讀結果、存紀錄', '模組 6：先看質量平衡，再看尖峰與水位。', 'mod-evaluation'], ['5（選用）受限篩選', '模組 5：需有自由出流證據。', 'mod-optimization']],
       [['1 Set the inflow', 'Module 1: peak discharge and hydrograph shape.', 'mod-inflow'], ['2 Set pond and outlet', 'Modules 2–3: area, floor elevation, weir or opening.', 'mod-storage'], ['3 Run routing', 'Module 4: press "Run routing and evaluation".', 'run'], ['4 Read and record', 'Module 6: check mass balance first, then peaks and levels.', 'mod-evaluation'], ['5 (optional) Screening', 'Module 5: needs free-discharge evidence.', 'mod-optimization']]);
     const panes = {
       start: `<div id="hcNextPage">${nextHtml(nextStep())}</div>
         <div class="hc-steps">${steps.map(([a, b, t]) => `<div class="hc-step"><b>${esc(a)}</b>${esc(b)}<div class="hc-actions"><button type="button" class="hc-btn" data-hc-go="${t}">${T('前往', 'Go')}</button></div></div>`).join('')}</div>
         <p>${T('第一次使用？目前已載入示範案例，可以直接到模組 4 按執行，看看結果長什麼樣子。想練習完整流程（含受限篩選），請用教學案例。', 'First time? The demonstration case is loaded, so you can press run in Module 4 and see what a result looks like. To practise the full workflow including screening, use the teaching case.')}</p>
-        <div class="hc-actions"><button type="button" class="hc-btn primary" data-hc-go="run">${T('用示範案例跑一次', 'Run the demonstration case')}</button><button type="button" class="hc-btn" data-hc-go="teachingAssistant">${T('打開教學案例', 'Open the teaching case')}</button><button type="button" class="hc-btn" data-hc-open="drawer">${T('問 AI 助理', 'Ask the AI assistant')}</button></div>`,
+        <div class="hc-actions"><button type="button" class="hc-btn primary" data-hc-go="run">${T('用示範案例跑一次', 'Run the demonstration case')}</button><button type="button" class="hc-btn" data-hc-go="help:lessons">${T('開始引導練習（7 個案例）', 'Start the guided lessons (7 cases)')}</button><button type="button" class="hc-btn" data-hc-go="teachingAssistant">${T('打開教學案例', 'Open the teaching case')}</button><button type="button" class="hc-btn" data-hc-open="drawer">${T('問 AI 助理', 'Ask the AI assistant')}</button></div>`,
+      lessons: '<div id="hcLessons"></div>',
       manual: `<div class="hc-actions" style="margin-bottom:8px"><button type="button" class="hc-btn" id="hcManualDl">${T('下載使用手冊（HTML）', 'Download the user manual (HTML)')}</button></div><div class="hc-man">${manualHtml(false)}</div>`,
       glossary: `<div class="hc-gloss"><input id="hcGlossFilter" type="search" placeholder="${T('輸入名詞搜尋，例如 Qallow、自由出流', 'Search a term, for example Qallow or free discharge')}"><div id="hcGlossList">${glossHtml('')}</div></div>`,
       assistant: `<p>${T('AI 助理是<b>離線規則式</b>說明：它在您的瀏覽器內，依關鍵字與目前畫面狀態回答操作與名詞問題。它不連線到外部 AI 服務、不傳送資料、不改動輸入，也不做工程判斷。', 'The AI assistant is an <b>offline rule-based</b> guide. It runs in your browser and answers operation and terminology questions from keywords and the current screen state. It does not connect to an external AI service, send data, change inputs or make engineering judgements.')}</p><div class="hc-actions"><button type="button" class="hc-btn primary" data-hc-open="drawer">${T('打開 AI 助理', 'Open the AI assistant')}</button></div>`
@@ -256,8 +264,11 @@
     if (e.target.closest('#hcManualDl')) downloadManual();
   });
   box.addEventListener('input', e => { if (e.target.id === 'hcGlossFilter') $('hcGlossList').innerHTML = glossHtml(e.target.value); });
-  function downloadManual() {
-    const html = `<!doctype html><html lang="${zh() ? 'zh-Hant' : 'en'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${T('PondGate 使用手冊 v1.1.0', 'PondGate user manual v1.1.0')}</title><style>body{font-family:system-ui,sans-serif;max-width:860px;margin:24px auto;padding:0 16px;line-height:1.6;color:#102a43}h1{color:#0b3c5d}h2{color:#0b557d;border-bottom:1px solid #d6e3e8;padding-bottom:4px;margin-top:28px}code{background:#eef4f7;padding:1px 4px}dt{font-weight:700;margin-top:8px}</style></head><body><h1>${T('PondGate 使用手冊（v1.1.0）', 'PondGate user manual (v1.1.0)')}</h1>${manualHtml(true)}<h2>${T('名詞表', 'Glossary')}</h2><dl>${G.map(g => `<dt>${esc(term(g))}</dt><dd>${esc(def(g))}</dd>`).join('')}</dl></body></html>`;
+  async function downloadManual() {
+    const srcMap = {};
+    await Promise.all(FIGS.map(async f => { try { const r = await fetch(figSrc(f)); if (!r.ok) return; const blob = await r.blob();
+      srcMap[f.file] = await new Promise(res => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = () => res(null); fr.readAsDataURL(blob); }); } catch (e) { /* image left as a link */ } }));
+    const html = `<!doctype html><html lang="${zh() ? 'zh-Hant' : 'en'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${T('PondGate 使用手冊 v1.1.0', 'PondGate user manual v1.1.0')}</title><style>body{font-family:system-ui,sans-serif;max-width:860px;margin:24px auto;padding:0 16px;line-height:1.6;color:#102a43}h1{color:#0b3c5d}h2{color:#0b557d;border-bottom:1px solid #d6e3e8;padding-bottom:4px;margin-top:28px}code{background:#eef4f7;padding:1px 4px}dt{font-weight:700;margin-top:8px}figure{margin:14px 0}figure img{max-width:100%;border:1px solid #c9dbe3;border-radius:6px}figcaption{font-weight:700;margin-top:4px}.hc-fig-notes{margin:4px 0 0;font-size:14px}</style></head><body><h1>${T('PondGate 使用手冊（v1.1.0）', 'PondGate user manual (v1.1.0)')}</h1>${manualHtml(true, srcMap)}<h2>${T('名詞表', 'Glossary')}</h2><dl>${G.map(g => `<dt>${esc(term(g))}</dt><dd>${esc(def(g))}</dd>`).join('')}</dl></body></html>`;
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
     a.download = zh() ? 'PondGate_user_manual_v1.1.0_zh-Hant.html' : 'PondGate_user_manual_v1.1.0_en.html'; document.body.appendChild(a); a.click(); a.remove();
   }
@@ -335,6 +346,13 @@
     if (e.target.closest?.('#teachDemo,#teachRestore')) setTimeout(() => { userRan = true; changedAfterRun = false; refresh(); }, 400);
     setTimeout(refresh, 300); setTimeout(refresh, 1500);
   });
+  // After screening or continuous optimization, show the result: it is displayed in Module 6.
+  document.addEventListener('click', e => {
+    const btn = e.target.closest?.('#optimize,#continuousGlobal'); if (!btn || btn.disabled) return;
+    const o = $('optout'), before = o ? o.innerText : '', t0 = Date.now();
+    const poll = () => { const now = $('optout'); if (now && !now.classList.contains('hide') && now.innerText.trim() && now.innerText !== before) { window.DSSWorkspacePages?.openTarget('mod-evaluation'); setTimeout(() => now.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80); return; } if (Date.now() - t0 < 20000) setTimeout(poll, 250); };
+    setTimeout(poll, 250);
+  }, true);
   document.addEventListener('dss:continuous-result', refresh);
   document.addEventListener('dss:workspace-change', refresh);
   new MutationObserver(() => { renderPage(); renderDrawer(); refresh(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });

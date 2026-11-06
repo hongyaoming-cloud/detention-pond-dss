@@ -1,6 +1,6 @@
 {
  "version": "1.1.0",
- "total": 35,
+ "total": 37,
  "failed": 0,
  "results": [
   {
@@ -159,9 +159,19 @@
    "detail": "{\"terms\":[{\"id\":\"fpi\",\"tz\":\"近洪峰平坦指標 FPI95\",\"te\":\"Near-peak flatness FPI95\",\"dz\":\"出流在 95 % 尖峰以上的持續時間占"
   },
   {
-   "id": "P21 manual downloads as HTML with all sections",
+   "id": "P21 manual downloads as one HTML file with all 13 sections, glossary and 14 embedded figures",
    "ok": true,
    "detail": "PondGate_user_manual_v1.1.0_zh-Hant.html"
+  },
+  {
+   "id": "P28-zh all 14 manual figures load in the app",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "id": "P28-en all 14 manual figures load in the app",
+   "ok": true,
+   "detail": []
   },
   {
    "id": "P22 navigation acceptance passes (its check now allows the three-step guide card under Module 6)",

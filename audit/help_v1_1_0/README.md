@@ -18,9 +18,12 @@ and an infeasible case, the report download, both languages, and a 390 px phone 
 | F5 | English interface: loading the teaching example froze the page (also in v1.0.2). | `language-en-fallback.js` writes only when the text changes. |
 | F6 | English-only labels and notes in the Chinese interface (13) and Chinese texts in the English interface (13, including tooltips). | `language-v1-1.js`; tooltips follow a language switch. |
 | F7 | The internal navigation acceptance button reported a failure on a correct page (also in v1.0.2). | The check allows the three-step guide card under Module 6. |
-| F8 | No user manual inside the software. | 12-section bilingual manual, downloadable; same text in `docs/`. |
+| F8 | No user manual inside the software. | 13-section bilingual manual with 14 annotated screenshots per language, downloadable; same in `docs/`. |
+| F9 | After a feasible screening run the action message said "Screening was not completed". | Result-specific messages in `button-feedback.js`. |
+| F10 | The screening result appears in Module 6 while the page stays on Module 5, so nothing seems to happen. | The page moves to the result. |
+| F11 | No hands-on path from first run to screening. | Seven guided lessons with automatic step checks. |
 
-Not changed (outside the v1.1 scope, noted for later): on a phone the left menu shows the Module 5 tab stretched to the
+Not changed (outside the v1.1 scope, noted for later): in the "water level and storage" chart, level (m) and storage (m³) share one axis, so the level line lies near zero; on a phone the left menu shows the Module 5 tab stretched to the
 height of the Module 1–4 group; the empty "screening cases" chart frame is shown before any screening.
 
 ## Checks
@@ -31,7 +34,8 @@ height of the Module 1–4 group; the empty "screening cases" chart frame is sho
 | Misuse audit, 300 random sessions | `node audit/misuse_screening/audit.js PORT 300 results/run300_v1_1_0.json` + `check.py` | no violations; screening output text identical to v1.0.2 in 300/300 sessions |
 | Misuse audit, 150 eligible sessions | `... 150 results/elig150_v1_1_0.json eligible` + `check.py` | no violations; identical to v1.0.2 in 150/150 |
 | Four scripted scenarios, two languages | `node audit/scenarios_v1_0_2/scenarios.js PORT results/scenarios_v1_1_0.json` | status badges and decisions identical to v1.0.2; only the intended Step 1 wording differs |
-| Help centre, language and unchanged values | `node audit/help_v1_1_0/help_checks.js PORT_v1_1_0 PORT_v1_0_2 results/help_checks_v1_1_0.json` | 35/35 |
+| Help centre, language, manual figures and unchanged values | `node audit/help_v1_1_0/help_checks.js PORT_v1_1_0 PORT_v1_0_2 results/help_checks_v1_1_0.json` | 37/37 |
+| Guided lessons, both languages | `node audit/help_v1_1_0/lessons_check.js PORT results/lessons_check_v1_1_0.json` | 58/58 (all steps complete; no step completes early; wrong quiz answers rejected; own inputs restored) |
 
 `help_checks.js` compares routed tables, screening and blocking outputs with v1.0.2 in both languages, scans both
 interfaces for wrong-language text, follows the next-step hint through every state, checks the assistant, the

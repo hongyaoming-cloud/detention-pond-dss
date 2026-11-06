@@ -23,8 +23,8 @@ The interface is bilingual (English / Traditional Chinese). A user manual is in 
 
 This repository state is **v1.1.0**. It adds help for first-time users and changes no calculation:
 
-- v1.1.0: a "Start here" page with a live next-step hint, an in-app user manual (also downloadable, and in
-  `docs/USER_MANUAL_*.md`), a glossary, "?" help beside key fields, a list of the fields that block the run
+- v1.1.0: a "Start here" page with a live next-step hint, seven guided lessons with automatic step checks, an
+  illustrated in-app user manual (also downloadable, and in `docs/USER_MANUAL_*.md`), a glossary, "?" help beside key fields, a list of the fields that block the run
   button, and an offline rule-based assistant that reads the screen state only (no external AI service, no data
   leaves the browser). It also fixes display defects found in a novice walkthrough (`audit/help_v1_1_0/`).
 

@@ -106,8 +106,18 @@ async function languageLeaks(b, p0) {
   await p.evaluate(() => window.DSSWorkspacePages.openTarget('helpCenter'));
   await p.click('[data-hc-tab="manual"]');
   const [dl] = await Promise.all([p.waitForEvent('download', { timeout: 5000 }).catch(() => null), p.click('#hcManualDl')]);
-  let manualOk = false; if (dl) { const f = await dl.path(); const t = fs.readFileSync(f, 'utf8'); manualOk = /PondGate 使用手冊/.test(t) && (t.match(/<h2>/g) || []).length === 13 && /受限設計篩選/.test(t) && /<dt>/.test(t); }
-  rec('P21 manual downloads as HTML with all sections', manualOk, dl && dl.suggestedFilename());
+  let manualOk = false; if (dl) { const f = await dl.path(); const t = fs.readFileSync(f, 'utf8'); manualOk = /PondGate 使用手冊/.test(t) && (t.match(/<h2>/g) || []).length === 14 && (t.match(/src="data:image\/png/g) || []).length === 14 && /受限設計篩選/.test(t) && /<dt>/.test(t); }
+  rec('P21 manual downloads as one HTML file with all 13 sections, glossary and 14 embedded figures', manualOk, dl && dl.suggestedFilename());
+  // every manual figure loads in the app, in both languages
+  for (const lg of ['zh', 'en']) {
+    if ((await p.evaluate(() => document.documentElement.lang)) !== (lg === 'zh' ? 'zh-Hant' : 'en')) { await p.click('#lang'); await p.waitForTimeout(500); }
+    await p.evaluate(() => window.DSSWorkspacePages.openTarget('helpCenter')); await p.click('[data-hc-tab="manual"]');
+    await p.evaluate(() => document.querySelectorAll('.hc-man details').forEach(d => { d.open = true; }));
+    await p.evaluate(() => Promise.all([...document.querySelectorAll('.hc-fig img')].map(i => { i.loading = 'eager'; return i.complete ? 0 : new Promise(r => { i.onload = i.onerror = r; }); })));
+    const imgs = await p.evaluate(() => [...document.querySelectorAll('.hc-fig img')].map(i => [i.getAttribute('src'), i.naturalWidth]));
+    rec(`P28-${lg} all 14 manual figures load in the app`, imgs.length === 14 && imgs.every(x => x[1] > 0), imgs.filter(x => !x[1]));
+  }
+  if ((await p.evaluate(() => document.documentElement.lang)) !== 'zh-Hant') { await p.click('#lang'); await p.waitForTimeout(500); }
   // navigation acceptance (existing QA button) still passes
   await p.evaluate(() => window.DSSWorkspacePages.activate('learn')); await p.click('#qaNavigationRun'); await p.waitForTimeout(500);
   const nav = await p.evaluate(() => document.getElementById('qaNavigationReason').innerText);
