@@ -150,12 +150,12 @@
         const root = document.getElementById(id); if (!root) continue;
         walk(root, n => {
           if (n.nodeType === 3) {
-            if (en && CJK.test(n.nodeValue)) { if (!original.has(n)) original.set(n, n.nodeValue); n.nodeValue = toEnglish(n.nodeValue); }
+            if (en && CJK.test(n.nodeValue)) { const v = toEnglish(n.nodeValue); if (v !== n.nodeValue) { if (!original.has(n)) original.set(n, n.nodeValue); n.nodeValue = v; } }
             else if (!en && original.has(n)) { n.nodeValue = original.get(n); original.delete(n); }
           } else if (n.nodeType === 1) {
             for (const a of ['aria-label', 'title']) {
               const v = n.getAttribute(a), key = 'data-zh-' + a;
-              if (en && v && CJK.test(v)) { n.setAttribute(key, v); n.setAttribute(a, toEnglish(v)); }
+              if (en && v && CJK.test(v) && toEnglish(v) !== v) { n.setAttribute(key, v); n.setAttribute(a, toEnglish(v)); }
               else if (!en && n.hasAttribute(key)) { n.setAttribute(a, n.getAttribute(key)); n.removeAttribute(key); }
             }
           }

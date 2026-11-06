@@ -13,14 +13,23 @@ can be defended:
 * When no feasible design exists, or the inputs fall outside the envelope, the software **blocks** the result,
   shows a three-step diagnostic, and offers correction links. It never reports "pass" without a feasible design.
 
-The interface is bilingual (English / Traditional Chinese).
+The interface is bilingual (English / Traditional Chinese). A user manual is in `docs/` and inside the software
+("Start here").
 
 > Scope. Agreement with other engines reported here is **numerical consistency** under identical declared physics.
 > It is not field calibration and not a general validation of the method outside the tested laboratory envelope.
 
 ## Version
 
-This repository state is **v1.0.2**. It differs from v1.0.0 (commit `334304c`, the version first described in the
+This repository state is **v1.1.0**. It adds help for first-time users and changes no calculation:
+
+- v1.1.0: a "Start here" page with a live next-step hint, an in-app user manual (also downloadable, and in
+  `docs/USER_MANUAL_*.md`), a glossary, "?" help beside key fields, a list of the fields that block the run
+  button, and an offline rule-based assistant that reads the screen state only (no external AI service, no data
+  leaves the browser). It also fixes display defects found in a novice walkthrough (`audit/help_v1_1_0/`).
+
+The software paper reports results from v1.0.0 and v1.0.2; those releases remain available as tags.
+v1.0.2 differs from v1.0.0 (commit `334304c`, the version first described in the
 accompanying software paper) only in display text:
 
 - v1.0.1: the screening-gate guidance, the on-screen run-record panel, the E-W1 A-005 benchmark panel and one
@@ -65,6 +74,7 @@ A Python implementation of the same regression is in `regression_176.py` (NumPy)
 | `audit/scenarios_334304c/`, `audit/scenarios_v1_0_1/` | Four scripted scenarios in English and Chinese on `334304c` and on v1.0.1 (same decisions). |
 | `audit/rename_v1_0_2/` | Rename check for v1.0.2: no "Software I/II" left in either interface (15 hits on v1.0.1, negative control). |
 | `audit/language_v1_0_1/` | English-interface scan for Chinese text: 0 hits on v1.0.1, 57 on `334304c` (negative control); Chinese round-trip check. |
+| `audit/help_v1_1_0/` | v1.1.0 checks: novice walkthrough findings, 35 help-centre, language and unchanged-value checks (three negative controls on v1.0.2), and reruns of the misuse audit and scenarios. |
 | `audit/cross_engine/` | E-W1 A-005 cross-engine comparison: PondGate reference, SciPy `solve_ivp` (DOP853, LSODA), HEC-HMS 4.13 native outputs, EPA SWMM 5.2.4 values. |
 
 Browser audits: `npm install playwright`, start the static server on a port, then for example
@@ -80,7 +90,7 @@ Experiments* (Version 1.0). Zenodo. https://doi.org/10.5281/zenodo.22673729
 
 ## Citation
 
-Hong, Y.-M. (2026). *PondGate: detention-pond routing decision-support system* (Version 1.0.2). Zenodo.
+Hong, Y.-M. (2026). *PondGate: detention-pond routing decision-support system* (Version 1.1.0). Zenodo.
 https://doi.org/10.5281/zenodo.23296721
 
 This concept DOI always resolves to the latest version; version 1.0.0 is https://doi.org/10.5281/zenodo.23296722. See also `CITATION.cff`.

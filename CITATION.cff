@@ -2,8 +2,8 @@ cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 type: software
 title: "PondGate: detention-pond routing decision-support system"
-version: "1.0.2"
-date-released: "2026-10-11"
+version: "1.1.0"
+date-released: "2026-11-06"
 license: MIT
 doi: "10.5281/zenodo.23296721"
 repository-code: "https://github.com/hongyaoming-cloud/detention-pond-dss"

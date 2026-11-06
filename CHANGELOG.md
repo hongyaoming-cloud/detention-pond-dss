@@ -1,5 +1,37 @@
 # Changelog
 
+## v1.1.0 (2026-11-06)
+
+Help for first-time users and display fixes. No change to the routing core (`routing-core.js`, `physics-refinement.js`
+untouched), screening, optimization or any routed value.
+
+Added (`dist/help-content.js`, `dist/help-center.js`, `dist/language-v1-1.js`, `docs/`):
+- "Start here | help and assistant" page (first item in the left menu) with a live next-step hint that follows the
+  screen state: fix inputs, run, read results, screening locks, screening available, feasible result, or blocked.
+  A blocked or infeasible state is always reported as blocked, never as pass.
+- In-app user manual in 12 sections (bilingual), downloadable as HTML; the same text is in `docs/USER_MANUAL_zh-Hant.md`
+  and `docs/USER_MANUAL_en.md` (built by `docs/build_manual.js`).
+- Glossary of 36 terms with search, and "?" buttons beside 20 key fields.
+- A list of the fields that keep "Run routing and evaluation" disabled, with red outlines and jump links. The list
+  mirrors the readiness rule in `module-shell.js` (200 random input sets: no mismatch).
+- Offline rule-based assistant (bottom-left button). It answers operation and terminology questions from keywords and
+  the screen state, does not change inputs, makes no engineering judgement, and sends no data.
+
+Fixed (display only):
+- English interface froze when the teaching example was loaded (`language-en-fallback.js` rewrote untranslatable
+  text on every mutation); it now writes only when the text changes. The teaching example records follow the
+  interface language (`teaching-assistant.js`).
+- English-only texts in the Chinese interface (13 found by the scan, reference citations excluded) and Chinese texts in
+  the English interface (13, including button tooltips) are now shown in the interface language (`language-v1-1.js`); button tooltips follow a language switch (`button-feedback.js`).
+- The three-step check under Module 6 is labelled as the screening/optimization check; after plain routing it says
+  screening has not been run instead of "Not yet run" (`diagnostic-guide.js`).
+- The internal navigation acceptance test counted the three-step guide card as an extra module and reported a failure
+  (also in v1.0.2); it now allows that card under Module 6 (`quality-assurance.js`).
+
+Checks: `release_check.sh` (176-case regression unchanged), misuse audit (300 + 150 sessions) and the four scripted
+scenarios with outcomes identical to v1.0.2, and `audit/help_v1_1_0/help_checks.js` (35 checks). See
+`audit/help_v1_1_0/README.md`.
+
 ## v1.0.2 (2026-10-11)
 
 Rename only. No change to the routing core, screening, optimization or any routed value.

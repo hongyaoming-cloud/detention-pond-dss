@@ -57,8 +57,8 @@
     window.setTimeout(()=>{const message=done(button);if(message)say(message,/未完成|not completed/i.test(message)?'warn':'ok');},80);
   },true);
   const decorate=()=>document.querySelectorAll('button').forEach(button=>{
-    if(!button.dataset.feedbackReady){button.dataset.feedbackReady='true';button.title=(isZh()?'按下後將顯示操作提示： ':'After pressing, an action message appears: ')+label(button);}
+    const want=isZh()?'zh':'en';if(button.dataset.feedbackLang!==want&&(!button.dataset.feedbackReady||button.title.startsWith('按下後將顯示操作提示')||button.title.startsWith('After pressing, an action message appears'))){button.dataset.feedbackReady='true';button.dataset.feedbackLang=want;button.title=(isZh()?'按下後將顯示操作提示： ':'After pressing, an action message appears: ')+label(button);}
   });
-  new MutationObserver(decorate).observe(document.body,{childList:true,subtree:true});
+  new MutationObserver(decorate).observe(document.body,{childList:true,subtree:true});new MutationObserver(decorate).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
   decorate();
 })();
