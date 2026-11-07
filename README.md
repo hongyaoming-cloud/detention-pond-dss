@@ -21,8 +21,13 @@ The interface is bilingual (English / Traditional Chinese). A user manual is in 
 
 ## Version
 
-This repository state is **v1.1.0**. It adds help for first-time users and changes no calculation:
+This repository state is **v1.2.0**. It adds optional accounts and changes no calculation:
 
+- v1.2.0: optional accounts and saved projects when the app is served by the account server in `server/`
+  (Cloudflare Worker + D1). Organisations are kept apart; four roles (system administrator, organisation
+  administrator, engineer, viewer); projects can be shared read-only inside an organisation, moved to a trash and
+  restored; an activity log records actions but never passwords or project contents. Only inputs are stored and
+  results are recomputed. On a static copy `dist/account.js` does nothing. Checks are in `audit/accounts_v1_2_0/`.
 - v1.1.0: a "Start here" page with a live next-step hint, seven guided lessons with automatic step checks, an
   illustrated in-app user manual (also downloadable, and in `docs/USER_MANUAL_*.md`), a full step-by-step guide for students in Traditional Chinese (`docs/STUDENT_GUIDE_zh-Hant.md`), a glossary, "?" help beside key fields, a list of the fields that block the run
   button, and an offline rule-based assistant that reads the screen state only (no external AI service, no data
@@ -75,6 +80,7 @@ A Python implementation of the same regression is in `regression_176.py` (NumPy)
 | `audit/rename_v1_0_2/` | Rename check for v1.0.2: no "Software I/II" left in either interface (15 hits on v1.0.1, negative control). |
 | `audit/language_v1_0_1/` | English-interface scan for Chinese text: 0 hits on v1.0.1, 57 on `334304c` (negative control); Chinese round-trip check. |
 | `audit/help_v1_1_0/` | v1.1.0 checks: novice walkthrough findings, 37 help-centre, 58 lesson and 18 student-guide checks, language and unchanged-value checks (three negative controls on v1.0.2), and reruns of the misuse audit and scenarios. |
+| `audit/accounts_v1_2_0/` | v1.2.0 checks: 47 local account checks, 30 live API checks, novice (13) and beginner (11) walkthrough fix checks with negative controls. |
 | `audit/cross_engine/` | E-W1 A-005 cross-engine comparison: PondGate reference, SciPy `solve_ivp` (DOP853, LSODA), HEC-HMS 4.13 native outputs, EPA SWMM 5.2.4 values. |
 
 Browser audits: `npm install playwright`, start the static server on a port, then for example
@@ -90,7 +96,7 @@ Experiments* (Version 1.0). Zenodo. https://doi.org/10.5281/zenodo.22673729
 
 ## Citation
 
-Hong, Y.-M. (2026). *PondGate: detention-pond routing decision-support system* (Version 1.1.0). Zenodo.
+Hong, Y.-M. (2026). *PondGate: detention-pond routing decision-support system* (Version 1.2.0). Zenodo.
 https://doi.org/10.5281/zenodo.23296721
 
 This concept DOI always resolves to the latest version; version 1.0.0 is https://doi.org/10.5281/zenodo.23296722. See also `CITATION.cff`.

@@ -1,9 +1,11 @@
 # Changelog
 
-## v1.2.0 (draft, 2026-11-07)
+## v1.2.0 (2026-11-07)
 
 - Optional accounts and saved projects when served by the account server in `server/` (Cloudflare Worker + D1): organisations with four roles (system administrator, organisation administrator, engineer, viewer), sign-in, password change, project save/open/share, trash with restore, activity log, account management. Inputs only are stored; results are recomputed.
 - `dist/account.js` added; it does nothing on a static copy. Calculation files unchanged. Checks: `audit/accounts_v1_2_0/accounts_check.js` 47/47.
+- Fixes from a novice walkthrough of the account system (`audit/accounts_v1_2_0/NOVICE_WALKTHROUGH.md`, N1-N10): clearer messages for empty company names and accounts added before any company, kept form values, "unsaved changes" marker with a warning before sign-out, the page is cleared after sign-out, a forgotten-password hint, first steps and role help for administrators. Check: `novice_fix_check.js` 13/13.
+- Fixes from a beginner walkthrough of the whole app (B1-B6): the offline assistant answers questions about saving projects, forgotten passwords, the allowed outflow, pond size and screening locks; the "cannot run" message names the fields to fix. Check: `beginner_fix_check.js` 11/11 (with negative controls). Live API check `live_api_check.js` 30/30.
 
 ## v1.1.0 (2026-11-06)
 

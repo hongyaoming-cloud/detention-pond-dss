@@ -1,8 +1,8 @@
 {
   "title": "PondGate: detention-pond routing decision-support system",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "upload_type": "software",
-  "description": "Browser-based, event-scale level-pool (RK4) routing system for a single detention pond with a known inflow hydrograph. It records every run, screens candidate outlet designs only inside a declared eligibility envelope, and blocks non-compliant design statements with a diagnostic and correction guidance. Includes the 176-case laboratory regression, misuse audit scripts and cross-engine (SciPy, HEC-HMS 4.13, EPA SWMM) comparison used in the accompanying software paper. Cross-engine agreement is numerical consistency only, not field calibration.",
+  "description": "Browser-based, event-scale level-pool (RK4) routing system for a single detention pond with a known inflow hydrograph. It records every run, screens candidate outlet designs only inside a declared eligibility envelope, and blocks non-compliant design statements with a diagnostic and correction guidance. Includes the 176-case laboratory regression, misuse audit scripts and cross-engine (SciPy, HEC-HMS 4.13, EPA SWMM) comparison used in the accompanying software paper. Version 1.2.0 adds optional accounts and saved projects (organisations, four roles, sharing, trash, activity log) through a small Cloudflare Worker and D1 account server; the browser app still runs without it, and no calculation changed. Cross-engine agreement is numerical consistency only, not field calibration.",
   "creators": [
     {
       "name": "Hong, Yao-Ming",
