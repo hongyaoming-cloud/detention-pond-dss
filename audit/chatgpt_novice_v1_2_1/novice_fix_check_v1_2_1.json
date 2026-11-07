@@ -1,0 +1,73 @@
+{
+ "date": "2026-11-07T10:12:45.970Z",
+ "base": "http://127.0.0.1:8787",
+ "pass": 13,
+ "total": 13,
+ "results": [
+  {
+   "id": "N8 sign-in screen tells a user who forgot the password what to do",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "N6 account buttons no longer trigger the generic \"已收到操作\" toast",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "N10 system administrator sees the order of first steps and what each role can do",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "N2 with no company yet, the company list says to add one first",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "N2b adding an account before any company explains what to do",
+   "pass": true,
+   "detail": "請先在上方「公司」新增公司，再選所屬公司。"
+  },
+  {
+   "id": "N1 an empty company name gives a company message (was: \"請輸入專案名稱\")",
+   "pass": true,
+   "detail": "請輸入公司名稱。"
+  },
+  {
+   "id": "N2c the username typed before adding the company is kept",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "N5 an engineer with no project sees a clear \"存成專案\" button and a \"存檔／開啟專案\" button",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "N4 after a change the bar shows \"有未儲存的變更\"; right after saving it does not",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "N4b signing out with unsaved changes asks first",
+   "pass": true,
+   "detail": "目前專案有未儲存的變更，登出後會遺失。仍要登出嗎？"
+  },
+  {
+   "id": "N3 after sign-out the page is cleared: the next person does not see the previous inputs (before: 0.33)",
+   "pass": true,
+   "detail": "before=0.33, after=0.120"
+  },
+  {
+   "id": "N5b a viewer sees \"開啟分享的專案\" and no save button",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "N6n negative control: an ordinary app button still shows its action message",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}

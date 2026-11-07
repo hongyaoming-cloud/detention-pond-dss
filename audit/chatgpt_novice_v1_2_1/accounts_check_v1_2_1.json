@@ -1,0 +1,243 @@
+{
+ "date": "2026-11-07T10:14:05.976Z",
+ "base": "http://127.0.0.1:8787",
+ "pass": 47,
+ "total": 47,
+ "results": [
+  {
+   "id": "A1n wrong password and unknown user both give the same 401 (no account guessing)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A2 correct sign-in sets an HttpOnly, Secure, SameSite=Strict cookie; role is system administrator",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A3n before the first password change, everything else is refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A4n short new password and wrong old password are refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A4 password change works, issues a new session and ends the old one",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "O1 system administrator creates organisations; duplicate name refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "O2 system administrator creates an organisation administrator; missing organisation and bad username refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "O3 organisation administrator adds engineers and viewers to its own organisation only",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "O4n organisation administrator cannot create a system administrator",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "P1 engineer saves a private and a shared project; empty name and malformed state refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "P2 a colleague can open the shared project read-only",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "P2n a colleague cannot see the private project, nor overwrite or delete the shared one",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "P3 viewer sees only the shared project and cannot save",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "P4n another company cannot see either project, even the shared one",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "P5 organisation administrator lists and opens all company projects but cannot overwrite them; engineers cannot list them all",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "P6 delete moves a project to the trash (nothing erased) and the owner can restore it",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "P7n the system administrator cannot open company projects",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "P8n organisation administrator cannot manage another company; engineers have no admin access; only the system administrator adds companies",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "P9 changing a role takes effect at once (old session ends; viewer promoted to engineer can save)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "P9n nobody can change their own role or promote to system administrator",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "P10n disabling a company stops its users signing in and ends open sessions",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S1n cross-site and form posts are refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S2n no session or a made-up session is refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S3n five wrong passwords lock the account even for the right password",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S4 administrator reset unlocks the account and forces a password change",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S5n disabled user cannot sign in and the open session ends; nobody can disable themselves",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S6 re-enabled user signs in; sign-out ends the session",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "L1 activity log records sign-in, project save, trash, restore, role change, reset and disable",
+   "pass": true,
+   "detail": "login,user_enabled,user_disabled,password_reset,account_locked,project_created,role_changed,project_restored,project_trashed,password_changed,user_created"
+  },
+  {
+   "id": "L1n organisation administrator sees only its own company in the log; the system administrator sees all",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "L2n the log holds no passwords",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "S7 the database holds no password in plain text",
+   "pass": true,
+   "detail": "none found"
+  },
+  {
+   "id": "S7n negative control: the same search finds a known stored value (username)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U1 the server copy shows the sign-in screen first",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U1n wrong password shows a Chinese error and stays on the sign-in screen",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U2 system administrator: bar shows the role and Accounts, and no Projects button",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U3 system administrator adds a company and its administrator from the Accounts window",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U4 company administrator must change the password first, then sees the company name",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U5 company administrator adds an engineer and a viewer; no system-administrator choice offered",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U6 engineer saves a shared project; the bar shows it",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U7n a fresh page does not have the saved inputs (so the next check is meaningful)",
+   "pass": true,
+   "detail": "6 fields differ"
+  },
+  {
+   "id": "U7 opening the project restores every input field",
+   "pass": true,
+   "detail": "82 fields, 0 differ"
+  },
+  {
+   "id": "U8 running again gives the same results as before saving",
+   "pass": true,
+   "detail": "入流尖峰 Qp,i 0.2000 m³/s 宣告水力負荷|出流尖峰 Qp,o 0.0783 m³/s 所有啟用出口構造之總出流|尖峰比 RQ = Qp,o/Qp"
+  },
+  {
+   "id": "U9 engineer moves the project to the trash and restores it",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U10 viewer opens the shared project read-only: no save buttons",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U11 company administrator sees the activity log for the company only",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U12 static copy (Claude page) works as before: no sign-in, no bar",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "C1 calculation files identical to v1.1.0; only display files (index.html, account.js, button-feedback.js, help-center.js, help-content.js, beginner-check.js) changed in dist",
+   "pass": true,
+   "detail": "dist/account.js, dist/beginner-check.js, dist/button-feedback.js, dist/help-center.js, dist/help-content.js, dist/index.html"
+  }
+ ]
+}

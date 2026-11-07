@@ -1,0 +1,78 @@
+{
+ "date": "2026-11-07T10:01:22.503Z",
+ "port": "8765",
+ "pass": 14,
+ "total": 14,
+ "results": [
+  {
+   "id": "G1 after changing Qp (not run), switching language says routing was recomputed, and the result is current",
+   "pass": true,
+   "detail": "Language switched. Routing was recomputed once with the current inputs (same as pressing \""
+  },
+  {
+   "id": "G1b before switching, the beginner panel warned that the table is from the previous run",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "G1n negative control: switching back with no new change does not claim a recomputation",
+   "pass": true,
+   "detail": "正在切換展示語言。"
+  },
+  {
+   "id": "G2 Qp 0.4: Hmax and Qp,o are compared with Hallow and Qallow on the result page; \"exceeds\" is shown",
+   "pass": true,
+   "detail": "H 0.996 vs 1, Q 0.3379 vs 0.08"
+  },
+  {
+   "id": "G2n negative control: with Hallow 2.0 and Qallow 0.6 the same pond reads \"both within limits\" and says it is not a final design",
+   "pass": true,
+   "detail": "H 0.996 vs 2, Q 0.3379 vs 0.6"
+  },
+  {
+   "id": "G2c a peak outflow equal to Qallow (after rounding) is reported as \"check again\", not as a pass",
+   "pass": true,
+   "detail": "Q 0.0903 vs 0.0903"
+  },
+  {
+   "id": "G3 beside the screening button, the missing items are listed before pressing it",
+   "pass": true,
+   "detail": "4 items"
+  },
+  {
+   "id": "G3n negative control: when every condition is complete, the box says screening can run and lists nothing",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "G4 \"如何判斷這個滯洪池夠不夠用\" explains Hmax vs Hallow and Qp,o vs Qallow (was: \"sorry\")",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "G4b \"我的池子要多大\" still gets the pond-size answer (Module 5)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "G4n negative control: an off-topic question still gets the \"only PondGate\" answer",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "G5 the \"screening not run\" message is English after switching to English",
+   "pass": true,
+   "detail": "Screening was not run. Use exactly one p"
+  },
+  {
+   "id": "G5n negative control: back in Chinese the message is Chinese again",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "G6 \"How to start\" opens with a three-step quick start before the equations",
+   "pass": true,
+   "detail": "H2"
+  }
+ ]
+}
