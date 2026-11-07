@@ -142,6 +142,11 @@
         : { text: T('受限篩選的出口與證據條件都已滿足。到模組 5 按「執行受限設計篩選」。', 'The outlet and evidence conditions for screening are met. Press "Run constrained design screening" in Module 5.'), actions: [['optimize', T('前往模組 5', 'Go to Module 5')]] }; } },
     { k: ['下一步', '接下來', '卡住', '不知道', '怎麼開始', '如何開始', '從哪', '該做什麼', '要做什麼', 'next', 'stuck', 'start', 'begin', 'what now', 'what should', 'what do i do'], a: () => ({ next: nextStep() }) },
     { k: ['這是什麼', '能做什麼', '可以做什麼', '用途', '範圍', '功能', 'what is', 'what does', 'scope', 'purpose', 'can it'], a: () => ({ manual: 'scope' }) },
+    { k: ['夠不夠', '夠用', '不夠用', '合格', '可以採用', '能不能用', '可不可以用', '是否足夠', '符合限制', '超過限制', 'good enough', 'enough', 'adequate', 'acceptable'], a: () => { /* v1.2.1: answer "is my pond good enough?" from the result and the declared limits */
+      const v = window.PondGateBeginner?.verdict?.();
+      return { text: (window.PondGateBeginner ? window.PondGateBeginner.verdictText(v) + ' ' : '') + T('判斷方法：比較兩件事，最高水位 Hmax 不可超過容許水位 Hallow，出流尖峰 Qp,o 不可超過容許出流 Qallow。結果頁最上方的「新手判讀」會直接列出這兩項；限制值在模組 5 設定，應依法規或設計準則填寫。', 'How to judge: compare two things. The maximum level Hmax must not exceed the allowable level Hallow, and the peak outflow Qp,o must not exceed the allowable outflow Qallow. The "Beginner check" at the top of the result page lists both; the limits are set in Module 5 from regulations or design criteria.'),
+        actions: [['mod-evaluation', T('看新手判讀', 'See the beginner check')], ['mod-optimization', T('看限制值（模組 5）', 'See the limits (Module 5)')]] };
+    } },
     { k: ['結果', '怎麼看', '判讀', '解讀', '表格', '圖', 'result', 'interpret', 'read the', 'chart', 'table'], a: () => ({ manual: 'm6', actions: [['mod-evaluation', T('前往模組 6', 'Go to Module 6')]] }) },
     { k: ['存專案', '存成專案', '儲存專案', '存檔', '保存', '開啟專案', '打開專案', '我的專案', '分享', '登出', '改密碼', '變更密碼', '忘記密碼', '帳號', '回收區', 'save project', 'open project', 'share', 'sign out', 'log out', 'password', 'account', 'trash'], a: () => {
       if (!window.PondGateAccounts?.active()) return { text: T('這個版本沒有登入帳號，不能存專案。要留下紀錄，請在模組 6 按「下載可追溯決策支援報告」。', 'This copy has no sign-in, so projects cannot be saved. To keep a record, press "Download the traceable decision-support report" in Module 6.'), actions: [['download', T('前往下載報告', 'Go to the report download')]] };
@@ -397,6 +402,17 @@
   const inRouteInputs = el => el && el.closest && el.closest('#mod-inflow,#mod-storage,#mod-outlet');
   document.addEventListener('input', e => { if (inRouteInputs(e.target)) changedAfterRun = true; refresh(); }, true);
   document.addEventListener('change', e => { if (inRouteInputs(e.target)) changedAfterRun = true; refresh(); }, true);
+  /* v1.2.1: switching the language re-runs routing with the current inputs (physics-refinement setLanguage).
+     Say so, and mark the result as current, so a beginner is not surprised by updated numbers. */
+  let anyChange = false;
+  document.addEventListener('input', e => { if (inRouteInputs(e.target)) anyChange = true; }, true);
+  document.addEventListener('change', e => { if (inRouteInputs(e.target)) anyChange = true; }, true);
+  window.addEventListener('dss:language-changed', () => {
+    const rerun = (changedAfterRun || (!userRan && anyChange)) && !inputProblems().length && document.querySelectorAll('#metricbody tr').length > 0;
+    if (!rerun) return;
+    userRan = true; changedAfterRun = false;
+    setTimeout(() => { const f = $('buttonFeedback'); if (f) { f.textContent = T('已切換語言，並依目前的輸入重新計算了一次路由（等同按一次「執行路由與評估」）。結果頁的數值已更新。', 'Language switched. Routing was recomputed once with the current inputs (same as pressing "Run routing and evaluation"); the result page is updated.'); f.className = 'button-feedback show ok'; setTimeout(() => f.classList.remove('show'), 8000); } refresh(); }, 250);
+  });
   document.addEventListener('click', e => {
     if (e.target.closest?.('#run') && !$('run').disabled) { userRan = true; changedAfterRun = false; }
     if (e.target.closest?.('#teachDemo,#teachRestore')) setTimeout(() => { userRan = true; changedAfterRun = false; refresh(); }, 400);
@@ -416,5 +432,5 @@
   $('run') && new MutationObserver(refresh).observe($('run'), { attributes: true, attributeFilter: ['disabled'] });
 
   renderPage(); renderDrawer(); refresh();
-  window.PondGateHelp = Object.freeze({ guideDocument: async () => guideDocument(await guideImages()), answer, nextStep, inputProblems, screeningLocks, screeningOutcome, open: openDrawer, close: closeDrawer, go, version: '1.1.0' });
+  window.PondGateHelp = Object.freeze({ guideDocument: async () => guideDocument(await guideImages()), answer, nextStep, inputProblems, screeningLocks, screeningOutcome, runState: () => ({ userRan, changedAfterRun }), open: openDrawer, close: closeDrawer, go, version: '1.1.0' });
 })();
