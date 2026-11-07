@@ -1,0 +1,103 @@
+{
+ "when": "2026-11-07T13:54:17.317Z",
+ "pass": 16,
+ "total": 16,
+ "results": [
+  {
+   "id": "B1",
+   "pass": true,
+   "what": "Start here has a Book tab with the full table of contents",
+   "info": "26"
+  },
+  {
+   "id": "B2",
+   "pass": true,
+   "what": "every chapter opens with its own heading and every figure loads",
+   "info": "26 chapters; bad "
+  },
+  {
+   "id": "B3",
+   "pass": true,
+   "what": "PDF and example ZIP download links serve real files",
+   "info": "[{\"a\":\"#bkPdf\",\"status\":200,\"size\":2885205,\"magic\":\"%PDF\"},{\"a\":\"#bkZip\",\"status\":200,\"size\":14735,\"magic\":\"PK\\u0003\\u0004\"}]"
+  },
+  {
+   "id": "B4",
+   "pass": true,
+   "what": "single-page HTML holds every chapter with all figures embedded",
+   "info": "missing 0; images 15"
+  },
+  {
+   "id": "B5",
+   "pass": true,
+   "what": "assistant answers \"孔口公式怎麼算\" with the book section and the button opens it",
+   "info": "工具書：12.2 矩形開口 -> 12.2 矩形開口"
+  },
+  {
+   "id": "B5n",
+   "pass": true,
+   "what": "negative control: a meaningless question gets no book section",
+   "info": "[[\"help:manual\",\"打開使用手冊\"],[\"help:book\",\"打開工具書\"],[\"help:glossary\",\"打開名詞表\"]]"
+  },
+  {
+   "id": "B6",
+   "pass": true,
+   "what": "a term question returns the definition plus a book link",
+   "info": "[[\"book:bk-c14-s3\",\"工具書：13.3 步長敏感度\"],[\"book:bk-c14-s1\",\"工具書：13.1 原理\"]]"
+  },
+  {
+   "id": "B7",
+   "pass": true,
+   "what": "every Qp,o and Hmax of the Part II runs appears in the book text",
+   "info": "28 numbers; missing "
+  },
+  {
+   "id": "B7n",
+   "pass": true,
+   "what": "negative control: a wrong peak (0.0913) does not appear in the book",
+   "info": "0.0913"
+  },
+  {
+   "id": "B8",
+   "pass": true,
+   "what": "beginner check flags the 5.41 % drain-down residual of the 0.010 m² opening",
+   "info": "不夠用：至少一項超過您宣告的限制"
+  },
+  {
+   "id": "B8n",
+   "pass": true,
+   "what": "negative control: the weir case residual 0.03 % is shown as within the limit",
+   "info": "排空殘留（Te + Td）\t0.03 %\t容許 1.00 %\t未超過"
+  },
+  {
+   "id": "B9",
+   "pass": true,
+   "what": "after a blocked screening, the condition rows say screening ran with no feasible candidate",
+   "info": "步驟 1｜篩選計算狀態 阻擋 無可行解 步驟 2｜條件檢核 通過 出口型式適用正式篩選 單一被動出口，固定係數。 注意 最高水位 Hmax ≤ Hallow 受限篩選已執行，沒有任何候選同時符合限制（見步驟 3 的主導限制）；Hallow "
+  },
+  {
+   "id": "B9n",
+   "pass": true,
+   "what": "negative control: before screening, the rows still say screening has not run",
+   "info": "步驟 1｜篩選計算狀態 注意 尚未執行受限篩選或連續最佳化（一般路由結果請看上方結果表） 步驟 2｜條件檢核 通過 出口型式適用正式篩選 單一被動出口，固定係數"
+  },
+  {
+   "id": "B10n",
+   "pass": true,
+   "what": "negative control: v1.0.2 has no book tab or book search (the checks above can fail)",
+   "info": "{\"tab\":false,\"api\":false}"
+  },
+  {
+   "id": "B11",
+   "pass": true,
+   "what": "RK4 core files are byte-identical to v1.0.2",
+   "info": "routing-core, physics-refinement, module-shell"
+  },
+  {
+   "id": "B12",
+   "pass": true,
+   "what": "no page errors during the checks",
+   "info": ""
+  }
+ ]
+}

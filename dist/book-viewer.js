@@ -1,4 +1,4 @@
-/* PondGate v1.3.0 book viewer: reads window.PondGateBookData (dist/book-data.js),
+/* PondGate v1.3.1 book viewer: reads window.PondGateBookData (dist/book-data.js),
    shows the book inside "Start here → Book", searches it offline for the AI assistant,
    and builds the downloadable single-file HTML. Display only: it never changes an input
    or a computed value. */
@@ -19,7 +19,7 @@
 .bk-fig{margin:12px 0;text-align:center}.bk-fig img{max-width:100%;border:1px solid #d6e3e8;border-radius:4px}.bk-fig figcaption{font-size:13px;color:#425b6d;margin-top:4px}
 .bk-nav{display:flex;justify-content:space-between;gap:8px;margin-top:10px}.bk-search{width:100%;box-sizing:border-box;padding:6px 8px;border:1px solid #9fb3c1;border-radius:5px;font:inherit;margin-bottom:6px}
 .bk-hits{border:1px solid #d6e3e8;border-radius:6px;background:#fffbea;padding:6px 10px;margin-bottom:8px;font-size:14px}.bk-hits button{border:0;background:none;color:#0b557d;text-decoration:underline;cursor:pointer;font:inherit;padding:2px 0;text-align:left}
-.bk-dl{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 10px}@media(max-width:760px){.bk-wrap{display:block}.bk-toc{max-height:220px;margin-bottom:10px;position:static}}`;
+.bk-dl{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 6px}.bk-msg{min-height:1.2em;margin:0 0 10px;color:#0b557d;font-weight:600}@media(max-width:760px){.bk-wrap{display:block}.bk-toc{max-height:220px;margin-bottom:10px;position:static}}`;
   const st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st);
 
   /* ---------- offline search: whole-word hits for Latin terms, two-character hits for Chinese ---------- */
@@ -65,7 +65,8 @@
   function paneHtml() {
     return `${zh() ? '' : '<p class="hc-lead">The book is written in Traditional Chinese. The short user manual is available in English.</p>'}
       <p class="hc-lead">${esc(D.title)}（v${esc(D.version)}）。${T('第一部是使用手冊，第二部用範例一步一步教您完成滯洪池檢核。書中所有數字都由本版軟體實際執行，再用獨立程式驗算。', 'Part I is the user manual; Part II teaches detention-pond checking step by step with worked examples. Every number was produced by this version and recomputed independently.')}</p>
-      <div class="bk-dl"><a class="hc-btn primary" id="bkPdf" href="${esc(D.downloads.pdf)}" download>${T('下載 PDF', 'Download PDF')}</a><button type="button" class="hc-btn" id="bkHtml">${T('下載單一網頁版（HTML）', 'Download single-page HTML')}</button><a class="hc-btn" id="bkZip" href="${esc(D.downloads.zip)}" download>${T('下載範例資料（ZIP）', 'Download example data (ZIP)')}</a></div>
+      <div class="bk-dl"><a class="hc-btn primary" id="bkPdf" href="${esc(D.downloads.pdf)}" download>${T('下載 PDF', 'Download PDF')}</a><button type="button" class="hc-btn" id="bkHtml">${T('下載單一網頁版（HTML）', 'Download single-page HTML')}</button><a class="hc-btn" id="bkZip" href="${esc(D.downloads.zip)}" download>${T('下載範例資料（ZIP）', 'Download example data (ZIP)')}</a><button type="button" class="hc-btn" id="bkBase">${T('回到基本案例', 'Back to the base case')}</button></div>
+      <p class="bk-msg" id="bkMsg" role="status" aria-live="polite">${esc(msg)}</p>
       <div class="bk-wrap"><nav class="bk-toc" aria-label="${T('目錄', 'Contents')}">${tocHtml()}</nav><div class="bk-main">
       <input type="search" class="bk-search" id="bkSearch" placeholder="${T('在書中搜尋，例如：孔口公式、RK4、無可行解', 'Search the book, e.g. orifice, RK4, no feasible solution')}" value="${esc(query)}">
       <div id="bkHits">${hitsHtml()}</div><article class="bk-view" id="bkView">${chapterHtml()}</article></div></div>`;
@@ -101,11 +102,41 @@ ${CSS.replace(/\.bk-view /g, '')}@media print{a{color:inherit;text-decoration:no
     a.download = `PondGate_book_v${D.version}_zh-Hant.html`; document.body.appendChild(a); a.click(); a.remove();
   }
 
+  /* v1.3.1: visible feedback for downloads, and a one-click return to the base case of Part II. */
+  let msg = '';
+  function say(t) { msg = t; const m = document.getElementById('bkMsg'); if (m) m.textContent = t; }
+  const BASE_SCOPE = '#mod-inflow,#mod-storage,#mod-outlet,#mod-optimization';
+  const FIRST = ['case', 'shape', 'triMode', 'storageMode', 'coeffMode', 'optMode'];
+  let base = null;
+  function snapshot() {
+    const o = [];
+    document.querySelectorAll('input[id],select[id],textarea[id]').forEach(e => {
+      if (e.type === 'file' || e.type === 'button' || !e.closest(BASE_SCOPE)) return;
+      o.push([e.id, e.type === 'checkbox' || e.type === 'radio' ? !!e.checked : e.value]);
+    });
+    return o.sort((a, b) => (FIRST.indexOf(a[0]) + 1 || 99) - (FIRST.indexOf(b[0]) + 1 || 99));
+  }
+  function takeBase() { if (!base) { const s = snapshot(); if (s.length) base = s; } }
+  if (document.readyState === 'complete') setTimeout(takeBase, 600); else window.addEventListener('load', () => setTimeout(takeBase, 600));
+  function restoreBase() {
+    if (!base) { say(T('基本案例尚未記錄，請重新整理網頁。', 'The base case is not recorded yet; please reload the page.')); return false; }
+    for (const [id, v] of base) {
+      const e = document.getElementById(id); if (!e) continue;
+      if (typeof v === 'boolean') e.checked = v; else e.value = v;
+      e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+    say(T('已回到基本案例（A = 180 m²、堰寬 b = 0.20 m、三角形入流）。請到模組 4 按「執行路由與評估」。', 'Back to the base case (A = 180 m², weir b = 0.20 m, triangular inflow). Press "Run routing and evaluation" in Module 4.'));
+    return true;
+  }
+
   document.addEventListener('click', e => {
+    if (e.target.closest('#bkPdf')) say(T('已開始下載 PDF（約 3 MB）。請查看瀏覽器的下載清單；若沒有出現，請改用「下載單一網頁版」。', 'PDF download started. Check the browser download list; if nothing appears, use the single-page HTML.'));
+    if (e.target.closest('#bkZip')) say(T('已開始下載範例資料 ZIP。請查看瀏覽器的下載清單。', 'Example-data ZIP download started. Check the browser download list.'));
+    if (e.target.closest('#bkBase')) { if (window.confirm(T('要把所有輸入改回基本案例嗎？目前未儲存的修改會消失。', 'Reset every input to the base case? Unsaved changes will be lost.'))) restoreBase(); return; }
     const g = e.target.closest('[data-bk-go]'); if (g) { e.preventDefault(); query = ''; const h = document.getElementById('bkHits'); if (h) h.innerHTML = ''; const s = document.getElementById('bkSearch'); if (s) s.value = ''; open(g.dataset.bkGo); return; }
-    if (e.target.closest('#bkHtml')) downloadHtml();
+    if (e.target.closest('#bkHtml')) { say(T('正在產生單一網頁版，請稍候…', 'Building the single-page HTML, please wait…')); downloadHtml().then(() => say(T('已開始下載單一網頁版（HTML）。請查看瀏覽器的下載清單。', 'Single-page HTML download started. Check the browser download list.')), () => say(T('單一網頁版產生失敗，請改下載 PDF。', 'Could not build the HTML; please download the PDF.'))); }
   });
   document.addEventListener('input', e => { if (e.target.id === 'bkSearch') { query = e.target.value; const h = document.getElementById('bkHits'); if (h) h.innerHTML = hitsHtml(); } });
 
-  window.PondGateBook = Object.freeze({ version: D.version, title: D.title, paneHtml, open, search, snippet, documentHtml, chapters: () => D.chapters.map(c => ({ id: c.id, title: c.title })) });
+  window.PondGateBook = Object.freeze({ version: D.version, title: D.title, paneHtml, open, search, resetToBase: restoreBase, snippet, documentHtml, chapters: () => D.chapters.map(c => ({ id: c.id, title: c.title })) });
 })();

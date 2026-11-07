@@ -20,6 +20,6 @@ PondGate 計算一座滯洪池在已知入流歷線下的水位、蓄水量與�
 
 ### 版本與引用
 
-本書對應 PondGate v1.3.0。軟體原始碼公開於 GitHub（hongyaoming-cloud/detention-pond-dss），各版本的 Zenodo DOI 列在附錄 D。
+本書對應 PondGate v1.3.1。軟體原始碼公開於 GitHub（hongyaoming-cloud/detention-pond-dss），各版本的 Zenodo DOI 列在附錄 D。
 
 作者：洪耀明（Yao-Ming Hong），國立東華大學環境暨海洋學院自然資源與環境學系教授。
