@@ -7,7 +7,8 @@ Fixes from a ChatGPT (agent mode) novice test of v1.2.0 (`audit/chatgpt_novice_v
 - The items still missing for constrained screening are listed right below the screening button.
 - Switching the language says that routing was recomputed with the current inputs (this was already the behaviour, but it was silent).
 - Three-step quick start at the top of "How to start"; the "screening not run" message follows the language; the assistant answers "is my pond good enough?".
-- Checks: `gpt_fix_check.js` 14/14 with negative controls; accounts 47/47, novice 13/13, beginner 11/11, help 37/37, lessons 58/58, guide 18/18.
+- After a second ChatGPT run (4/5): the panel says how pond area and outlet size move the results and states its scope; missing screening items say what evidence to look for; the screening rows point to the Beginner check.
+- Checks: `gpt_fix_check.js` 18/18 with negative controls; accounts 47/47, novice 13/13, beginner 11/11, help 37/37, lessons 58/58, guide 18/18.
 
 ## v1.2.0 (2026-11-07)
 
