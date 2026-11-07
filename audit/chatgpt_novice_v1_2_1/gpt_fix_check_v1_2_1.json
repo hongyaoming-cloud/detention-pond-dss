@@ -1,9 +1,19 @@
 {
- "date": "2026-11-07T11:03:24.811Z",
+ "date": "2026-11-07T11:47:19.654Z",
  "port": "8765",
- "pass": 18,
- "total": 18,
+ "pass": 22,
+ "total": 22,
  "results": [
+  {
+   "id": "G10 after changing an input, a note beside the language button warns before switching that it recomputes",
+   "pass": true,
+   "detail": "提醒：輸入已改變，切換語言會依目前輸入重新計算一次。"
+  },
+  {
+   "id": "G10n negative control: right after a run (nothing changed) there is no such note",
+   "pass": true,
+   "detail": ""
+  },
   {
    "id": "G1 after changing Qp (not run), switching language says routing was recomputed, and the result is current",
    "pass": true,
@@ -85,6 +95,11 @@
    "detail": "Screening was not run. Use exactly one p"
   },
   {
+   "id": "G11 while screening has not run, the \"selected feasible screening case\" caption is not shown",
+   "pass": true,
+   "detail": ""
+  },
+  {
    "id": "G5n negative control: back in Chinese the message is Chinese again",
    "pass": true,
    "detail": ""
@@ -93,6 +108,11 @@
    "id": "G6 \"How to start\" opens with a three-step quick start before the equations",
    "pass": true,
    "detail": "H2"
+  },
+  {
+   "id": "G11n negative control: after a screening run on the teaching case, the caption is shown",
+   "pass": true,
+   "detail": "選定可行受限篩選案例——已完成路由系統先完成完整可見網格搜尋，再進行 2 輪局部細化；上方圖形已依此選定篩選案例重新路由"
   }
  ]
 }
