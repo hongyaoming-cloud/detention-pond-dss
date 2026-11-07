@@ -5,7 +5,7 @@
 // pipe tables, ![caption](path) figures, ```formula blocks and **bold**.
 const fs = require('fs'); const path = require('path');
 const DIR = __dirname; const ROOT = path.join(DIR, '..', '..');
-const VERSION = '1.3.0';
+const VERSION = '1.3.1';
 const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 const inline = s => esc(s).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>').replace(/`([^`]+)`/g, '<code>$1</code>');
 const plain = s => s.replace(/\*\*|`/g, '');

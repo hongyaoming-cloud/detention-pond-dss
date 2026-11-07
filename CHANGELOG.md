@@ -1,5 +1,15 @@
 # Changelog
 
+## v1.3.1 (draft, 2026-11-07)
+
+Fixes from a novice follow-along test of the book (ChatGPT agent mode, 3.5/5; every number matched). No calculation changed.
+- Ticking the free-outflow evidence boxes or filling the record fields no longer marks the routing result as out of date ("輸入已改變"); these fields do not change the routed numbers.
+- Typing in the assistant or the book search no longer resets the screening state in the diagnostic guide; only inputs in Modules 1–3 and 5 do.
+- New "Back to the base case" button in the Book tab (and an assistant answer for reset questions) restores every input to the values the page opened with.
+- Download feedback: the Book tab says when the PDF, ZIP or single-page HTML download has started.
+- Book: chapter 2 says the official site requires sign-in; chapter 4 lists the expected numbers (Qp,i 0.1200, Qp,o 0.0903, Hmax 0.413, ε/Vin 0.000 %) and why the verdict is "不夠用"; Part II says how to return to the base case; every run step names the button "執行路由與評估".
+- Checks: `audit/book_v1_3_1/fix_check.js` 14/14 with negative controls; v1.3.0 book checks 16/16; account checks 47/47; Part II numbers re-run and independently recomputed (PASS, perturbation caught).
+
 ## v1.3.0 (draft, 2026-11-07)
 
 The PondGate book (Traditional Chinese) inside the app, and offline book search in the assistant. No calculation changed.

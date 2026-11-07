@@ -137,6 +137,9 @@
       const out = screeningOutcome();
       if (out === 'infeasible') return { text: (blockText() || '') + ' ' + T('這是系統刻意的阻擋，不是錯誤：在目前的限制與邊界內沒有設計能同時符合所有條件。請依「主導限制」調整池面積或出口尺寸，或擴大有工程依據的搜尋邊界；不要只為了得到解而放寬 Qallow 或 Hallow。', 'This is a deliberate block, not an error: no design within the current limits and bounds meets every condition. Adjust pond area or outlet size according to the dominant limit, or widen bounds you can justify. Do not relax Qallow or Hallow just to obtain a solution.'), actions: [['mod-evaluation', T('查看阻擋診斷', 'See the blocking diagnosis')]] };
       return { text: T('目前沒有「無可行解」的結果。當受限篩選或連續最佳化找不到符合所有條件的設計時，系統會顯示「阻擋」與主導限制，並提供「前往修正」連結，不會顯示「通過」。', 'There is no "no feasible solution" result now. When screening or optimization finds no design that meets every condition, the software shows "Blocked", the dominant limit and a "Go to fix" link. It never shows "pass".') }; } },
+    { k: ['基本案例', '回到基本', '重設', '重置', '重來', '恢復預設', '預設值', 'reset', 'base case', 'start over', 'default values'], a: () => ({
+      text: T('要回到第二部的基本案例（A = 180 m²、堰寬 b = 0.20 m、三角形入流 Qp = 0.120 m³/s），請到「工具書」分頁按「回到基本案例」，再到模組 4 按「執行路由與評估」。也可以直接重新整理網頁，效果相同（未儲存的修改會消失）。', 'To return to the Part II base case (A = 180 m², weir b = 0.20 m, triangular inflow Qp = 0.120 m³/s), open the Book tab and press "Back to the base case", then press "Run routing and evaluation" in Module 4. Reloading the page does the same (unsaved changes are lost).'),
+      actions: [['help:book', T('前往工具書', 'Open the Book')], ['run', T('前往模組 4', 'Go to Module 4')]] }) },
     { k: ['鎖定', '鎖住', '不能篩選', '無法篩選', '篩選不能', '篩選', '篩選按', '篩選不了', '篩選沒反應', '篩選灰', 'locked', 'lock', 'screening disabled', "can't screen", 'cannot screen'], a: () => {
       const L = screeningLocks();
       return L.length ? { text: T('受限設計篩選目前鎖定，原因如下。只有在您真的有證據時才勾選或填寫：', 'Constrained screening is locked for these reasons. Tick or fill them only when you hold real evidence:'), list: L, actions: [['teachingAssistant', T('用教學案例練習', 'Practise with the teaching case')]] }
@@ -405,7 +408,10 @@
       const nd = $('hcDrawerNext'); if (nd) nd.innerHTML = nextHtml(nextStep());
     }, 120);
   }
-  const inRouteInputs = el => el && el.closest && el.closest('#mod-inflow,#mod-storage,#mod-outlet');
+  /* v1.3.1: evidence and record fields only unlock screening; they do not change the routed numbers,
+     so ticking them must not mark the routing result as out of date. */
+  const EVIDENCE_ONLY = /^(free(Discharge|Tailwater|Backwater|Submergence|Operation|EvidenceRecord)|screeningLimitRecord|coeffSource|coeffUrl)$/;
+  const inRouteInputs = el => !!(el && el.closest && el.closest('#mod-inflow,#mod-storage,#mod-outlet')) && !EVIDENCE_ONLY.test(el.id || '');
   document.addEventListener('input', e => { if (inRouteInputs(e.target)) changedAfterRun = true; refresh(); }, true);
   document.addEventListener('change', e => { if (inRouteInputs(e.target)) changedAfterRun = true; refresh(); }, true);
   /* v1.2.1: switching the language re-runs routing with the current inputs (physics-refinement setLanguage).
