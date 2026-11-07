@@ -2,8 +2,8 @@
 
 ## v1.2.0 (draft, 2026-11-07)
 
-- Optional accounts and saved projects when served by the account server in `server/` (Cloudflare Worker + D1): administrator and user roles, sign-in, password change, project save/open/delete, account management. Inputs only are stored; results are recomputed.
-- `dist/account.js` added; it does nothing on a static copy. Calculation files unchanged. Checks: `audit/accounts_v1_2_0/accounts_check.js` 32/32.
+- Optional accounts and saved projects when served by the account server in `server/` (Cloudflare Worker + D1): organisations with four roles (system administrator, organisation administrator, engineer, viewer), sign-in, password change, project save/open/share, trash with restore, activity log, account management. Inputs only are stored; results are recomputed.
+- `dist/account.js` added; it does nothing on a static copy. Calculation files unchanged. Checks: `audit/accounts_v1_2_0/accounts_check.js` 47/47.
 
 ## v1.1.0 (2026-11-06)
 

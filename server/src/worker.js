@@ -2,6 +2,7 @@
 // Serves the static app from ./public and a small JSON API under /api/.
 // Passwords: PBKDF2-SHA256, 100 000 iterations, 16-byte salt. Sessions: random 32-byte token,
 // only its SHA-256 hash is stored. Cookie is HttpOnly, Secure, SameSite=Strict.
+// Roles: sysadmin, orgadmin, engineer, viewer (see README). Organisations are isolated from each other.
 // It never touches the routing calculation; projects store only the input fields.
 
 const ITER = 100000, SESSION_H = 12, MAX_FAIL = 5, LOCK_MIN = 15;
@@ -26,13 +27,16 @@ const SEC = { 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'same-orig
 const json = (data, status = 200, extra = {}) => new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json; charset=utf-8', ...SEC, ...extra } });
 const err = (code, status) => json({ error: code }, status);
 const cookie = (token, maxAge) => `pg_session=${token}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAge}`;
-const pubUser = u => ({ id: u.id, username: u.username, display_name: u.display_name, role: u.role, must_change: !!u.must_change });
-
+const pubUser = u => ({ id: u.id, username: u.username, display_name: u.display_name, role: u.role, org_id: u.org_id, org_name: u.org_name || '', must_change: !!u.must_change });
+const ROLES = ['sysadmin', 'orgadmin', 'engineer', 'viewer'];
+async function audit(env, u, action, target = '', detail = '') {
+  try { await env.DB.prepare('INSERT INTO audit (at, user_id, org_id, action, target, detail) VALUES (?, ?, ?, ?, ?, ?)').bind(now(), u ? u.id : null, u ? u.org_id : null, action, String(target).slice(0, 120), String(detail).slice(0, 200)).run(); } catch (e) { console.error('audit', e); }
+}
 async function currentUser(req, env) {
   const m = /(?:^|;\s*)pg_session=([0-9a-f]{64})/.exec(req.headers.get('Cookie') || '');
   if (!m) return null;
-  const row = await env.DB.prepare('SELECT u.* FROM sessions s JOIN users u ON u.id = s.user_id WHERE s.token_hash = ? AND s.expires > ?').bind(await sha256(m[1]), now()).first();
-  if (!row || row.disabled) return null;
+  const row = await env.DB.prepare('SELECT u.*, o.name AS org_name, o.disabled AS org_disabled FROM sessions s JOIN users u ON u.id = s.user_id LEFT JOIN orgs o ON o.id = u.org_id WHERE s.token_hash = ? AND s.expires > ?').bind(await sha256(m[1]), now()).first();
+  if (!row || row.disabled || row.org_disabled) return null;
   return row;
 }
 async function body(req) { try { const b = await req.json(); return b && typeof b === 'object' ? b : {}; } catch { return null; } }
@@ -40,14 +44,14 @@ async function body(req) { try { const b = await req.json(); return b && typeof 
 async function login(req, env) {
   const b = await body(req); if (!b) return err('bad_request', 400);
   const username = String(b.username || '').trim(), password = String(b.password || '');
-  const u = await env.DB.prepare('SELECT * FROM users WHERE username = ?').bind(username).first();
+  const u = await env.DB.prepare('SELECT u.*, o.name AS org_name, o.disabled AS org_disabled FROM users u LEFT JOIN orgs o ON o.id = u.org_id WHERE u.username = ?').bind(username).first();
   const t = now();
   if (!u) { await pbkdf2(password || 'x', '00'.repeat(16), ITER); return err('invalid_login', 401); } // same cost as a real check
   if (u.locked_until > t) return err('locked', 429);
   const ok = same(await pbkdf2(password, u.pw_salt, u.pw_iter), u.pw_hash);
-  if (!ok || u.disabled) {
-    if (!ok) { const f = u.failed + 1; await env.DB.prepare('UPDATE users SET failed = ?, locked_until = ? WHERE id = ?').bind(f >= MAX_FAIL ? 0 : f, f >= MAX_FAIL ? t + LOCK_MIN * 60 : 0, u.id).run(); }
-    return err(u.disabled && ok ? 'disabled' : 'invalid_login', 401);
+  if (!ok || u.disabled || u.org_disabled) {
+    if (!ok) { const f = u.failed + 1; await env.DB.prepare('UPDATE users SET failed = ?, locked_until = ? WHERE id = ?').bind(f >= MAX_FAIL ? 0 : f, f >= MAX_FAIL ? t + LOCK_MIN * 60 : 0, u.id).run(); if (f >= MAX_FAIL) await audit(env, u, 'account_locked', u.username); }
+    return err(!ok ? 'invalid_login' : u.disabled ? 'disabled' : 'org_disabled', 401);
   }
   const token = rand(32);
   await env.DB.batch([
@@ -55,6 +59,7 @@ async function login(req, env) {
     env.DB.prepare('INSERT INTO sessions (token_hash, user_id, expires) VALUES (?, ?, ?)').bind(await sha256(token), u.id, t + SESSION_H * 3600),
     env.DB.prepare('UPDATE users SET failed = 0, locked_until = 0, last_login = ? WHERE id = ?').bind(t, u.id)
   ]);
+  await audit(env, u, 'login', u.username);
   return json({ user: pubUser(u) }, 200, { 'Set-Cookie': cookie(token, SESSION_H * 3600) });
 }
 
@@ -76,6 +81,7 @@ async function changePassword(req, env, u) {
   ]);
   const token = rand(32);
   await env.DB.prepare('INSERT INTO sessions (token_hash, user_id, expires) VALUES (?, ?, ?)').bind(await sha256(token), u.id, now() + SESSION_H * 3600).run();
+  await audit(env, u, 'password_changed', u.username);
   return json({ ok: true, user: pubUser({ ...u, must_change: 0 }) }, 200, { 'Set-Cookie': cookie(token, SESSION_H * 3600) });
 }
 
@@ -85,66 +91,124 @@ function cleanProject(b) {
   if (!name) return { e: 'name_required' };
   if (state.length > MAX_STATE) return { e: 'project_too_large' };
   try { const s = JSON.parse(state); if (!s || typeof s !== 'object' || !s.fields) return { e: 'bad_state' }; } catch { return { e: 'bad_state' }; }
-  return { name, note, state, app_version: String(b.app_version || '').slice(0, 20) };
+  return { name, note, state, shared: b.shared ? 1 : 0, app_version: String(b.app_version || '').slice(0, 20) };
 }
+// project access: the system administrator never opens company projects
+const canRead = (u, p) => u.role !== 'sysadmin' && p.org_id === u.org_id && (p.owner_id === u.id || u.role === 'orgadmin' || (p.shared && !p.deleted_at));
+const canWrite = (u, p) => p.owner_id === u.id && !p.deleted_at && (u.role === 'engineer' || u.role === 'orgadmin');
+const canDelete = (u, p) => u.role !== 'sysadmin' && p.org_id === u.org_id && (p.owner_id === u.id || u.role === 'orgadmin');
+const LIST = 'SELECT p.id, p.name, p.note, p.shared, p.app_version, p.created_at, p.updated_at, p.deleted_at, p.owner_id, u.username AS owner, u.display_name AS owner_name FROM projects p JOIN users u ON u.id = p.owner_id ';
 
 async function projects(req, env, u, path) {
   const id = path[2] ? Number(path[2]) : null, M = req.method, t = now();
+  if (u.role === 'sysadmin') return err('forbidden', 403);
   if (path[2] && !(Number.isInteger(id) && id > 0)) return err('not_found', 404);
   if (!id && M === 'GET') {
-    const all = new URL(req.url).searchParams.get('all') === '1';
-    if (all && u.role !== 'admin') return err('forbidden', 403);
-    const q = all
-      ? env.DB.prepare('SELECT p.id, p.name, p.note, p.app_version, p.created_at, p.updated_at, u.username AS owner, u.display_name AS owner_name FROM projects p JOIN users u ON u.id = p.owner_id ORDER BY p.updated_at DESC')
-      : env.DB.prepare('SELECT id, name, note, app_version, created_at, updated_at FROM projects WHERE owner_id = ? ORDER BY updated_at DESC').bind(u.id);
+    const scope = new URL(req.url).searchParams.get('scope') || 'mine'; let q;
+    if (scope === 'mine') q = env.DB.prepare(LIST + 'WHERE p.owner_id = ? AND p.deleted_at IS NULL ORDER BY p.updated_at DESC').bind(u.id);
+    else if (scope === 'shared') q = env.DB.prepare(LIST + 'WHERE p.org_id = ? AND p.shared = 1 AND p.owner_id != ? AND p.deleted_at IS NULL ORDER BY p.updated_at DESC').bind(u.org_id, u.id);
+    else if (scope === 'org') { if (u.role !== 'orgadmin') return err('forbidden', 403); q = env.DB.prepare(LIST + 'WHERE p.org_id = ? AND p.deleted_at IS NULL ORDER BY p.updated_at DESC').bind(u.org_id); }
+    else if (scope === 'trash') q = u.role === 'orgadmin' ? env.DB.prepare(LIST + 'WHERE p.org_id = ? AND p.deleted_at IS NOT NULL ORDER BY p.deleted_at DESC').bind(u.org_id) : env.DB.prepare(LIST + 'WHERE p.owner_id = ? AND p.deleted_at IS NOT NULL ORDER BY p.deleted_at DESC').bind(u.id);
+    else return err('bad_request', 400);
     return json({ projects: (await q.all()).results });
   }
   if (!id && M === 'POST') {
+    if (!(u.role === 'engineer' || u.role === 'orgadmin')) return err('forbidden', 403);
     const b = await body(req); if (!b) return err('bad_request', 400);
     const c = cleanProject(b); if (c.e) return err(c.e, 400);
-    const n = await env.DB.prepare('SELECT COUNT(*) AS n FROM projects WHERE owner_id = ?').bind(u.id).first();
+    const n = await env.DB.prepare('SELECT COUNT(*) AS n FROM projects WHERE owner_id = ? AND deleted_at IS NULL').bind(u.id).first();
     if (n.n >= MAX_PROJECTS) return err('too_many_projects', 400);
-    const r = await env.DB.prepare('INSERT INTO projects (owner_id, name, note, state, app_version, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(u.id, c.name, c.note, c.state, c.app_version, t, t).run();
+    const r = await env.DB.prepare('INSERT INTO projects (owner_id, org_id, shared, name, note, state, app_version, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)').bind(u.id, u.org_id, c.shared, c.name, c.note, c.state, c.app_version, t, t).run();
+    await audit(env, u, 'project_created', r.meta.last_row_id, c.name);
     return json({ id: r.meta.last_row_id }, 201);
   }
   if (!id) return err('method_not_allowed', 405);
-  const p = await env.DB.prepare('SELECT p.*, u.username AS owner FROM projects p JOIN users u ON u.id = p.owner_id WHERE p.id = ?').bind(id).first();
-  const mine = p && p.owner_id === u.id;
-  if (!p || !(mine || u.role === 'admin')) return err('not_found', 404); // never reveal other users' projects
-  if (M === 'GET') return json({ project: { id: p.id, name: p.name, note: p.note, state: p.state, app_version: p.app_version, owner: p.owner, mine, updated_at: p.updated_at } });
-  if (M === 'PUT') {
-    if (!mine) return err('read_only', 403); // admins may read and delete, not overwrite, a student's work
+  const p = await env.DB.prepare('SELECT p.*, u.username AS owner, u.display_name AS owner_name FROM projects p JOIN users u ON u.id = p.owner_id WHERE p.id = ?').bind(id).first();
+  if (!p || !canRead(u, p)) return err('not_found', 404); // never reveal projects one may not see
+  const mine = p.owner_id === u.id;
+  if (M === 'GET' && !path[3]) return json({ project: { id: p.id, name: p.name, note: p.note, shared: !!p.shared, state: p.state, app_version: p.app_version, owner: p.owner, owner_name: p.owner_name, mine, writable: canWrite(u, p), deleted: !!p.deleted_at, updated_at: p.updated_at } });
+  if (M === 'PUT' && !path[3]) {
+    if (!canWrite(u, p)) return err('read_only', 403);
     const b = await body(req); if (!b) return err('bad_request', 400);
     const c = cleanProject(b); if (c.e) return err(c.e, 400);
-    await env.DB.prepare('UPDATE projects SET name = ?, note = ?, state = ?, app_version = ?, updated_at = ? WHERE id = ?').bind(c.name, c.note, c.state, c.app_version, t, id).run();
+    await env.DB.prepare('UPDATE projects SET name = ?, note = ?, state = ?, shared = ?, app_version = ?, updated_at = ? WHERE id = ?').bind(c.name, c.note, c.state, c.shared, c.app_version, t, id).run();
+    await audit(env, u, 'project_saved', id, c.name + (c.shared !== p.shared ? (c.shared ? ' (shared)' : ' (unshared)') : ''));
     return json({ ok: true });
   }
-  if (M === 'DELETE') { await env.DB.prepare('DELETE FROM projects WHERE id = ?').bind(id).run(); return json({ ok: true }); }
+  if (M === 'DELETE' && !path[3]) { // moves to the trash; nothing is erased
+    if (!canDelete(u, p) || p.deleted_at) return err(p.deleted_at ? 'not_found' : 'read_only', p.deleted_at ? 404 : 403);
+    await env.DB.prepare('UPDATE projects SET deleted_at = ? WHERE id = ?').bind(t, id).run();
+    await audit(env, u, 'project_trashed', id, p.name);
+    return json({ ok: true });
+  }
+  if (M === 'POST' && path[3] === 'restore') {
+    if (!canDelete(u, p) || !p.deleted_at) return err('not_found', 404);
+    await env.DB.prepare('UPDATE projects SET deleted_at = NULL, updated_at = ? WHERE id = ?').bind(t, id).run();
+    await audit(env, u, 'project_restored', id, p.name);
+    return json({ ok: true });
+  }
   return err('method_not_allowed', 405);
 }
 
+// who may manage whom
+function canManage(u, t) {
+  if (u.role === 'sysadmin') return true;
+  return u.role === 'orgadmin' && t.role !== 'sysadmin' && t.org_id === u.org_id;
+}
 async function admin(req, env, u, path) {
-  if (u.role !== 'admin') return err('forbidden', 403);
-  const M = req.method, id = path[3] ? Number(path[3]) : null, act = path[4];
+  if (!(u.role === 'sysadmin' || u.role === 'orgadmin')) return err('forbidden', 403);
+  const M = req.method, sys = u.role === 'sysadmin';
+  if (path[2] === 'audit' && M === 'GET') {
+    const q = sys ? env.DB.prepare('SELECT a.*, u.username, o.name AS org_name FROM audit a LEFT JOIN users u ON u.id = a.user_id LEFT JOIN orgs o ON o.id = a.org_id ORDER BY a.id DESC LIMIT 300')
+      : env.DB.prepare('SELECT a.*, u.username FROM audit a LEFT JOIN users u ON u.id = a.user_id WHERE a.org_id = ? ORDER BY a.id DESC LIMIT 300').bind(u.org_id);
+    return json({ audit: (await q.all()).results });
+  }
+  if (path[2] === 'orgs') {
+    if (!sys) return err('forbidden', 403);
+    const oid = path[3] ? Number(path[3]) : null;
+    if (!oid && M === 'GET') return json({ orgs: (await env.DB.prepare('SELECT o.*, (SELECT COUNT(*) FROM users x WHERE x.org_id = o.id) AS users, (SELECT COUNT(*) FROM projects p WHERE p.org_id = o.id AND p.deleted_at IS NULL) AS projects FROM orgs o ORDER BY o.name').all()).results });
+    const b = await body(req); if (!b) return err('bad_request', 400);
+    if (!oid && M === 'POST') {
+      const name = String(b.name || '').trim().slice(0, 80); if (!name) return err('name_required', 400);
+      if (await env.DB.prepare('SELECT 1 FROM orgs WHERE name = ?').bind(name).first()) return err('org_taken', 409);
+      const r = await env.DB.prepare('INSERT INTO orgs (name, created_at) VALUES (?, ?)').bind(name, now()).run();
+      await audit(env, u, 'org_created', r.meta.last_row_id, name);
+      return json({ id: r.meta.last_row_id }, 201);
+    }
+    if (Number.isInteger(oid) && oid > 0 && M === 'POST' && path[4] === 'disable') {
+      const o = await env.DB.prepare('SELECT * FROM orgs WHERE id = ?').bind(oid).first(); if (!o) return err('not_found', 404);
+      const d = b.disabled ? 1 : 0; const st = [env.DB.prepare('UPDATE orgs SET disabled = ? WHERE id = ?').bind(d, oid)];
+      if (d) st.push(env.DB.prepare('DELETE FROM sessions WHERE user_id IN (SELECT id FROM users WHERE org_id = ?)').bind(oid));
+      await env.DB.batch(st); await audit(env, u, d ? 'org_disabled' : 'org_enabled', oid, o.name);
+      return json({ ok: true });
+    }
+    return err('not_found', 404);
+  }
   if (path[2] !== 'users') return err('not_found', 404);
+  const id = path[3] ? Number(path[3]) : null, act = path[4];
   if (!id && M === 'GET') {
-    const r = await env.DB.prepare('SELECT u.id, u.username, u.display_name, u.role, u.disabled, u.must_change, u.created_at, u.last_login, (u.locked_until > ?) AS locked, (SELECT COUNT(*) FROM projects p WHERE p.owner_id = u.id) AS projects FROM users u ORDER BY u.role, u.username').bind(now()).all();
+    const sel = 'SELECT u.id, u.username, u.display_name, u.role, u.org_id, o.name AS org_name, u.disabled, u.must_change, u.created_at, u.last_login, (u.locked_until > ?) AS locked, (SELECT COUNT(*) FROM projects p WHERE p.owner_id = u.id AND p.deleted_at IS NULL) AS projects FROM users u LEFT JOIN orgs o ON o.id = u.org_id ';
+    const r = sys ? await env.DB.prepare(sel + 'ORDER BY o.name, u.role, u.username').bind(now()).all() : await env.DB.prepare(sel + 'WHERE u.org_id = ? ORDER BY u.role, u.username').bind(now(), u.org_id).all();
     return json({ users: r.results });
   }
+  const b = await body(req); if (!b) return err('bad_request', 400);
   if (!id && M === 'POST') {
-    const b = await body(req); if (!b) return err('bad_request', 400);
-    const username = String(b.username || '').trim(), role = b.role === 'admin' ? 'admin' : 'user';
+    const username = String(b.username || '').trim(), role = String(b.role || 'engineer');
+    if (!ROLES.includes(role) || (!sys && role === 'sysadmin')) return err('bad_role', 400);
+    const org_id = role === 'sysadmin' ? null : sys ? Number(b.org_id) : u.org_id;
+    if (role !== 'sysadmin' && !(await env.DB.prepare('SELECT 1 FROM orgs WHERE id = ?').bind(org_id).first())) return err('org_required', 400);
     if (!USER_RE.test(username)) return err('bad_username', 400);
     const p = pwProblem(b.password); if (p) return err(p, 400);
     if (await env.DB.prepare('SELECT 1 FROM users WHERE username = ?').bind(username).first()) return err('username_taken', 409);
     const h = await makeHash(b.password);
-    const r = await env.DB.prepare('INSERT INTO users (username, display_name, role, pw_hash, pw_salt, pw_iter, must_change, created_at) VALUES (?, ?, ?, ?, ?, ?, 1, ?)').bind(username, String(b.display_name || '').trim().slice(0, 60), role, h.pw_hash, h.pw_salt, h.pw_iter, now()).run();
+    const r = await env.DB.prepare('INSERT INTO users (username, display_name, role, org_id, pw_hash, pw_salt, pw_iter, must_change, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, 1, ?)').bind(username, String(b.display_name || '').trim().slice(0, 60), role, org_id, h.pw_hash, h.pw_salt, h.pw_iter, now()).run();
+    await audit({ DB: env.DB }, { id: u.id, org_id: org_id ?? u.org_id }, 'user_created', username, role);
     return json({ id: r.meta.last_row_id }, 201);
   }
   if (!(Number.isInteger(id) && id > 0) || M !== 'POST') return err('not_found', 404);
   const t = await env.DB.prepare('SELECT * FROM users WHERE id = ?').bind(id).first();
-  if (!t) return err('not_found', 404);
-  const b = await body(req); if (!b) return err('bad_request', 400);
+  if (!t || !canManage(u, t)) return err('not_found', 404);
+  const as = { id: u.id, org_id: t.org_id ?? u.org_id };
   if (act === 'reset') {
     const p = pwProblem(b.password); if (p) return err(p, 400);
     const h = await makeHash(b.password);
@@ -152,6 +216,7 @@ async function admin(req, env, u, path) {
       env.DB.prepare('UPDATE users SET pw_hash = ?, pw_salt = ?, pw_iter = ?, must_change = 1, failed = 0, locked_until = 0 WHERE id = ?').bind(h.pw_hash, h.pw_salt, h.pw_iter, id),
       env.DB.prepare('DELETE FROM sessions WHERE user_id = ?').bind(id)
     ]);
+    await audit(env, as, 'password_reset', t.username);
     return json({ ok: true });
   }
   if (act === 'disable') {
@@ -159,7 +224,15 @@ async function admin(req, env, u, path) {
     const d = b.disabled ? 1 : 0;
     const stmts = [env.DB.prepare('UPDATE users SET disabled = ? WHERE id = ?').bind(d, id)];
     if (d) stmts.push(env.DB.prepare('DELETE FROM sessions WHERE user_id = ?').bind(id));
-    await env.DB.batch(stmts);
+    await env.DB.batch(stmts); await audit(env, as, d ? 'user_disabled' : 'user_enabled', t.username);
+    return json({ ok: true });
+  }
+  if (act === 'role') {
+    const role = String(b.role || '');
+    if (id === u.id) return err('cannot_change_own_role', 400);
+    if (!ROLES.includes(role) || role === 'sysadmin' || t.role === 'sysadmin') return err('bad_role', 400); // org roles only
+    await env.DB.batch([env.DB.prepare('UPDATE users SET role = ? WHERE id = ?').bind(role, id), env.DB.prepare('DELETE FROM sessions WHERE user_id = ?').bind(id)]);
+    await audit(env, as, 'role_changed', t.username, t.role + ' -> ' + role);
     return json({ ok: true });
   }
   return err('not_found', 404);
