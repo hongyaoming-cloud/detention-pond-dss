@@ -1,0 +1,26 @@
+{
+ "zh_first": {
+  "lang": "zh-Hant",
+  "gate": "正式受限篩選尚未就緒：缺少自由出流邊界確認。 前往修正",
+  "trace": "本次可追溯紀錄（唯讀） 模式與執行時間：探索性路由；執行時間：2026-10-11T13:22:50.056Z。 入流 Qin(t)：0.120 m³/s；輸入來源：未提供；單位：m³/s。 固定平面積 S(H)；面積 180.00 m²；輸入來源：未提供；單位：m、m³。 單一堰流 Qout(H)，Cw=1.70、b=0.200 m；輸入來源：未提供；單位：m³/s。 H0：0.00 m；輸入來",
+  "ew1": "E‑W1 A‑005 外部交叉驗算基準唯讀 Paper II 可重現驗證案例，非工程設計案例；不會改寫一般路由、受限篩選或最佳化的輸入與結果。案例說明與適用界線案例定位：E‑W1 A‑005 是 Paper II 的唯讀、可重現數值驗證案例；不是實際工程設計案例。系統與事件：單一被動堰流；事件期間 0–977.25 s；初始絕對水位 H0 = 0.07399 m。固定計算依據：使用同一原始 Qin"
+ },
+ "en": {
+  "lang": "en",
+  "gate": "Formal constrained screening is not ready: missing free-discharge boundary confirmation. Go to fix",
+  "trace": "Run record for this session (read-only) Mode and run time: Exploratory routing; run time: 2026-10-11T13:22:50.056Z. Inflow Qin(t): 0.120 m³/s; input source: not provided; units: m³/s. Constant-area S(",
+  "ew1": "E‑W1 A‑005 external cross-check benchmarkRead-only reproducible verification case, not a design case; it does not change the inputs or results of routing, constrained screening or optimization.Case de"
+ },
+ "zh_again": {
+  "lang": "zh-Hant",
+  "gate": "正式受限篩選尚未就緒：缺少自由出流邊界確認。 前往修正",
+  "trace": "本次可追溯紀錄（唯讀） 模式與執行時間：探索性路由；執行時間：2026-10-11T13:22:50.056Z。 入流 Qin(t)：0.120 m³/s；輸入來源：未提供；單位：m³/s。 固定平面積 S(H)；面積 180.00 m²；輸入來源：未提供；單位：m、m³。 單一堰流 Qout(H)，Cw=1.70、b=0.200 m；輸入來源：未提供；單位：m³/s。 H0：0.00 m；輸入來",
+  "ew1": "E‑W1 A‑005 外部交叉驗算基準唯讀 Paper II 可重現驗證案例，非工程設計案例；不會改寫一般路由、受限篩選或最佳化的輸入與結果。案例說明與適用界線案例定位：E‑W1 A‑005 是 Paper II 的唯讀、可重現數值驗證案例；不是實際工程設計案例。系統與事件：單一被動堰流；事件期間 0–977.25 s；初始絕對水位 H0 = 0.07399 m。固定計算依據：使用同一原始 Qin"
+ },
+ "checks": {
+  "zh_first_chinese": true,
+  "en_no_chinese": true,
+  "zh_restored_equal": true
+ },
+ "errs": []
+}

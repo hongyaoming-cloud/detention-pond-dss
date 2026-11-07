@@ -1,0 +1,35 @@
+{
+ "lang": "zh",
+ "errs": [],
+ "oldNameHits": [],
+ "pondgateTextNodesPerStage": [
+  {
+   "stage": "load",
+   "pondgateTextNodes": 12
+  },
+  {
+   "stage": "ineligible-gate",
+   "pondgateTextNodes": 12
+  },
+  {
+   "stage": "routed",
+   "pondgateTextNodes": 12
+  },
+  {
+   "stage": "screened",
+   "pondgateTextNodes": 12
+  },
+  {
+   "stage": "continuous",
+   "pondgateTextNodes": 12
+  },
+  {
+   "stage": "blocked",
+   "pondgateTextNodes": 12
+  },
+  {
+   "stage": "ew1",
+   "pondgateTextNodes": 12
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+  "core": "dist/routing-core.js",
+  "coreVersion": "software-i-rk4-v1",
+  "n": 3910,
+  "vin": 1.2891228624999966,
+  "vout": 1.2695372699507184,
+  "finalStorage": 0.019585591551648827,
+  "residual": 9.976294478020176e-10,
+  "H0": 0.07399,
+  "dt": 0.25
+}

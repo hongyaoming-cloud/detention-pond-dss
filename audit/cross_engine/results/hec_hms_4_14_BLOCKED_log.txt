@@ -1,0 +1,51 @@
+# HEC-HMS 4.14 download attempt, 2026-10-11T01:53:40Z
+curl: (56) CONNECT tunnel failed, response 403
+https://www.hec.usace.army.mil/software/hec-hms/downloads.aspx -> HTTP 000
+curl: (56) CONNECT tunnel failed, response 403
+https://www.hec.usace.army.mil/ -> HTTP 000
+curl: (56) CONNECT tunnel failed, response 403
+https://hec.usace.army.mil/ -> HTTP 000
+
+# agent-proxy recent relay failures
+[
+ {
+  "ts": "2026-10-11T01:51:03.510Z",
+  "kind": "connect_rejected",
+  "detail": "gateway answered 403 to CONNECT (policy denial or upstream failure)",
+  "host": "www.hec.usace.army.mil:443"
+ },
+ {
+  "ts": "2026-10-11T01:51:07.961Z",
+  "kind": "connect_rejected",
+  "detail": "gateway answered 403 to CONNECT (policy denial or upstream failure)",
+  "host": "www.hec.usace.army.mil:443"
+ },
+ {
+  "ts": "2026-10-11T01:51:08.221Z",
+  "kind": "connect_rejected",
+  "detail": "gateway answered 403 to CONNECT (policy denial or upstream failure)",
+  "host": "hec.usace.army.mil:443"
+ },
+ {
+  "ts": "2026-10-11T01:53:40.475Z",
+  "kind": "connect_rejected",
+  "detail": "gateway answered 403 to CONNECT (policy denial or upstream failure)",
+  "host": "www.hec.usace.army.mil:443"
+ },
+ {
+  "ts": "2026-10-11T01:53:40.693Z",
+  "kind": "connect_rejected",
+  "detail": "gateway answered 403 to CONNECT (policy denial or upstream failure)",
+  "host": "www.hec.usace.army.mil:443"
+ },
+ {
+  "ts": "2026-10-11T01:53:40.914Z",
+  "kind": "connect_rejected",
+  "detail": "gateway answered 403 to CONNECT (policy denial or upstream failure)",
+  "host": "hec.usace.army.mil:443"
+ }
+]
+# local search for an existing HEC-HMS install (find / -iname 'hec-hms*' -o -iname hms.jar): none found
+openjdk version "21.0.11" 2026-04-21
+OpenJDK Runtime Environment (build 21.0.11+10-1-24.04.2-Ubuntu)
+OpenJDK 64-Bit Server VM (build 21.0.11+10-1-24.04.2-Ubuntu, mixed mode, sharing)

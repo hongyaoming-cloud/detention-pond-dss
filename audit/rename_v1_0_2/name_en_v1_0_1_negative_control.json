@@ -1,0 +1,126 @@
+{
+ "lang": "en",
+ "errs": [],
+ "oldNameHits": [
+  {
+   "stage": "ew1",
+   "where": "text",
+   "id": "moduleNavContent",
+   "text": "Software I | logical workflow"
+  },
+  {
+   "stage": "ew1",
+   "where": "text",
+   "id": "moduleNavContent",
+   "text": "Current Software I"
+  },
+  {
+   "stage": "ew1",
+   "where": "text",
+   "id": "moduleNavContent",
+   "text": "Reserved Software II interfaces"
+  },
+  {
+   "stage": "ew1",
+   "where": "text",
+   "id": "moduleNavContent",
+   "text": "Software II"
+  },
+  {
+   "stage": "ew1",
+   "where": "text",
+   "id": "pipeBox",
+   "text": "A partially wetted pipe is evaluated as a circular-segment opening; a full openi"
+  },
+  {
+   "stage": "ew1",
+   "where": "text",
+   "id": "mod-evaluation",
+   "text": "Scope: one detention facility with a known inflow. Rainfall-runoff, channel rout"
+  },
+  {
+   "stage": "ew1",
+   "where": "text",
+   "id": "mod-evaluation",
+   "text": "Compare an external result with the current Software I route or one of four publ"
+  },
+  {
+   "stage": "ew1",
+   "where": "text",
+   "id": "mod-evaluation",
+   "text": "Software I reference"
+  },
+  {
+   "stage": "ew1",
+   "where": "text",
+   "id": "mod-evaluation",
+   "text": "Import only the actual HEC-HMS/SWMM simulation-result CSV. Required for outflow "
+  },
+  {
+   "stage": "ew1",
+   "where": "text",
+   "id": "mod-evaluation",
+   "text": "The public package excludes the 176 fixed laboratory regression cases. Selecting"
+  },
+  {
+   "stage": "ew1",
+   "where": "text",
+   "id": "crossProvenance",
+   "text": "Declare the comparison case before importing HEC-HMS/SWMM output. Numerical agre"
+  },
+  {
+   "stage": "ew1",
+   "where": "text",
+   "id": "crossEvidenceKind",
+   "text": "Software I scope-matched: one pond, known inflow, one passive free-discharge out"
+  },
+  {
+   "stage": "ew1",
+   "where": "text",
+   "id": "teachingAssistant",
+   "text": "Software I feature guide"
+  },
+  {
+   "stage": "ew1",
+   "where": "text",
+   "id": "",
+   "text": "Software I modular workspace"
+  },
+  {
+   "stage": "ew1",
+   "where": "aria-label",
+   "id": "workspacePageTabs",
+   "text": "Software I pages"
+  }
+ ],
+ "pondgateTextNodesPerStage": [
+  {
+   "stage": "load",
+   "pondgateTextNodes": 0
+  },
+  {
+   "stage": "ineligible-gate",
+   "pondgateTextNodes": 0
+  },
+  {
+   "stage": "routed",
+   "pondgateTextNodes": 0
+  },
+  {
+   "stage": "screened",
+   "pondgateTextNodes": 0
+  },
+  {
+   "stage": "continuous",
+   "pondgateTextNodes": 0
+  },
+  {
+   "stage": "blocked",
+   "pondgateTextNodes": 0
+  },
+  {
+   "stage": "ew1",
+   "pondgateTextNodes": 0
+  }
+ ]
+}

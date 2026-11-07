@@ -1,0 +1,63 @@
+{
+ "date": "2026-11-07T03:18:53.192Z",
+ "base": "http://127.0.0.1:8787",
+ "pass": 11,
+ "total": 11,
+ "results": [
+  {
+   "id": "B1 signed in: \"怎麼存檔？\" explains saving a project (not only the report)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "B1b \"忘記密碼怎麼辦\" points to the organisation administrator",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "B2 \"允許出流是什麼\" finds the glossary term Qallow (was: \"sorry\")",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "B3 \"我的池子要多大\" explains run first, then Module 5 screening",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "B4 \"為什麼篩選按不下去\" answers about screening locks (was: about the run button)",
+   "pass": true,
+   "detail": "{\"text\":\"受限設計篩選目前鎖定，原因如下。只有在您真的有證據時才勾選或填寫：\",\"list\":[{\"id\":\"freeDischarge\",\"msg\":\"尚未勾選「已確認自由出流邊界」\"},{\"id\":\"freeTailwater\""
+  },
+  {
+   "id": "B4n negative control: a plain \"為什麼按不下去\" still answers about the run button",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "B5 \"結果怎麼下載\" still gives the report download",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "B5n negative control: an off-topic question still gets the polite \"only PondGate\" answer",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "B6 with Qp empty, the \"cannot run\" message names the field to fix",
+   "pass": true,
+   "detail": "尚不能執行路由：請先完成入流、蓄水量—水位與至少一個出口的有效物理輸入。 待修正：入流尖峰 Qp 必須大於 0（可按右下角「說明／AI 助理」問「為什麼不能按」）"
+  },
+  {
+   "id": "B6n negative control: with valid inputs the run button is enabled",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "B7 static copy (no sign-in): \"怎麼存檔？\" says projects need sign-in and points to the report",
+   "pass": true,
+   "detail": ""
+  }
+ ]
+}
