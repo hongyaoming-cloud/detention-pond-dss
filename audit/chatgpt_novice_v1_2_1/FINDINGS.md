@@ -30,3 +30,11 @@ ChatGPT rated the updated version 4/5 (was 3/5). It judged the old issues 2, 4 a
 | Download success is not shown on the page. | Not changed; the download was confirmed in earlier checks. | (none) |
 
 Checks after the second round: gpt_fix_check 18/18, accounts 47/47, novice 13/13, beginner 11/11, help 37/37, lessons 58/58, guide 18/18. Calculation files unchanged.
+
+## Third run (after deploying the second-round fixes)
+
+ChatGPT kept the score at 4/5. It judged the second-run issues B2, B3 and F1 solved; B1, B4 and F3 partly improved; B5 (download confirmation) and F2 (no warning before the language switch) still present. New points: when screening has not run, the result area first shows the caption for a selected screening case before saying screening has not run; a short practice lesson for "change one thing and compare" would help.
+
+The score has levelled off. The remaining points are by design (the language switch recomputes in the core file, which is not changed; formal screening needs real evidence) or could not be verified by the agent (download). They are left for a later version.
+
+The test account `qa_novice` and company `qa_測試公司`, their sessions, projects and activity-log rows were deleted from the production database after this run; only the owner's system-administrator account remains.
