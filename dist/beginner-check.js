@@ -117,13 +117,30 @@
   const NOT_RUN = ['尚未執行受限篩選。請僅使用單一被動堰流或單一矩形開口，完成自由出流四項檢核，並填寫兩項可追溯紀錄。', 'Screening was not run. Use exactly one passive weir or one rectangular opening, complete the four free-discharge checks, and enter both traceability records.'];
   function relabelOptout() { const o = $('optout'); if (!o) return; const t = o.textContent.trim(), i = NOT_RUN.indexOf(t); if (i >= 0) { const want = zh() ? 0 : 1; if (i !== want) o.textContent = NOT_RUN[want]; } }
 
+  /* ---------- 5. no "selected case" caption while screening has not run (third ChatGPT run) ---------- */
+  function captionForNotRun() {
+    const box = $('optResultBox'), o = $('optout'); if (!box || !o) return;
+    const notRun = NOT_RUN.includes(o.textContent.trim());
+    box.querySelectorAll('.meta, #sizegraphic').forEach(e => { e.style.display = notRun ? 'none' : ''; });
+  }
+  /* ---------- 6. say before switching the language that it recomputes (third ChatGPT run) ---------- */
+  function renderLangNote() {
+    const btn = $('lang'); if (!btn) return;
+    let n = $('pgLangNote');
+    if (!n) { n = document.createElement('span'); n.id = 'pgLangNote'; n.style.cssText = 'float:right;clear:right;width:min(260px,60vw);margin:4px 0 0 12px;font-size:13px;line-height:1.35;color:#fff3c4;text-align:right'; btn.insertAdjacentElement('afterend', n); }
+    const st = window.PondGateHelp?.runState?.() || {};
+    const show = !!st.changedAfterRun && document.querySelectorAll('#metricbody tr').length > 0;
+    n.textContent = show ? T('提醒：輸入已改變，切換語言會依目前輸入重新計算一次。', 'Note: inputs changed; switching the language recomputes once with the current inputs.') : '';
+    n.hidden = !show; n.style.display = show ? 'block' : 'none';
+  }
+
   let pending = 0;
-  function refresh() { cancelAnimationFrame(pending); pending = requestAnimationFrame(() => { try { renderVerdict(); renderMissing(); renderQuickStart(); relabelOptout(); } catch (e) { /* display layer must never break the app */ } }); }
+  function refresh() { cancelAnimationFrame(pending); pending = requestAnimationFrame(() => { try { renderVerdict(); renderMissing(); renderQuickStart(); relabelOptout(); captionForNotRun(); renderLangNote(); } catch (e) { /* display layer must never break the app */ } }); }
   document.addEventListener('click', e => { const b = e.target.closest?.('[data-pg-go]'); if (b) window.DSSWorkspacePages?.openTarget(b.dataset.pgGo); }, false);
   document.addEventListener('input', refresh, true);
   document.addEventListener('change', refresh, true);
   window.addEventListener('dss:language-changed', () => setTimeout(refresh, 60));
-  const watch = () => { const mb = $('metricbody'); if (mb) new MutationObserver(refresh).observe(mb, { childList: true, subtree: true, characterData: true }); const o = $('optout'); if (o) new MutationObserver(() => setTimeout(relabelOptout, 0)).observe(o, { childList: true, characterData: true, subtree: true }); };
+  const watch = () => { const mb = $('metricbody'); if (mb) new MutationObserver(refresh).observe(mb, { childList: true, subtree: true, characterData: true }); const o = $('optout'); if (o) new MutationObserver(() => setTimeout(() => { relabelOptout(); captionForNotRun(); }, 0)).observe(o, { childList: true, characterData: true, subtree: true }); };
   const boot = () => { watch(); refresh(); setTimeout(refresh, 800); setInterval(() => { if (!$('pgQuickStart') && $('teachingAssistant')) renderQuickStart(); if (!$('pgScreenMissing') && $('optimize')) renderMissing(); }, 1500); };
   document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', boot) : boot();
   window.PondGateBeginner = Object.freeze({ verdict, verdictText, version: '1.2.1' });

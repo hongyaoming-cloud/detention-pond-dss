@@ -15,6 +15,14 @@ const res = []; const ok = (id, pass, detail = '') => { res.push({ id, pass: !!p
   const rowQin = pg => pg.evaluate(() => [...document.querySelectorAll('#metricbody tr')].find(r => /Qp,i$/.test(r.cells[0].textContent.trim()))?.cells[1].textContent.trim());
   const ask = (pg, q) => pg.evaluate(q => JSON.stringify(window.PondGateHelp.answer(q)), q);
 
+  // G10 (third run) a note beside the language button says, before switching, that it will recompute
+  { const q = await fresh(); await q.evaluate(() => window.DSSWorkspacePages.openTarget('mod-routing')); await q.click('#run'); await q.waitForTimeout(1500);
+    const before = await q.evaluate(() => { const n = document.getElementById('pgLangNote'); return n && !n.hidden ? n.textContent : ''; });
+    await q.evaluate(() => window.DSSWorkspacePages.openTarget('mod-inflow')); await q.fill('#qp', '0.3'); await q.press('#qp', 'Tab'); await q.waitForTimeout(400);
+    const after = await q.evaluate(() => { const n = document.getElementById('pgLangNote'); return n && !n.hidden && n.getBoundingClientRect().height > 0 ? n.textContent : ''; });
+    ok('G10 after changing an input, a note beside the language button warns before switching that it recomputes', /重新計算/.test(after), after);
+    ok('G10n negative control: right after a run (nothing changed) there is no such note', before === '');
+    await q.close(); }
   // G1 language switch after an unrun change: says it recomputed, and the result is no longer marked stale
   let pg = await fresh();
   await setv(pg, 'mod-inflow', 'qp', '0.5'); await run(pg);
@@ -68,12 +76,20 @@ const res = []; const ok = (id, pass, detail = '') => { res.push({ id, pass: !!p
   await pg.click('#lang'); await pg.waitForTimeout(900);
   const enMsg = await pg.evaluate(() => document.getElementById('optout').textContent.trim());
   ok('G5 the "screening not run" message is English after switching to English', /^尚未執行受限篩選/.test(zhMsg) && /^Screening was not run/.test(enMsg), enMsg.slice(0, 40));
+  ok('G11 while screening has not run, the "selected feasible screening case" caption is not shown', await pg.evaluate(() => [...document.querySelectorAll('#optResultBox .meta')].every(e => e.style.display === 'none' || e.getBoundingClientRect().height === 0)));
   await pg.click('#lang'); await pg.waitForTimeout(900);
   ok('G5n negative control: back in Chinese the message is Chinese again', /^尚未執行受限篩選/.test(await pg.evaluate(() => document.getElementById('optout').textContent.trim())));
   // G6 quick start
   await pg.evaluate(() => window.DSSWorkspacePages.openTarget('teachingAssistant')); await pg.waitForTimeout(600);
   const q = await pg.evaluate(() => { const e = document.getElementById('pgQuickStart'); return e ? { t: e.innerText, top: e.previousElementSibling?.tagName } : null; });
   ok('G6 "How to start" opens with a three-step quick start before the equations', q && /最快上手/.test(q.t) && q.top === 'H2', q && q.top);
+  await pg.close();
+  // G11n negative control: after a real (teaching-case) screening run, the caption is shown again
+  pg = await fresh();
+  await pg.evaluate(() => window.DSSWorkspacePages.openTarget('teachingAssistant')); await pg.click('#teachDemo'); await pg.waitForTimeout(1800);
+  await pg.evaluate(() => window.DSSWorkspacePages.openTarget('mod-optimization')); await pg.click('#optimize'); await pg.waitForTimeout(4000);
+  const cap = await pg.evaluate(() => ({ t: document.getElementById('optout')?.textContent.trim().slice(0, 60), shown: [...document.querySelectorAll('#optResultBox .meta')].some(e => e.style.display !== 'none') }));
+  ok('G11n negative control: after a screening run on the teaching case, the caption is shown', cap.shown && !/^尚未執行受限篩選/.test(cap.t), cap.t);
   await pg.close(); await b.close();
   const pass = res.filter(r => r.pass).length; console.log(`${pass}/${res.length}`);
   fs.writeFileSync(OUT, JSON.stringify({ date: new Date().toISOString(), port: PORT, pass, total: res.length, results: res }, null, 1));
