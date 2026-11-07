@@ -21,7 +21,7 @@
   }
   function label(button){return (button.getAttribute('aria-label')||button.textContent||'').replace(/\s+/g,' ').trim();}
   function blocked(button){
-    if(button.id==='run')return isZh()?'尚不能執行路由：請先完成入流、蓄水量—水位與至少一個出口的有效物理輸入。':'Routing is not ready: complete valid inflow, storage–level, and at least one outlet input.';
+    if(button.id==='run'){const P=(window.PondGateHelp?.inputProblems?.()||[]).map(p=>p.msg).slice(0,3);/* v1.2: name the fields a beginner must fix */return (isZh()?'尚不能執行路由：請先完成入流、蓄水量—水位與至少一個出口的有效物理輸入。':'Routing is not ready: complete valid inflow, storage–level, and at least one outlet input.')+(P.length?(isZh()?' 待修正：':' To fix: ')+P.join(isZh()?'；':'; ')+(isZh()?'（可按右下角「說明／AI 助理」問「為什麼不能按」）':' (ask the Help / AI assistant "why is the button grey")'):'');}
     if(button.id==='optimize'||button.id==='continuousGlobal')return isZh()?'尚不能進行篩選：請先完成單一被動出口、自由出流四項檢核及兩項可追溯紀錄。':'Screening is not ready: complete one passive outlet, all four free-discharge checks, and both traceability records.';
     if(button.id==='teachRestore')return isZh()?'目前沒有可還原的工作案例；請先載入教學示範。':'There is no saved working case yet; load the teaching demonstration first.';
     return isZh()?'此按鈕目前不可用；請先完成畫面上的待完成條件。':'This action is not available yet; complete the pending conditions shown on the page.';

@@ -17,3 +17,16 @@ An AI tester acting as a first-time user went through all four roles on a local 
 
 Not changed: the lock message appears only from the 6th attempt (telling earlier would reveal whether an account exists).
 Checks: novice_fix_check.js 13/13, accounts_check.js 47/47, guide_check.js 18/18. Calculation files unchanged.
+
+## Beginner walkthrough of the whole app behind sign-in (2026-11-07, engineer role)
+
+| # | What a beginner ran into | Fix | Check |
+|---|---|---|---|
+| B1 | Assistant: "怎麼存檔？" answered only about the report; it did not know about projects, passwords or sign-out | New account intent (answers differently when no account server is present) | B1, B1b, B7 |
+| B2 | "允許出流是什麼" got "sorry" (glossary only knew 容許出流) | Synonyms 允許出流, 允許水位 and others | B2 |
+| B3 | "我的池子要多大" got "sorry" | Answer: run first, then Module 5 screening; not a final design | B3 |
+| B4 | "為什麼篩選按不下去" answered about the run button | Screening words weigh more in the lock intent | B4, B4n |
+| B5 | "結果怎麼下載" answered how to read results | 怎麼下載 added to the download intent | B5 |
+| B6 | Grey run button: message did not say which field | Message lists the fields to fix (from the assistant's own check) | B6, B6n |
+
+Checks: beginner_fix_check.js 11/11; accounts 47/47; novice 13/13; guide 18/18; help 37/37; lessons 58/58. Calculation files unchanged.
