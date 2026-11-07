@@ -28,6 +28,7 @@
     const nav = window.DSSWorkspacePages; if (!nav) return;
     closeDrawer();
     if (target.startsWith('help:')) { nav.openTarget('helpCenter'); showTab(target.slice(5)); return; }
+    if (target.startsWith('book:')) { nav.openTarget('helpCenter'); showTab('book'); window.PondGateBook?.open(target.slice(5)); return; }
     if (MODULES.includes(target)) { nav.openTarget(target); setTimeout(() => $(target)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); return; }
     const mod = MODULE_OF[target] || $(target)?.closest('.module-card')?.id;
     if (mod) nav.openTarget(mod);
@@ -162,7 +163,8 @@
     { k: ['外部模型', '交叉', 'swmm', 'hec', 'hms', 'cross', 'external'], a: () => ({ manual: 'cross', actions: [['mod-evaluation', T('前往模組 6', 'Go to Module 6')]] }) },
     { k: ['隱私', '個資', '傳送', '上傳到', '資料會', '外流', '金鑰', 'privacy', 'private', 'send', 'leave', 'server', 'api key'], a: () => ({ text: T('不會傳送任何資料。計算、說明與本助理都在您的瀏覽器內執行；本助理是離線規則式說明，不連線到任何外部 AI 服務。', 'Nothing is sent. Calculation, help and this assistant all run in your browser. This assistant is an offline rule-based guide and does not connect to any external AI service.') }) },
     { k: ['設計核准', '直接用', '最終設計', '核定', '可以用來設計', 'final design', 'approve', 'approval', 'use for design'], a: () => ({ text: T('不行。PondGate 的結果只在您宣告的入流、S(H)、出口律與限制條件下成立，不是最終工程設計，也不是現地驗證。工程責任仍由合格專業人員承擔。', 'No. PondGate results hold only under your declared inflow, S(H), outlet law and limits. They are not a final engineering design or field validation. A qualified engineer remains responsible.') }) },
-    { k: ['手冊', '說明書', '說明', 'manual', 'guide', 'help'], a: () => ({ text: T('「開始這裡」頁有兩份手冊：「使用手冊（精簡版）」，以及給學生一步一步跟著做的「完整版操作手冊」（繁體中文，附截圖、檢核表與練習題），兩份都可以下載。', 'The "Start here" page has two manuals: the short user manual, and a full step-by-step guide for students (Traditional Chinese, with screenshots, a checklist and exercises). Both can be downloaded.'), actions: [['help:manual', T('打開使用手冊', 'Open the user manual')]] }) },
+    { k: ['手冊', '說明書', '說明', 'manual', 'guide', 'help'], a: () => ({ text: T('「開始這裡」頁有兩份手冊：「使用手冊（精簡版）」，以及給學生一步一步跟著做的「完整版操作手冊」（繁體中文，附截圖、檢核表與練習題），兩份都可以下載。另有「工具書」：第一部是使用手冊，第二部用範例教您完成滯洪池檢核，可下載 PDF。', 'The "Start here" page has two manuals: the short user manual, and a full step-by-step guide for students (Traditional Chinese, with screenshots, a checklist and exercises). Both can be downloaded. There is also a book (Traditional Chinese): Part I is the user manual and Part II teaches detention-pond checking with worked examples; it can be downloaded as a PDF.'), actions: [['help:manual', T('打開使用手冊', 'Open the user manual')], ['help:book', T('打開工具書', 'Open the book')]] }) },
+    { k: ['工具書', '這本書', '書裡', '書中', '教科書', '範例教程', '電子書', 'book', 'textbook', 'pdf'], a: () => ({ text: T('工具書在「開始這裡 → 工具書」：第一部是使用手冊，第二部用範例一步一步教您完成滯洪池檢核。可以線上閱讀，也可以下載 PDF、單一網頁版與範例資料 ZIP。在這裡輸入關鍵字（例如「孔口公式」），我會幫您找到書中的章節。', 'The book is under "Start here → Book": Part I is the user manual and Part II teaches detention-pond checking with worked examples. Read it online or download the PDF, a single-page HTML and the example data ZIP. Type a keyword here (for example "orifice") and I will find the section.'), actions: [['help:book', T('打開工具書', 'Open the book')]] }) },
     { k: ['你好', '嗨', '哈囉', '您好', 'hello', 'hi', 'hey'], a: () => ({ text: T('您好，我是 PondGate 的離線說明助理。可以問我「下一步要做什麼」、「為什麼按鈕不能按」、「Qallow 是什麼」等問題。我不會改動您的輸入，也不做工程判斷。', 'Hello, I am the PondGate offline help assistant. Ask me "what should I do next", "why is the button grey" or "what is Qallow". I never change your inputs and I do not make engineering judgements.') }) }
   ];
   function answer(raw) {
@@ -171,9 +173,12 @@
     INTENTS.forEach((it, i) => { const s = it.k.filter(k => hit(q, k.toLowerCase())).length; if (s > score) { score = s; best = it; } });
     const terms = G.filter(g => g.keys.some(k => hit(q, k.toLowerCase())));
     const askDef = /是什麼|什麼是|意思|定義|代表|what is|what's|meaning|define|stands for/.test(q);
-    if (terms.length && (askDef || !best)) return { terms: terms.slice(0, 3) };
-    if (best) { const r = best.a(); if (terms.length && !r.terms) r.terms = terms.slice(0, 2); return r; }
-    return { text: T('抱歉，我是離線規則式助理，只能回答 PondGate 的操作與名詞問題。可以試試下面的常見問題，或打開使用手冊。', 'Sorry, I am an offline rule-based assistant and can answer only PondGate operation and terminology questions. Try a common question below or open the user manual.'), actions: [['help:manual', T('打開使用手冊', 'Open the user manual')], ['help:glossary', T('打開名詞表', 'Open the glossary')]] };
+    const book = window.PondGateBook ? window.PondGateBook.search(raw, 3) : [];
+    const bookActs = book.map(s => ['book:' + s.id, T('工具書：', 'Book: ') + s.title]);
+    if (terms.length && (askDef || !best)) return bookActs.length ? { terms: terms.slice(0, 3), actions: bookActs.slice(0, 2) } : { terms: terms.slice(0, 3) };
+    if (best) { const r = best.a(); if (terms.length && !r.terms) r.terms = terms.slice(0, 2); if (bookActs.length) r.actions = (r.actions || []).concat(bookActs.slice(0, 2)); return r; }
+    if (book.length) return { text: T('我在工具書中找到這些相關章節，按一下就會打開那一節：', 'These sections of the book look relevant; press one to open it:') + '\n' + book.map(s => '• ' + (s.chapter === s.title ? s.title : s.chapter + '｜' + s.title) + '：' + window.PondGateBook.snippet(s, raw)).join('\n'), actions: bookActs };
+    return { text: T('抱歉，我是離線規則式助理，只能回答 PondGate 的操作與名詞問題，也可以在工具書中搜尋。可以試試下面的常見問題，或打開使用手冊。', 'Sorry, I am an offline rule-based assistant and can answer only PondGate operation and terminology questions, or search the book. Try a common question below or open the user manual.'), actions: [['help:manual', T('打開使用手冊', 'Open the user manual')], ['help:book', T('打開工具書', 'Open the book')], ['help:glossary', T('打開名詞表', 'Open the glossary')]] };
   }
   function answerHtml(r) {
     let h = '';
@@ -252,7 +257,7 @@
       .map(g => `<div class="hc-term"><b>${esc(term(g))}</b>（${esc(zh() ? g.te : g.tz)}）<br>${esc(def(g))} <button type="button" class="hc-link" data-hc-go="${esc(g.target)}">${T('看欄位', 'Show field')}</button></div>`).join('') || `<p>${T('找不到符合的名詞。', 'No matching term.')}</p>`;
   }
   function renderPage() {
-    const tabs = [['start', T('開始這裡', 'Start here')], ['lessons', T('引導練習', 'Guided lessons')], ['manual', T('使用手冊（精簡版）', 'User manual (short)')], ['guide', T('完整版操作手冊', 'Full step-by-step guide')], ['glossary', T('名詞表', 'Glossary')], ['assistant', T('AI 助理', 'AI assistant')]];
+    const tabs = [['start', T('開始這裡', 'Start here')], ['lessons', T('引導練習', 'Guided lessons')], ['manual', T('使用手冊（精簡版）', 'User manual (short)')], ['guide', T('完整版操作手冊', 'Full step-by-step guide')], ['book', T('工具書', 'Book')], ['glossary', T('名詞表', 'Glossary')], ['assistant', T('AI 助理', 'AI assistant')]];
     const steps = T([['1 設定入流', '模組 1：尖峰流量與歷線形狀。', 'mod-inflow'], ['2 設定池與出口', '模組 2–3：池面積、池底高程、堰或開口。', 'mod-storage'], ['3 執行路由', '模組 4：按「執行路由與評估」。', 'run'], ['4 讀結果、存紀錄', '模組 6：先看質量平衡，再看尖峰與水位。', 'mod-evaluation'], ['5（選用）受限篩選', '模組 5：需有自由出流證據。', 'mod-optimization']],
       [['1 Set the inflow', 'Module 1: peak discharge and hydrograph shape.', 'mod-inflow'], ['2 Set pond and outlet', 'Modules 2–3: area, floor elevation, weir or opening.', 'mod-storage'], ['3 Run routing', 'Module 4: press "Run routing and evaluation".', 'run'], ['4 Read and record', 'Module 6: check mass balance first, then peaks and levels.', 'mod-evaluation'], ['5 (optional) Screening', 'Module 5: needs free-discharge evidence.', 'mod-optimization']]);
     const panes = {
@@ -263,6 +268,7 @@
       lessons: '<div id="hcLessons"></div>',
       manual: `<div class="hc-actions" style="margin-bottom:8px"><button type="button" class="hc-btn" id="hcManualDl">${T('下載使用手冊（HTML）', 'Download the user manual (HTML)')}</button></div><div class="hc-man">${manualHtml(false)}</div>`,
       guide: guidePane(),
+      book: window.PondGateBook ? window.PondGateBook.paneHtml() : `<p>${T('工具書未載入。', 'The book did not load.')}</p>`,
       glossary: `<div class="hc-gloss"><input id="hcGlossFilter" type="search" placeholder="${T('輸入名詞搜尋，例如 Qallow、自由出流', 'Search a term, for example Qallow or free discharge')}"><div id="hcGlossList">${glossHtml('')}</div></div>`,
       assistant: `<p>${T('AI 助理是<b>離線規則式</b>說明：它在您的瀏覽器內，依關鍵字與目前畫面狀態回答操作與名詞問題。它不連線到外部 AI 服務、不傳送資料、不改動輸入，也不做工程判斷。', 'The AI assistant is an <b>offline rule-based</b> guide. It runs in your browser and answers operation and terminology questions from keywords and the current screen state. It does not connect to an external AI service, send data, change inputs or make engineering judgements.')}</p><div class="hc-actions"><button type="button" class="hc-btn primary" data-hc-open="drawer">${T('打開 AI 助理', 'Open the AI assistant')}</button></div>`
     };
