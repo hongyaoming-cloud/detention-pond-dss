@@ -40,6 +40,7 @@ const EX = [
   { id: 'ex20_1', ch: 'C', evidence: true, set: { case: 'user', shape: 'custom', points: SITE, area: 500, bw: 0.30, qallow: 0.15, hallow: 0.80, optBmin: 0.10, optBmax: 0.60, optObjective: 'area' }, screen: true },
   { id: 'ex18_2', ch: 'C', evidence: true, set: { qallow: 0.040, hallow: 1.00 }, screen: true },
 ];
+const FIGS = { demo: ['qchart'], weir_b010: ['qchart'], ori_ao010: ['qchart'], long: ['qchart'] }; // only the charts the book shows
 const ORDER = ['case', 'shape', 'triMode', 'storageMode'];
 async function setv(p, id, v) { await p.evaluate(([id, v]) => { const e = document.getElementById(id); if (!e) throw new Error('no #' + id); if (typeof v === 'boolean') e.checked = v; else e.value = String(v); e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true })); }, [id, v]); await p.waitForTimeout(60); }
 const cell = p => p.evaluate(() => { const rows = [...document.querySelectorAll('#metricbody tr')].map(r => [...r.cells].map(c => c.innerText.trim())); const o = {}; rows.forEach(r => { o[r[0]] = r[1]; }); return o; });
@@ -57,14 +58,14 @@ const inputs = p => p.evaluate(() => { const o = {}; document.querySelectorAll('
     const rec = { id: ex.id, ch: ex.ch, set: ex.set, evidence: !!ex.evidence, inputs: await inputs(p), metrics: await cell(p),
       verdict: await p.evaluate(() => (document.getElementById('pgVerdict') || {}).innerText || '') };
     await p.evaluate(() => window.DSSWorkspacePages.openTarget('mod-evaluation')); await p.waitForTimeout(400);
-    for (const c of ['qchart', 'hchart']) { const l = p.locator('#' + c); if (await l.count()) { await l.scrollIntoViewIfNeeded(); await l.screenshot({ path: path.join(FIG, `${ex.id}_${c}.png`) }); } }
+    for (const c of (ex.ch === 'C' ? [] : FIGS[ex.id] || [])) { const l = p.locator('#' + c); if (await l.count()) { await l.scrollIntoViewIfNeeded(); await l.screenshot({ path: path.join(FIG, `${ex.id}_${c}.png`) }); } }
     if (ex.screen) {
       await p.evaluate(() => document.getElementById('optimize').click());
       for (let i = 0; i < 60; i++) { await p.waitForTimeout(500); const o = await p.evaluate(() => document.getElementById('optout').innerText.trim()); if (/^(選定可行|阻擋)/.test(o)) break; }
       await p.waitForTimeout(1200);
       rec.screen = await p.evaluate(() => { const rows = [...document.querySelectorAll('#optout tr')].map(r => [...r.cells].map(c => c.innerText.trim())); return { text: document.getElementById('optout').innerText.trim(), rows, guide: (document.querySelector('.diagnostic-guide .three-step') || {}).innerText || '' }; });
       rec.afterScreen = { area: await p.evaluate(() => document.getElementById('area').value), bw: await p.evaluate(() => document.getElementById('bw').value) };
-      const l = p.locator('#optout'); if (await l.count()) await l.screenshot({ path: path.join(FIG, `${ex.id}_optout.png`) });
+      const l = p.locator('#optout'); if (ex.ch !== 'C' && ['screen_ok', 'site_screen'].includes(ex.id) && await l.count()) await l.screenshot({ path: path.join(FIG, `${ex.id}_optout.png`) });
     }
     out.examples.push(rec); console.log(ex.id, rec.metrics['出流尖峰 Qp,o'], rec.metrics['最大水位 Hmax'], rec.screen ? rec.screen.text.split('\n')[0] : '');
   }

@@ -19,7 +19,8 @@
     const hRow = rows.find(r => /Hmax$/.test(first(r)));
     const qRow = rows.find(r => /Qp,o$/.test(first(r)));
     const qiRow = rows.find(r => /Qp,i$/.test(first(r)));
-    return { hmax: cellNum(hRow), qout: cellNum(qRow), qin: cellNum(qiRow) };
+    const dRow = rows.find(r => /Te \+ Td/.test(first(r)));
+    return { hmax: cellNum(hRow), qout: cellNum(qRow), qin: cellNum(qiRow), resid: cellNum(dRow) };
   }
   function compare(v, lim, dec) {
     if (!Number.isFinite(v) || !Number.isFinite(lim)) return 'none';
@@ -32,17 +33,19 @@
     const r = readResult(); if (!r) return null;
     const hallow = Number($('hallow')?.value), qallow = Number($('qallow')?.value);
     const st = window.PondGateHelp?.runState?.() || {};
-    const h = compare(r.hmax, hallow, 3), q = compare(r.qout, qallow, 4);
-    const overall = (h === 'stop' || q === 'stop') ? 'stop' : (h === 'ok' && q === 'ok') ? 'ok' : 'warn';
-    return { ...r, hallow, qallow, h, q, overall, stale: !!st.changedAfterRun, demo: !st.userRan };
+    const rlim = Number($('residualPct')?.value), td = Number($('drainHours')?.value);
+    const h = compare(r.hmax, hallow, 3), q = compare(r.qout, qallow, 4), d = Number.isFinite(r.resid) ? compare(r.resid, rlim, 2) : 'ok';
+    const overall = (h === 'stop' || q === 'stop' || d === 'stop') ? 'stop' : (h === 'ok' && q === 'ok' && d === 'ok') ? 'ok' : 'warn';
+    return { ...r, hallow, qallow, rlim, td, h, q, d, overall, stale: !!st.changedAfterRun, demo: !st.userRan };
   }
   const word = s => ({ ok: T('未超過', 'within limit'), stop: T('超過', 'exceeds limit'), warn: T('等於或無法判斷，請再確認', 'equal or undetermined; check again'), none: T('尚未宣告', 'not declared') }[s]);
   function verdictText(v) {
     if (!v) return T('目前還沒有結果。請先到「設定與路由」按「執行路由與評估」。', 'There is no result yet. Press "Run routing and evaluation" first.');
     let s = T(`最高水位 Hmax = ${v.hmax.toFixed(3)} m，容許水位 Hallow = ${v.hallow.toFixed(3)} m（${word(v.h)}）；出流尖峰 Qp,o = ${v.qout.toFixed(4)} m³/s，容許出流 Qallow = ${v.qallow.toFixed(4)} m³/s（${word(v.q)}）。`,
       `Maximum level Hmax = ${v.hmax.toFixed(3)} m, allowable Hallow = ${v.hallow.toFixed(3)} m (${word(v.h)}); peak outflow Qp,o = ${v.qout.toFixed(4)} m³/s, allowable Qallow = ${v.qallow.toFixed(4)} m³/s (${word(v.q)}). `);
+    if (Number.isFinite(v.resid)) s += T(`排空 ${v.td} 小時後殘留 ${v.resid.toFixed(2)} %，容許 ${v.rlim.toFixed(2)} %（${word(v.d)}）。`, `Residual after ${v.td} h drain-down = ${v.resid.toFixed(2)} %, allowable ${v.rlim.toFixed(2)} % (${word(v.d)}). `);
     s += v.overall === 'stop' ? T('至少一項超過限制：修正前不可採用此設計。', 'At least one limit is exceeded: do not adopt this design before revision.')
-      : v.overall === 'ok' ? T('兩項都沒有超過您宣告的限制。這只是初步判讀，自由出流證據與工程審查完成前，不是最終設計。', 'Neither limit is exceeded. This is a preliminary reading only; it is not a final design before the free-discharge evidence and engineering review.')
+      : v.overall === 'ok' ? T('最高水位、出流尖峰與排空殘留都沒有超過您宣告的限制。這只是初步判讀，自由出流證據與工程審查完成前，不是最終設計。', 'No declared limit (level, peak outflow, drain-down residual) is exceeded. This is a preliminary reading only; it is not a final design before the free-discharge evidence and engineering review.')
       : T('至少一項等於限制或無法判斷，請不要當作通過。', 'At least one value equals the limit or cannot be judged; do not treat it as a pass.');
     if (v.stale) s += T(' 注意：輸入已改變，這是上一次執行的結果，請重新執行。', ' Note: inputs changed; this is the previous result. Run again.');
     return s;
@@ -58,7 +61,7 @@
     box.className = v.stale ? 'warn' : v.overall;
     const head = v.stale ? T('輸入已改變：下表是上一次執行的結果', 'Inputs changed: the table below is from the previous run')
       : v.overall === 'stop' ? T('不夠用：至少一項超過您宣告的限制', 'Not good enough: at least one declared limit is exceeded')
-      : v.overall === 'ok' ? T('初步判讀：兩項都沒有超過限制', 'Preliminary reading: both limits are met')
+      : v.overall === 'ok' ? T('初步判讀：三項都沒有超過限制', 'Preliminary reading: all three limits are met')
       : T('請再確認：有數值等於限制或無法判斷', 'Check again: a value equals a limit or cannot be judged');
     const row = (lab, val, lim, s) => `<tr><td>${lab}</td><td>${val}</td><td>${lim}</td><td class="tag ${s}">${esc(word(s))}</td></tr>`;
     box.innerHTML = '<h3>' + T('新手判讀｜這個池子夠不夠用？', 'Beginner check | Is this pond good enough?') + '</h3>'
@@ -66,10 +69,12 @@
       + '<table><thead><tr><th>' + T('項目', 'Item') + '</th><th>' + T('本次結果', 'This run') + '</th><th>' + T('您宣告的限制', 'Your declared limit') + '</th><th>' + T('判讀', 'Reading') + '</th></tr></thead><tbody>'
       + row(T('最高水位 Hmax', 'Maximum level Hmax'), v.hmax.toFixed(3) + ' m', 'Hallow = ' + (Number.isFinite(v.hallow) ? v.hallow.toFixed(3) : '—') + ' m', v.h)
       + row(T('出流尖峰 Qp,o', 'Peak outflow Qp,o'), v.qout.toFixed(4) + ' m³/s', 'Qallow = ' + (Number.isFinite(v.qallow) ? v.qallow.toFixed(4) : '—') + ' m³/s', v.q)
+      + (Number.isFinite(v.resid) ? row(T('排空殘留（Te + Td）', 'Drain-down residual (Te + Td)'), v.resid.toFixed(2) + ' %', T('容許 ', 'limit ') + (Number.isFinite(v.rlim) ? v.rlim.toFixed(2) : '—') + ' %', v.d) : '')
       + '</tbody></table><p>' + (v.overall === 'stop'
         ? T('修正前不可採用此設計。可調整池面積（模組 2）或出口尺寸（模組 3）後重新執行；不要只為了通過而放寬 Hallow 或 Qallow。', 'Do not adopt this design before revision. Adjust the pond area (Module 2) or the outlet size (Module 3) and run again; do not relax Hallow or Qallow just to pass.')
         : T('這只是依本次結果與您宣告的限制所做的初步判讀；自由出流證據與工程審查完成前，不是最終設計。限制值在模組 5 設定。', 'This is a preliminary reading of this run against your declared limits; it is not a final design before the free-discharge evidence and engineering review. The limits are set in Module 5.')) + '</p>'
-      + (v.overall === 'stop' && !v.stale ? '<p>' + T('怎麼調整：加大池面積時，最高水位和出流尖峰通常都會下降；縮小出口時，出流尖峰下降但最高水位會上升。每次只改一項，重新執行後再比較上表兩列。', 'How to adjust: a larger pond area usually lowers both the maximum level and the peak outflow; a smaller outlet lowers the peak outflow but raises the maximum level. Change one thing at a time, run again, and compare both rows.') + '</p>' : '')
+      + (v.d === 'stop' && !v.stale ? '<p>' + T('排空殘留超過限制：池子在規定時間內排不乾，下一場雨來時可用的容量會變少。常見原因是出口底高程高於池底，或開口太小（見工具書第 15 章）。', 'The drain-down residual exceeds the limit: the pond does not empty in the required time, leaving less room for the next storm. Common causes are an outlet invert above the pond floor or a very small opening (see chapter 15 of the book).') + '</p>' : '')
+      + (v.overall === 'stop' && !v.stale ? '<p>' + T('怎麼調整：加大池面積時，最高水位和出流尖峰通常都會下降；縮小出口時，出流尖峰下降但最高水位會上升。每次只改一項，重新執行後再比較上表。', 'How to adjust: a larger pond area usually lowers both the maximum level and the peak outflow; a smaller outlet lowers the peak outflow but raises the maximum level. Change one thing at a time, run again, and compare the table.') + '</p>' : '')
       + (freeIncomplete() ? '<p><strong>' + T('適用範圍：', 'Scope: ') + '</strong>' + T('自由出流證據尚未完整（模組 3），所以這個判讀只供探索與學習，不能當作工程設計驗證。', 'The free-discharge evidence is not complete (Module 3), so this reading is for exploration and learning only, not an engineering design check.') + '</p>' : '')
       + (v.stale ? '<p>' + T('提醒：切換語言也會依目前的輸入重新計算一次。', 'Reminder: switching the language also recomputes once with the current inputs.') + '</p>' : '')
       + (v.stale ? '<button type="button" data-pg-go="mod-routing">' + T('前往重新執行', 'Go and run again') + '</button>' : '')

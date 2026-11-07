@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.3.0 (draft, 2026-11-07)
+
+The PondGate book (Traditional Chinese) inside the app, and offline book search in the assistant. No calculation changed.
+- New "Start here → Book" tab: 《PondGate 滯洪池演算實務：使用手冊與範例教程》, 20 chapters and 4 appendices. Part I is the user manual (including accounts and projects); Part II teaches routing, outlet formulas, RK4, design checking, screening, blocked results and cross-model checks with worked examples and exercises with answers.
+- Downloads: PDF (54 pages), a single-page HTML with figures embedded, and a ZIP of the example data with an independent recomputation script.
+- Every number quoted in Part II was produced by this version (`docs/book/run_examples.js`) and recomputed by an independent RK4 script (`docs/book/check_examples.py`): all match (Qp,o within 0.00005 m³/s, Hmax within 0.0005 m); a perturbed number is caught.
+- The offline assistant searches the book and offers buttons that open the matching section; it still sends nothing and makes no engineering judgement.
+- Beginner check: a third row compares the drain-down residual at Te + Td with the declared limit (an outlet whose invert is above the floor can no longer show "both limits met" while the pond cannot empty).
+- Diagnostic guide: after a blocked screening, the condition rows say that screening ran with no feasible candidate instead of "not yet run".
+- Checks: `audit/book_v1_3_0/book_check.js` 16/16 with negative controls; existing checks re-run.
+
 ## v1.2.1 (draft, 2026-11-07)
 
 Fixes from a ChatGPT (agent mode) novice test of v1.2.0 (`audit/chatgpt_novice_v1_2_1/FINDINGS.md`). Display only; no calculation changed.

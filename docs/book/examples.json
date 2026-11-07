@@ -1,6 +1,6 @@
 {
- "version": "1.1.0",
- "generated": "2026-11-07T13:01:59.674Z",
+ "version": "1.3.0",
+ "generated": "2026-11-07T13:05:04.957Z",
  "examples": [
   {
    "id": "demo",
@@ -8,6 +8,7 @@
    "set": {},
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -108,6 +109,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -209,6 +211,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -310,6 +313,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -411,6 +415,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -512,6 +517,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -613,6 +619,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -715,6 +722,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -817,6 +825,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -917,6 +926,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "long",
     "qp": ".120",
     "dur": "120",
@@ -1017,6 +1027,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "192",
@@ -1117,6 +1128,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -1217,6 +1229,7 @@
    },
    "evidence": true,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -1373,6 +1386,7 @@
    },
    "evidence": true,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -1528,6 +1542,7 @@
    },
    "evidence": true,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -1642,6 +1657,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "user",
     "qp": "0.120",
     "dur": "60",
@@ -1747,6 +1763,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "user",
     "qp": "0.120",
     "dur": "60",
@@ -1854,6 +1871,7 @@
    },
    "evidence": true,
    "inputs": {
+    "bkSearch": "",
     "case": "user",
     "qp": "0.120",
     "dur": "60",
@@ -2009,6 +2027,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -2108,6 +2127,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -2207,6 +2227,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -2309,6 +2330,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",
@@ -2410,6 +2432,7 @@
    },
    "evidence": false,
    "inputs": {
+    "bkSearch": "",
     "case": "long",
     "qp": ".120",
     "dur": "84",
@@ -2502,6 +2525,170 @@
    "verdict": "新手判讀｜這個池子夠不夠用？\n\n不夠用：至少一項超過您宣告的限制\n\n項目\t本次結果\t您宣告的限制\t判讀\n最高水位 Hmax\t0.497 m\tHallow = 1.000 m\t未超過\n出流尖峰 Qp,o\t0.1191 m³/s\tQallow = 0.0800 m³/s\t超過\n\n修正前不可採用此設計。可調整池面積（模組 2）或出口尺寸（模組 3）後重新執行；不要只為了通過而放寬 Hallow 或 Qallow。\n\n怎麼調整：加大池面積時，最高水位和出流尖峰通常都會下降；縮小出口時，出流尖峰下降但最高水位會上升。每次只改一項，重新執行後再比較上表兩列。\n\n適用範圍：自由出流證據尚未完整（模組 3），所以這個判讀只供探索與學習，不能當作工程設計驗證。\n\n調整池子（模組 2）調整出口（模組 3）查看限制值（模組 5）"
   },
   {
+   "id": "ex20_1",
+   "ch": "C",
+   "set": {
+    "case": "user",
+    "shape": "custom",
+    "points": "0, 0\n10, 0.03\n20, 0.09\n30, 0.21\n40, 0.25\n50, 0.18\n60, 0.12\n80, 0.06\n100, 0.025\n120, 0",
+    "area": 500,
+    "bw": 0.3,
+    "qallow": 0.15,
+    "hallow": 0.8,
+    "optBmin": 0.1,
+    "optBmax": 0.6,
+    "optObjective": "area"
+   },
+   "evidence": true,
+   "inputs": {
+    "bkSearch": "",
+    "case": "user",
+    "qp": "0.120",
+    "dur": "60",
+    "shape": "custom",
+    "triMode": "times",
+    "tpratio": "1",
+    "tpeak": "30",
+    "recess": "30",
+    "rise": "24",
+    "plateau": "72",
+    "recessLong": "24",
+    "points": "0, 0\n10, 0.03\n20, 0.09\n30, 0.21\n40, 0.25\n50, 0.18\n60, 0.12\n80, 0.06\n100, 0.025\n120, 0",
+    "storageMode": "constant",
+    "floor": "0.00",
+    "storageTable": "0, 0\n0.50, 90\n1.00, 180",
+    "area": "500",
+    "h0": "0",
+    "riserOn": false,
+    "riserCrest": "0.60",
+    "riserInvert": "0.00",
+    "riserD": "0.30",
+    "riserCr": "1.70",
+    "riserCd": "0.62",
+    "freeDischarge": true,
+    "freeTailwater": true,
+    "freeBackwater": true,
+    "freeSubmergence": true,
+    "freeOperation": true,
+    "freeEvidenceRecord": "教學假設（僅供練習）：單一出口自由出流，不受尾水、回水、淹沒或操作控制影響。",
+    "screeningLimitRecord": "教學假設（僅供練習）：Qallow 與 Hallow 為本書範例設定值。",
+    "coeffMode": "fixed",
+    "cwPreset": "1.70",
+    "cdPreset": "0.62",
+    "crPreset": "1.70",
+    "rCdPreset": "0.62",
+    "coeffProfile": "custom",
+    "coeffTable": "",
+    "coeffSource": "",
+    "coeffUrl": "",
+    "pipeOn": false,
+    "pipeD": "0.30",
+    "pipeCd": "0.62",
+    "pipeInvert": "0.00",
+    "weirOn": true,
+    "cw": "1.70",
+    "bw": "0.3",
+    "crest": "0",
+    "oriOn": false,
+    "cd": "0.62",
+    "ao": "0.010",
+    "oriH": "0.10",
+    "oriW": "0.100",
+    "invert": "0.05",
+    "qallow": "0.15",
+    "hallow": "0.8",
+    "optConfig": "weir",
+    "optMode": "quick",
+    "optObjective": "area",
+    "href": "1.00",
+    "drainHours": "24",
+    "residualPct": "1",
+    "optB": true,
+    "optBmin": "0.1",
+    "optBmax": "0.6",
+    "optAo": false,
+    "optAomin": "0.005",
+    "optAomax": "0.050",
+    "optD": false,
+    "optDmin": "0.15",
+    "optDmax": "0.60",
+    "contAmin": "60",
+    "contAmax": "600",
+    "displayMin": "120"
+   },
+   "metrics": {
+    "入流尖峰 Qp,i": "0.2500 m³/s",
+    "出流尖峰 Qp,o": "0.1662 m³/s",
+    "尖峰比 RQ = Qp,o/Qp,i": "0.665",
+    "事件新增滯洪量 ΔSmax": "236.763 m³",
+    "Te + Td 剩餘蓄水": "0.10 %",
+    "蓄水比 RS = ΔSmax/Vin": "0.355",
+    "無因次遲滯 RT": "0.102",
+    "最大水位 Hmax": "0.474 m",
+    "絕對守恆殘差": "1.111e-10 m³",
+    "質量平衡殘差 ε/Vin": "0.000 %",
+    "近洪峰平坦指標 FPI95": "0.008",
+    "中位體積時間": "67.7 分鐘",
+    "出流重心時間": "81.5 分鐘"
+   },
+   "verdict": "新手判讀｜這個池子夠不夠用？\n\n不夠用：至少一項超過您宣告的限制\n\n項目\t本次結果\t您宣告的限制\t判讀\n最高水位 Hmax\t0.474 m\tHallow = 0.800 m\t未超過\n出流尖峰 Qp,o\t0.1662 m³/s\tQallow = 0.1500 m³/s\t超過\n\n修正前不可採用此設計。可調整池面積（模組 2）或出口尺寸（模組 3）後重新執行；不要只為了通過而放寬 Hallow 或 Qallow。\n\n怎麼調整：加大池面積時，最高水位和出流尖峰通常都會下降；縮小出口時，出流尖峰下降但最高水位會上升。每次只改一項，重新執行後再比較上表兩列。\n\n調整池子（模組 2）調整出口（模組 3）查看限制值（模組 5）",
+   "screen": {
+    "text": "選定可行受限篩選案例——已完成路由\n\n系統先完成完整可見網格搜尋，再進行 2 輪局部細化；上方圖形已依此選定篩選案例重新路由。 所有已篩選出口尺寸均未停留於宣告邊界。\n\n篩選項目\t結果\t工程判讀\n出口組合\t僅被動堰流——可正式篩選\t僅列出的出口構造啟用。\n池面積 A\t380 m²\t於宣告的 20 m² 網格中選得。\n堰寬 b\t0.12 m\t已篩選\n事件新增滯洪量 ΔSmax\t289.0 m³\t相對於初始蓄水量 S0 的最大新增蓄水。\nTe + Td 排空殘留\t0.20 / 1.00%\t事件新增蓄水殘留必須符合宣告的排空約束。\n出流尖峰／容許值\t0.1392 / 0.1500 m³/s\t符合出流尖峰限制。\n最高水位／容許值\t0.761 / 0.800 m\t符合水位限制。\n反應指標\tRQ = 0.557; RS = 0.434\t削減與事件新增滯洪量指標。\n\n此為宣告範圍下的條件式離散篩選結果；不是連續全域最佳解，也不是最終工程設計驗證。",
+    "rows": [
+     [
+      "篩選項目",
+      "結果",
+      "工程判讀"
+     ],
+     [
+      "出口組合",
+      "僅被動堰流——可正式篩選",
+      "僅列出的出口構造啟用。"
+     ],
+     [
+      "池面積 A",
+      "380 m²",
+      "於宣告的 20 m² 網格中選得。"
+     ],
+     [
+      "堰寬 b",
+      "0.12 m",
+      "已篩選"
+     ],
+     [
+      "事件新增滯洪量 ΔSmax",
+      "289.0 m³",
+      "相對於初始蓄水量 S0 的最大新增蓄水。"
+     ],
+     [
+      "Te + Td 排空殘留",
+      "0.20 / 1.00%",
+      "事件新增蓄水殘留必須符合宣告的排空約束。"
+     ],
+     [
+      "出流尖峰／容許值",
+      "0.1392 / 0.1500 m³/s",
+      "符合出流尖峰限制。"
+     ],
+     [
+      "最高水位／容許值",
+      "0.761 / 0.800 m",
+      "符合水位限制。"
+     ],
+     [
+      "反應指標",
+      "RQ = 0.557; RS = 0.434",
+      "削減與事件新增滯洪量指標。"
+     ]
+    ],
+    "guide": "步驟 1｜篩選計算狀態\n通過 受限篩選完成\n步驟 2｜條件檢核\n通過\n出口型式適用正式篩選\n單一被動出口，固定係數。\n通過\n最高水位 Hmax ≤ Hallow\nHmax = 0.761 m；Hallow = 0.800 m。\n通過\n最大出流 Qmax ≤ Qallow\nQmax = 0.1392 m³/s；Qallow = 0.1500 m³/s。\n通過\n排空殘留與 S(H) 邊界\n殘留 = 0.20 %；宣告限制 = 1.00 %；S(H) 邊界未超出。\n通過\n自由出流四項佐證\n已完成 4/4 項使用者佐證。\n步驟 3｜下一步\n目前結果符合已宣告條件；仍須完成最終工程設計驗證。"
+   },
+   "afterScreen": {
+    "area": "380",
+    "bw": "0.1234375"
+   }
+  },
+  {
    "id": "ex18_2",
    "ch": "C",
    "set": {
@@ -2510,6 +2697,7 @@
    },
    "evidence": true,
    "inputs": {
+    "bkSearch": "",
     "case": "tri",
     "qp": "0.120",
     "dur": "60",

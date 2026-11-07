@@ -93,7 +93,7 @@
 .cover{text-align:center;padding:60px 0 30px;border-bottom:2px solid #0b557d;margin-bottom:20px}.cover h1{color:#0b3c5d;font-size:28px}.toc li{margin:2px 0}section{page-break-before:always}section h2{color:#0b3c5d;border-bottom:2px solid #d6e3e8;padding-bottom:4px}h3{color:#0b557d}
 ${CSS.replace(/\.bk-view /g, '')}@media print{a{color:inherit;text-decoration:none}.bk-tw{overflow:visible}figure{page-break-inside:avoid}table{page-break-inside:avoid}}</style></head><body>
 <div class="cover"><h1>${esc(D.title)}</h1><p>PondGate v${esc(D.version)}｜繁體中文版</p><p>洪耀明（Yao-Ming Hong）　國立東華大學自然資源與環境學系</p><p>書中數字皆由本版軟體實際執行，並以獨立程式驗算。</p></div>
-<h2>目錄</h2><ol class="toc">${toc}</ol>${body}</body></html>`;
+<h2>目錄</h2><ul class="toc" style="list-style:none;padding-left:0">${toc}</ul>${body}</body></html>`;
   }
   async function downloadHtml() {
     const html = await documentHtml();
