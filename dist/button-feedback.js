@@ -52,7 +52,7 @@
   },true);
   document.addEventListener('click',event=>{
     const button=event.target.closest?.('button');
-    if(!button)return;
+    if(!button||button.closest('#acctRoot,#acctBar'))return; // v1.2 account buttons give their own messages
     say(start(button));
     window.setTimeout(()=>{const message=done(button);if(message)say(message,/未完成|not completed/i.test(message)?'warn':'ok');},80);
   },true);

@@ -1,5 +1,5 @@
 {
- "date": "2026-11-07T01:44:54.661Z",
+ "date": "2026-11-07T02:41:37.427Z",
  "base": "http://127.0.0.1:8787",
  "pass": 47,
  "total": 47,
@@ -235,9 +235,9 @@
    "detail": ""
   },
   {
-   "id": "C1 calculation files identical to v1.1.0; only index.html and account.js changed in dist",
+   "id": "C1 calculation files identical to v1.1.0; only index.html, account.js and button-feedback.js (display) changed in dist",
    "pass": true,
-   "detail": "dist/account.js, dist/index.html"
+   "detail": "dist/account.js, dist/button-feedback.js, dist/index.html"
   }
  ]
 }

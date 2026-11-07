@@ -108,7 +108,7 @@ const STATE = { schema: 1, app: '1.2.0', lang: 'zh-Hant', fields: { 'qp#1': '0.2
   let pg = await ctx.newPage(); await pg.goto(BASE + '/'); await pg.waitForTimeout(1800);
   const signIn = async (u, p, newPw) => { await pg.fill('#acctUser', u); await pg.fill('#acctPass', p); await pg.click('#acctLoginBtn'); await pg.waitForTimeout(1400);
     if (newPw && await pg.isVisible('#acctPwForm')) { await pg.fill('#acctOld', p); await pg.fill('#acctNew', newPw); await pg.fill('#acctNew2', newPw); await pg.click('#acctPwBtn'); await pg.waitForTimeout(1400); } };
-  const signOut = async () => { await pg.click('#acctOut'); await pg.waitForTimeout(900); };
+  const signOut = async () => { await pg.click('#acctOut'); await pg.waitForTimeout(2400); };
   ok('U1 the server copy shows the sign-in screen first', await pg.isVisible('#acctLoginForm'));
   await pg.fill('#acctUser', SU); await pg.fill('#acctPass', 'nope-nope'); await pg.click('#acctLoginBtn'); await pg.waitForTimeout(1200);
   ok('U1n wrong password shows a Chinese error and stays on the sign-in screen', /帳號或密碼錯誤/.test(await pg.textContent('#acctLoginErr')) && await pg.isVisible('#acctLoginForm'));
@@ -157,7 +157,7 @@ const STATE = { schema: 1, app: '1.2.0', lang: 'zh-Hant', fields: { 'qp#1': '0.2
   /* ---------------- calculation files unchanged ---------------- */
   const diffCore = execSync('git diff --stat release/v1.1.0 -- dist/routing-core.js dist/physics-refinement.js dist/module-shell.js', { cwd: __dirname + '/../..' }).toString().trim();
   const diffAll = execSync('git diff --name-only release/v1.1.0 -- dist', { cwd: __dirname + '/../..' }).toString().trim().split('\n').filter(Boolean);
-  ok('C1 calculation files identical to v1.1.0; only index.html and account.js changed in dist', diffCore === '' && diffAll.every(f => ['dist/index.html', 'dist/account.js'].includes(f)), diffAll.join(', '));
+  ok('C1 calculation files identical to v1.1.0; only index.html, account.js and button-feedback.js (display) changed in dist', diffCore === '' && diffAll.every(f => ['dist/index.html', 'dist/account.js', 'dist/button-feedback.js'].includes(f)), diffAll.join(', '));
   const pass = res.filter(r => r.pass).length; console.log(`${pass}/${res.length}`);
   fs.writeFileSync(OUT, JSON.stringify({ date: new Date().toISOString(), base: BASE, pass, total: res.length, results: res }, null, 1));
   process.exit(pass === res.length ? 0 : 1);

@@ -35,13 +35,19 @@
   };
   const ROLE = { sysadmin: ['系統管理者', 'system administrator'], orgadmin: ['公司管理者', 'organisation administrator'], engineer: ['工程師', 'engineer'], viewer: ['檢視者', 'viewer'] };
   const roleName = r => T(...(ROLE[r] || [r, r]));
+  const ROLE_HELP = { sysadmin: ['管理所有公司與帳號，不能打開公司專案', 'manages organisations and accounts; cannot open company projects'], orgadmin: ['管理自己公司的帳號，可看公司全部專案', 'manages own organisation accounts; sees all its projects'], engineer: ['建立、儲存自己的專案，可分享給同事', 'creates and saves own projects; may share them'], viewer: ['只能看同事分享的專案，不能存檔', 'opens shared projects only; cannot save'] };
   const canSave = () => me && (me.role === 'engineer' || me.role === 'orgadmin');
   const isAdmin = () => me && (me.role === 'sysadmin' || me.role === 'orgadmin');
   const msg = code => (ERR[code] ? T(...ERR[code]) : T('發生錯誤：', 'Error: ') + code);
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const when = s => s ? new Date(s * 1000).toLocaleString(zh() ? 'zh-TW' : 'en-GB', { hour12: false }) : '—';
 
-  let me = null, current = null; // current = { id, name, note, mine }
+  let me = null, current = null, savedSnap = null; // current = { id, name, note, mine }
+  const snap = () => JSON.stringify(capture().fields);
+  const dirty = () => !!(current && current.writable && savedSnap !== null && snap() !== savedSnap);
+  let dirtyShown = false;
+  document.addEventListener('change', e => { if (!me || e.target.closest?.('#acctRoot')) return; const d = dirty(); if (d !== dirtyShown) { dirtyShown = d; renderBar(); } }, true);
+  window.addEventListener('beforeunload', e => { if (dirty()) { e.preventDefault(); e.returnValue = ''; } });
 
   async function call(method, path, data) {
     const r = await fetch('/api/' + path, { method, credentials: 'same-origin', headers: data ? { 'Content-Type': 'application/json' } : {}, body: data ? JSON.stringify(data) : undefined });
@@ -108,6 +114,7 @@
       <form id="acctLoginForm"><label for="acctUser">${T('帳號', 'Username')}</label><input id="acctUser" autocomplete="username" required>
       <label for="acctPass">${T('密碼', 'Password')}</label><input id="acctPass" type="password" autocomplete="current-password" required>
       <div class="acct-err" id="acctLoginErr">${note ? esc(note) : ''}</div>
+      <p class="acct-note">${T('忘記密碼？請洽貴公司的管理者幫您重設。', 'Forgot your password? Ask your organisation administrator to reset it.')}</p>
       <div class="acct-row"><button class="acct-btn primary" id="acctLoginBtn" type="submit">${T('登入', 'Sign in')}</button>
       <button class="acct-btn" type="button" id="acctLangBtn">${T('English', '中文')}</button></div></form>`, true, false);
     c.querySelector('#acctLangBtn').onclick = () => { document.getElementById('lang')?.click(); setTimeout(() => showLogin(), 50); };
@@ -140,37 +147,46 @@
     if (!me) { bar?.remove(); return; }
     if (!bar) { bar = document.createElement('div'); bar.id = 'acctBar'; document.querySelector('header.top')?.insertAdjacentElement('afterend', bar) || document.body.prepend(bar); }
     const proj = me.role === 'sysadmin' ? T('系統管理者不開啟公司專案', 'System administrators do not open company projects')
-      : current ? T('目前專案：', 'Project: ') + esc(current.name) + (current.writable ? (current.shared ? T('（已分享給同公司）', ' (shared)') : '') : T('（唯讀）', ' (read-only)')) : T('尚未開啟專案', 'No project open');
+      : current ? T('目前專案：', 'Project: ') + esc(current.name) + (current.writable ? (current.shared ? T('（已分享給同公司）', ' (shared)') : '') : T('（唯讀）', ' (read-only)')) + (current.writable && dirty() ? ` <b id="acctDirty" style="color:#a35a00">${T('● 有未儲存的變更', '● unsaved changes')}</b>` : '') : T('尚未開啟專案', 'No project open');
     bar.innerHTML = `<span class="who">${esc(me.display_name || me.username)}</span><span class="acct-tag" id="acctRole">${roleName(me.role)}</span>${me.org_name ? `<span class="acct-tag">${esc(me.org_name)}</span>` : ''}
       <span class="proj" id="acctCurrent">${proj}</span>
       <span class="sp"></span>
       ${current?.writable ? `<button class="acct-btn primary" id="acctSave">${T('儲存', 'Save')}</button>` : ''}
-      ${me.role === 'sysadmin' ? '' : `<button class="acct-btn" id="acctProjects">${T('專案', 'Projects')}</button>`}
+      ${canSave() && !current ? `<button class="acct-btn primary" id="acctQuickSave">${T('存成專案', 'Save as project')}</button>` : ''}
+      ${me.role === 'sysadmin' ? '' : `<button class="acct-btn" id="acctProjects">${canSave() ? T('存檔／開啟專案', 'Save / open projects') : T('開啟分享的專案', 'Open shared projects')}</button>`}
       ${isAdmin() ? `<button class="acct-btn" id="acctAdmin">${T('帳號管理', 'Accounts')}</button>` : ''}
       <button class="acct-btn" id="acctPw">${T('變更密碼', 'Password')}</button>
       <button class="acct-btn" id="acctOut">${T('登出', 'Sign out')}</button>
       <span id="acctToast" class="acct-ok" hidden role="status"></span>`;
     bar.querySelector('#acctSave')?.addEventListener('click', saveCurrent);
     bar.querySelector('#acctProjects')?.addEventListener('click', showProjects);
+    bar.querySelector('#acctQuickSave')?.addEventListener('click', showProjects);
     bar.querySelector('#acctAdmin')?.addEventListener('click', showAdmin);
     bar.querySelector('#acctPw').onclick = () => showPassword(false);
     bar.querySelector('#acctOut').onclick = logout;
   }
-  async function logout() { try { await call('POST', 'logout', {}); } catch { } me = null; current = null; renderBar(); showLogin(); }
+  async function logout() {
+    if (dirty() && !confirm(T('目前專案有未儲存的變更，登出後會遺失。仍要登出嗎？', 'The open project has unsaved changes that will be lost. Sign out anyway?'))) return;
+    try { await call('POST', 'logout', {}); } catch { }
+    me = null; current = null; savedSnap = null;
+    // reload so the next person at this computer does not see the previous user's inputs or results
+    location.reload();
+  }
   function afterLogin() { close(); renderBar(); if (me.must_change) showPassword(true); }
 
   async function saveCurrent() {
     if (!current?.writable) return;
-    try { await call('PUT', 'projects/' + current.id, { name: current.name, note: current.note, shared: current.shared, state: capture(), app_version: APP_VERSION }); toast(T('已儲存「', 'Saved "') + current.name + T('」。', '".')); }
+    try { await call('PUT', 'projects/' + current.id, { name: current.name, note: current.note, shared: current.shared, state: capture(), app_version: APP_VERSION }); savedSnap = snap(); dirtyShown = false; renderBar(); toast(T('已儲存「', 'Saved "') + current.name + T('」。', '".')); }
     catch (x) { toast(msg(x.code)); }
   }
   async function openProject(id) {
+    if (dirty() && !confirm(T('目前專案有未儲存的變更，開啟其他專案會遺失這些變更。仍要開啟嗎？', 'The open project has unsaved changes that will be lost. Open anyway?'))) return [];
     const { project: p } = await call('GET', 'projects/' + id);
     const st = JSON.parse(p.state);
     if (st.lang && st.lang !== document.documentElement.lang) document.getElementById('lang')?.click();
     const off = restore(st);
     current = { id: p.id, name: p.name, note: p.note, shared: p.shared, mine: p.mine, writable: p.writable, owner: p.owner };
-    close(); renderBar();
+    savedSnap = snap(); dirtyShown = false; close(); renderBar();
     window.DSSWorkspacePages?.openTarget('mod-inflow');
     toast(off.length ? T(`已開啟，但有 ${off.length} 個欄位無法還原。`, `Opened, but ${off.length} fields could not be restored.`) : T('已開啟。請到模組 4 按「執行」重新計算結果。', 'Opened. Press Run in Module 4 to compute the results again.'));
     return off;
@@ -199,7 +215,7 @@
     c.querySelector('#acctPClose').onclick = close;
     c.querySelector('#acctPNew')?.addEventListener('click', async () => {
       const name = q('#acctPName').value.trim(), note = q('#acctPNote').value, shared = q('#acctPShare').checked;
-      try { const r = await call('POST', 'projects', { name, note, shared, state: capture(), app_version: APP_VERSION }); current = { id: r.id, name, note, shared, mine: true, writable: true }; close(); renderBar(); toast(T('已存成新專案「', 'Saved as "') + name + T('」。', '".')); }
+      try { const r = await call('POST', 'projects', { name, note, shared, state: capture(), app_version: APP_VERSION }); current = { id: r.id, name, note, shared, mine: true, writable: true }; savedSnap = snap(); dirtyShown = false; close(); renderBar(); toast(T('已存成新專案「', 'Saved as "') + name + T('」。', '".')); }
       catch (x) { q('#acctPErr').textContent = msg(x.code); }
     });
     const by = p => esc(p.owner_name || p.owner), name = p => esc(p.name) + (p.note ? `<div class="acct-note">${esc(p.note)}</div>` : '');
@@ -234,7 +250,9 @@
       <div class="acct-row" style="margin-top:0"><div style="flex:1;min-width:200px"><label for="acctOName">${T('新增公司名稱', 'New organisation name')}</label><input id="acctOName" maxlength="80"></div>
       <button class="acct-btn primary" id="acctOAdd" style="align-self:flex-end">${T('新增公司', 'Add organisation')}</button><span class="acct-err" id="acctOErr" style="align-self:flex-end"></span></div>
       <div id="acctOrgList">…</div>` : ''}
+      ${sys ? `<p class="acct-note" id="acctSteps"><b>${T('使用順序', 'Steps')}</b>${T('：① 先新增公司 → ② 替公司建立「公司管理者」帳號 → ③ 公司管理者登入後，自己建立工程師與檢視者帳號。', ': (1) add an organisation, (2) create its organisation administrator, (3) that administrator creates engineers and viewers.')}</p>` : ''}
       <h3>${T('新增帳號', 'Add an account')}</h3>
+      <p class="acct-note" id="acctRoleHelp">${T('權限說明：', 'Roles: ')}${(sys ? ['orgadmin', 'engineer', 'viewer', 'sysadmin'] : ['orgadmin', 'engineer', 'viewer']).map(r => `<b>${roleName(r)}</b> ${T(...ROLE_HELP[r])}`).join('；')}</p>
       <div class="acct-row" style="margin-top:0"><div style="flex:1;min-width:130px"><label for="acctNU">${T('帳號（英數字）', 'Username')}</label><input id="acctNU" maxlength="32"></div>
       <div style="flex:1;min-width:130px"><label for="acctNN">${T('顯示名稱（可空白）', 'Display name (optional)')}</label><input id="acctNN" maxlength="60"></div>
       <div style="flex:1;min-width:130px"><label for="acctNP">${T('初始密碼（至少 8 字元）', 'Initial password (8+ chars)')}</label><input id="acctNP" maxlength="128"></div>
@@ -247,18 +265,20 @@
       <div class="acct-row"><button class="acct-btn" id="acctAClose">${T('關閉', 'Close')}</button></div>`);
     c.querySelector('#acctAClose').onclick = close;
     c.querySelector('#acctNGen').onclick = () => { q('#acctNP').value = genPw(); };
-    c.querySelector('#acctOAdd')?.addEventListener('click', async () => { try { await call('POST', 'admin/orgs', { name: q('#acctOName').value }); showAdmin(); } catch (x) { q('#acctOErr').textContent = msg(x.code); } });
+    c.querySelector('#acctOAdd')?.addEventListener('click', async () => { if (!q('#acctOName').value.trim()) { q('#acctOErr').textContent = T('請輸入公司名稱。', 'Enter an organisation name.'); return; } const keep = formValues(); try { await call('POST', 'admin/orgs', { name: q('#acctOName').value }); await showAdmin(); restoreForm(keep); } catch (x) { q('#acctOErr').textContent = msg(x.code); } });
     c.querySelector('#acctNR').onchange = () => { const o = q('#acctNO'); if (o) o.disabled = q('#acctNR').value === 'sysadmin'; };
     c.querySelector('#acctNAdd').onclick = async () => {
       q('#acctNErr').textContent = ''; q('#acctNOk').textContent = '';
       const u = q('#acctNU').value.trim(), p = q('#acctNP').value;
-      try { await call('POST', 'admin/users', { username: u, display_name: q('#acctNN').value, password: p, role: q('#acctNR').value, org_id: q('#acctNO')?.value }); await showAdmin(); q('#acctNOk').textContent = T(`已新增 ${u}，初始密碼：${p}`, `Added ${u}; initial password: ${p}`); }
-      catch (x) { q('#acctNErr').textContent = msg(x.code); }
+      if (!u || !p) { q('#acctNErr').textContent = T('請填帳號和初始密碼（可按「產生隨機密碼」）。', 'Enter a username and an initial password (or press Random password).'); return; }
+      try { await call('POST', 'admin/users', { username: u, display_name: q('#acctNN').value, password: p, role: q('#acctNR').value, org_id: q('#acctNO')?.value }); await showAdmin(); q('#acctNOk').textContent = T(`已新增 ${u}，初始密碼：${p}（請記下來私下交給本人）`, `Added ${u}; initial password: ${p} (note it and give it privately)`); }
+      catch (x) { q('#acctNErr').textContent = x.code === 'org_required' ? T('請先在上方「公司」新增公司，再選所屬公司。', 'Add an organisation above first, then choose it.') : msg(x.code); }
     };
     try {
       const [{ users }, orgs, { audit }] = await Promise.all([call('GET', 'admin/users'), sys ? call('GET', 'admin/orgs') : null, call('GET', 'admin/audit')]);
       if (orgs) {
-        q('#acctNO').innerHTML = orgs.orgs.filter(o => !o.disabled).map(o => `<option value="${o.id}">${esc(o.name)}</option>`).join('');
+        const live = orgs.orgs.filter(o => !o.disabled);
+        q('#acctNO').innerHTML = live.length ? live.map(o => `<option value="${o.id}">${esc(o.name)}</option>`).join('') : `<option value="">${T('（請先新增公司）', '(add an organisation first)')}</option>`;
         q('#acctOrgList').innerHTML = table(orgs.orgs, [[T('公司', 'Organisation'), o => esc(o.name)], [T('帳號數', 'Accounts'), o => o.users], [T('專案數', 'Projects'), o => o.projects], [T('狀態', 'Status'), o => o.disabled ? `<span class="acct-tag off">${T('已停用', 'disabled')}</span>` : `<span class="acct-tag">${T('正常', 'active')}</span>`]],
           o => `<button class="acct-btn${o.disabled ? '' : ' danger'}" data-odis="${o.id}" data-to="${o.disabled ? 0 : 1}">${o.disabled ? T('啟用', 'Enable') : T('停用', 'Disable')}</button>`);
       }
@@ -278,6 +298,8 @@
       veil.querySelectorAll('[data-role]').forEach(s => s.onchange = async () => { try { await call('POST', `admin/users/${s.dataset.role}/role`, { role: s.value }); showAdmin(); } catch (x) { toast(msg(x.code)); showAdmin(); } });
     } catch (x) { if (q('#acctUList')) q('#acctUList').textContent = msg(x.code); }
   }
+  function formValues() { const o = {}; veil?.querySelectorAll('#acctNU,#acctNN,#acctNP,#acctNR').forEach(e => o[e.id] = e.value); return o; }
+  function restoreForm(o) { for (const [k, v] of Object.entries(o || {})) { const e = q('#' + k); if (e) e.value = v; } }
   function genPw() { const a = 'ABCDEFGHJKMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'; const r = crypto.getRandomValues(new Uint32Array(10)); return [...r].map(x => a[x % a.length]).join(''); }
 
   new MutationObserver(() => { if (me) renderBar(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
