@@ -1,4 +1,4 @@
-// Checks the fixes from the ChatGPT (agent) novice test of PondGate v1.2.0 (2026-11-07), with negative controls.
+// Checks the fixes from the ChatGPT (agent) novice tests (first and second run) of PondGate v1.2.0 (2026-11-07), with negative controls.
 // Usage: node audit/chatgpt_novice_v1_2_1/gpt_fix_check.js <static port> <out.json>   (static server on dist/)
 const { chromium } = require('playwright'); const fs = require('fs');
 const [PORT, OUT] = [process.argv[2] || 8765, process.argv[3] || 'gpt_fix_check.json'];
@@ -30,8 +30,10 @@ const res = []; const ok = (id, pass, detail = '') => { res.push({ id, pass: !!p
   // G2 beginner verdict
   let v = await verdict(pg); let p = await panel(pg);
   ok('G2 Qp 0.4: Hmax and Qp,o are compared with Hallow and Qallow on the result page; "exceeds" is shown', v.overall === 'stop' && /超過/.test(p.text) && /修正前不可採用/.test(p.text), `H ${v.hmax} vs ${v.hallow}, Q ${v.qout} vs ${v.qallow}`);
+  ok('G7 second test: when limits are exceeded, the panel says how each change moves level and outflow, and that free-discharge evidence is incomplete', /加大池面積/.test(p.text) && /縮小出口/.test(p.text) && /只供探索與學習/.test(p.text));
   await setv(pg, 'mod-optimization', 'qallow', '0.6'); await setv(pg, 'mod-optimization', 'hallow', '2.0'); await run(pg);
   v = await verdict(pg); p = await panel(pg);
+  ok('G8 second test: the screening check below no longer says only "not yet run" for Hallow; it points to the Beginner check', await pg.evaluate(() => /受限篩選尚未執行（一般路由的比較請看上方「新手判讀」）；Hallow/.test(document.getElementById('diagnosticGuide')?.innerText || '')));
   ok('G2n negative control: with Hallow 2.0 and Qallow 0.6 the same pond reads "both within limits" and says it is not a final design', v.overall === 'ok' && p.cls === 'ok' && /不是最終設計/.test(p.text), `H ${v.hmax} vs ${v.hallow}, Q ${v.qout} vs ${v.qallow}`);
   await pg.close();
   // G2c equal after rounding is never a pass
@@ -43,10 +45,13 @@ const res = []; const ok = (id, pass, detail = '') => { res.push({ id, pass: !!p
   // G3 missing items beside the screening button
   pg = await fresh(); await open(pg, 'mod-optimization'); await pg.waitForTimeout(400);
   let m = await pg.evaluate(() => { const e = document.getElementById('pgScreenMissing'); return e ? { cls: e.className, n: e.querySelectorAll('li').length, text: e.innerText, vis: e.getBoundingClientRect().height > 0, after: e.previousElementSibling?.id } : null; });
+  ok('G9 second test: each missing screening item says what document to look for', await pg.evaluate(() => /要查：/.test(document.getElementById('pgScreenMissing')?.innerText || '') && /要填：/.test(document.getElementById('pgScreenMissing')?.innerText || '')));
   ok('G3 beside the screening button, the missing items are listed before pressing it', m && m.vis && m.after === 'optimize' && m.n >= 3 && /自由出流/.test(m.text), m && `${m.n} items`);
   await pg.evaluate(() => { for (const id of ['freeDischarge', 'freeTailwater', 'freeBackwater', 'freeSubmergence', 'freeOperation']) { const e = document.getElementById(id); if (e && !e.checked) e.click(); } for (const id of ['freeEvidenceRecord', 'screeningLimitRecord']) { const e = document.getElementById(id); e.value = 'QA record 1'; e.dispatchEvent(new Event('input', { bubbles: true })); e.dispatchEvent(new Event('change', { bubbles: true })); } });
   await pg.waitForTimeout(500);
   m = await pg.evaluate(() => { const e = document.getElementById('pgScreenMissing'); return { cls: e.className, n: e.querySelectorAll('li').length, text: e.innerText }; });
+  await run(pg); let pz = await panel(pg);
+  ok('G7n negative control: with all free-discharge evidence ticked, the beginner panel has no "exploration only" scope note', pz && !/只供探索與學習/.test(pz.text));
   ok('G3n negative control: when every condition is complete, the box says screening can run and lists nothing', m.cls === 'ok' && m.n === 0 && /齊全/.test(m.text));
   await pg.close();
   // G4 assistant
