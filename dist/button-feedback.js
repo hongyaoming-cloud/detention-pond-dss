@@ -41,7 +41,7 @@
     const text=(status?.textContent||'').replace(/\s+/g,' ').trim();
     if(button.id==='run'&&text)return isZh()?'路由已完成；請閱讀結果表、圖形與工程判讀後再下載紀錄。':'Routing completed; review the table, charts, and engineering interpretation before downloading the record.';
     if((button.id==='optimize'||button.id==='continuousGlobal')&&text){
-      const failed=/cannot|could not|not run|stopped|未|不可|失敗/i.test(text);
+      const ok=/選定可行|Selected feasible|連續最佳化完成|Continuous optimization complete/i.test(text),blockedRes=/^(阻擋|Blocked|No feasible)/i.test(text);if(blockedRes)return (isZh()?'篩選結果：阻擋（無可行解）；請看模組 6 的診斷與修正導引。':'Screening result: blocked (no feasible solution); see the diagnosis and correction links in Module 6.');const failed=!ok&&/cannot|could not|not run|stopped|未完成|未就緒|尚未|不可|失敗/i.test(text);
       return failed?(isZh()?'篩選未完成：':'Screening was not completed: ')+text:(isZh()?'篩選已更新：':'Screening updated: ')+text;
     }
     return null;
@@ -57,8 +57,8 @@
     window.setTimeout(()=>{const message=done(button);if(message)say(message,/未完成|not completed/i.test(message)?'warn':'ok');},80);
   },true);
   const decorate=()=>document.querySelectorAll('button').forEach(button=>{
-    if(!button.dataset.feedbackReady){button.dataset.feedbackReady='true';button.title=(isZh()?'按下後將顯示操作提示： ':'After pressing, an action message appears: ')+label(button);}
+    const want=isZh()?'zh':'en';if(button.dataset.feedbackLang!==want&&(!button.dataset.feedbackReady||button.title.startsWith('按下後將顯示操作提示')||button.title.startsWith('After pressing, an action message appears'))){button.dataset.feedbackReady='true';button.dataset.feedbackLang=want;button.title=(isZh()?'按下後將顯示操作提示： ':'After pressing, an action message appears: ')+label(button);}
   });
-  new MutationObserver(decorate).observe(document.body,{childList:true,subtree:true});
+  new MutationObserver(decorate).observe(document.body,{childList:true,subtree:true});new MutationObserver(decorate).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
   decorate();
 })();

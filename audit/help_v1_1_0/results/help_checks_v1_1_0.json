@@ -1,0 +1,217 @@
+{
+ "version": "1.1.0",
+ "total": 37,
+ "failed": 0,
+ "results": [
+  {
+   "id": "P1-zh demo routing table identical to v1.0.2",
+   "ok": true,
+   "detail": {
+    "rows": 13
+   }
+  },
+  {
+   "id": "P2-zh edited-input routing table identical to v1.0.2",
+   "ok": true,
+   "detail": [
+    "出流尖峰 Qp,o=0.1200 m³/s",
+    "尖峰比 RQ = Qp,o/Qp,i=1.000"
+   ]
+  },
+  {
+   "id": "P3-zh teaching-case screening result identical to v1.0.2",
+   "ok": true,
+   "detail": "選定可行受限篩選案例——已完成路由\n\n系統先完成完整可見網格搜尋，再進行 2 輪局部細化；上方圖形已依此選定篩選案例重新路由。 所有已篩選出口尺寸均未停留於宣告"
+  },
+  {
+   "id": "P4-zh infeasible case still blocked, identical to v1.0.2",
+   "ok": true,
+   "detail": "阻擋：在宣告的物理邊界與離散篩選範圍內找不到可行篩選案例。主導限制：出流尖峰限制、最高水位限制、排空殘留限制。請僅依工程依據調整池面積、堰寬或開口面積；不得任意"
+  },
+  {
+   "id": "P5-zh no page errors",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "id": "P1-en demo routing table identical to v1.0.2",
+   "ok": true,
+   "detail": {
+    "rows": 13
+   }
+  },
+  {
+   "id": "P2-en edited-input routing table identical to v1.0.2",
+   "ok": true,
+   "detail": [
+    "Peak outflow Qp,o=0.1200 m³/s",
+    "Peak ratio RQ = Qp,o/Qp,i=1.000"
+   ]
+  },
+  {
+   "id": "P3-en teaching-case screening result identical to v1.0.2",
+   "ok": true,
+   "detail": "Selected feasible constrained-screening case — routed\n\nThe program evaluated the"
+  },
+  {
+   "id": "P4-en infeasible case still blocked, identical to v1.0.2",
+   "ok": true,
+   "detail": "No feasible screening case was found within the declared physical bounds and dis"
+  },
+  {
+   "id": "P5-en no page errors",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "id": "P6 no English-only sentences in the Chinese interface (citations excluded)",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "id": "P7 no Chinese text in the English interface (language button excluded)",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "id": "N1 negative control: the same scan finds leaks on v1.0.2",
+   "ok": true,
+   "detail": {
+    "zhEn": 13,
+    "enZh": 13
+   }
+  },
+  {
+   "id": "P8 help page and floating assistant present",
+   "ok": true
+  },
+  {
+   "id": "P9 next step before any run asks to run",
+   "ok": true,
+   "detail": "按「執行路由與評估」"
+  },
+  {
+   "id": "P10 next step after routing points to results and lists screening locks",
+   "ok": true,
+   "detail": {
+    "t": "路由結果已產生：請到模組 6 閱讀",
+    "n": 4
+   }
+  },
+  {
+   "id": "P11 next step with eligible teaching case offers screening",
+   "ok": true,
+   "detail": "可以執行受限設計篩選"
+  },
+  {
+   "id": "P12 next step after feasible screening asks to read and download",
+   "ok": true,
+   "detail": "閱讀篩選結果並下載紀錄"
+  },
+  {
+   "id": "P13 next step after infeasible screening is a block, never pass",
+   "ok": true,
+   "detail": "受限篩選結果：阻擋（無可行解）"
+  },
+  {
+   "id": "P14 assistant explains the block with the dominant limit",
+   "ok": true,
+   "detail": "阻擋：在宣告的物理邊界與離散篩選範圍內找不到可行篩選案例。主導限制：出流尖峰限制、最高水位限制、排空殘留限制。請僅依工程依據調整池面積、堰寬或開口面積；不得任意"
+  },
+  {
+   "id": "P15 invalid Qp: run disabled, field outlined, fix list names Qp",
+   "ok": true,
+   "detail": {
+    "dis": true,
+    "red": true,
+    "box": "下一步需要修正的欄位點欄位名稱即可跳過去（紅框標示）：入流尖峰 Qp 必須大於 0"
+   }
+  },
+  {
+   "id": "P16 valid again: outline and fix list removed",
+   "ok": true
+  },
+  {
+   "id": "P17 \"?\" help button next to key fields",
+   "ok": true,
+   "detail": {
+    "missing": []
+   }
+  },
+  {
+   "id": "P18 assistant defines Qallow",
+   "ok": true,
+   "detail": "{\"terms\":[{\"id\":\"qallow\",\"tz\":\"容許出流尖峰 Qallow\",\"te\":\"Allowable peak outflow Qallow\",\"dz\":\"受限篩選中出流尖峰的上"
+  },
+  {
+   "id": "P19 assistant answers privacy (offline, nothing sent)",
+   "ok": true,
+   "detail": "不會傳送任何資料。計算、說明與本助理都在您的瀏覽器內執行；本助理是離線規則式說明，不連線到任何外部 AI 服務。"
+  },
+  {
+   "id": "N2 assistant declines an unrelated question instead of inventing an answer",
+   "ok": true,
+   "detail": "抱歉，我是離線規則式助理，只能回答 PondGate 的操作與名詞問題。可以試試下面的常見問題，或打開使用手冊。"
+  },
+  {
+   "id": "P20 assistant answers in English",
+   "ok": true,
+   "detail": "{\"terms\":[{\"id\":\"fpi\",\"tz\":\"近洪峰平坦指標 FPI95\",\"te\":\"Near-peak flatness FPI95\",\"dz\":\"出流在 95 % 尖峰以上的持續時間占"
+  },
+  {
+   "id": "P21 manual downloads as one HTML file with all 13 sections, glossary and 14 embedded figures",
+   "ok": true,
+   "detail": "PondGate_user_manual_v1.1.0_zh-Hant.html"
+  },
+  {
+   "id": "P28-zh all 14 manual figures load in the app",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "id": "P28-en all 14 manual figures load in the app",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "id": "P22 navigation acceptance passes (its check now allows the three-step guide card under Module 6)",
+   "ok": true,
+   "detail": "全部導覽驗收通過。"
+  },
+  {
+   "id": "P23 no request leaves the local server (assistant is offline)",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "id": "P24 no page errors during help checks",
+   "ok": true,
+   "detail": []
+  },
+  {
+   "id": "P25 fix list matches the run-button state in 200 random input sets",
+   "ok": true,
+   "detail": {
+    "mismatches": 0
+   }
+  },
+  {
+   "id": "P27 English interface: loading the teaching example keeps the page responsive",
+   "ok": true,
+   "detail": "ok"
+  },
+  {
+   "id": "N3 negative control: the same action freezes v1.0.2",
+   "ok": true,
+   "detail": "HUNG"
+  },
+  {
+   "id": "P26 phone width: no horizontal scroll, drawer fits",
+   "ok": true,
+   "detail": {
+    "sw": 390,
+    "dw": 382
+   }
+  }
+ ]
+}
