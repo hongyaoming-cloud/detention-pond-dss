@@ -1,0 +1,324 @@
+{
+ "total": 58,
+ "failed": 0,
+ "results": [
+  {
+   "id": "zh L1 all 5 steps completed",
+   "ok": true,
+   "d": {
+    "steps": 5
+   }
+  },
+  {
+   "id": "zh L1 no step completed before the learner acted",
+   "ok": true
+  },
+  {
+   "id": "zh L1 wrong quiz answer not accepted",
+   "ok": true
+  },
+  {
+   "id": "zh L1 own inputs restored after the lesson",
+   "ok": true,
+   "d": {
+    "area": "333"
+   }
+  },
+  {
+   "id": "zh L2 all 7 steps completed",
+   "ok": true,
+   "d": {
+    "steps": 7
+   }
+  },
+  {
+   "id": "zh L2 no step completed before the learner acted",
+   "ok": true
+  },
+  {
+   "id": "zh L2 wrong quiz answer not accepted",
+   "ok": true
+  },
+  {
+   "id": "zh L2 own inputs restored after the lesson",
+   "ok": true,
+   "d": {
+    "area": "333"
+   }
+  },
+  {
+   "id": "zh L3 all 4 steps completed",
+   "ok": true,
+   "d": {
+    "steps": 4
+   }
+  },
+  {
+   "id": "zh L3 no step completed before the learner acted",
+   "ok": true
+  },
+  {
+   "id": "zh L3 wrong quiz answer not accepted",
+   "ok": true
+  },
+  {
+   "id": "zh L3 own inputs restored after the lesson",
+   "ok": true,
+   "d": {
+    "area": "333"
+   }
+  },
+  {
+   "id": "zh L4 all 4 steps completed",
+   "ok": true,
+   "d": {
+    "steps": 4
+   }
+  },
+  {
+   "id": "zh L4 no step completed before the learner acted",
+   "ok": true
+  },
+  {
+   "id": "zh L4 wrong quiz answer not accepted",
+   "ok": true
+  },
+  {
+   "id": "zh L4 own inputs restored after the lesson",
+   "ok": true,
+   "d": {
+    "area": "333"
+   }
+  },
+  {
+   "id": "zh L5 all 8 steps completed",
+   "ok": true,
+   "d": {
+    "steps": 8
+   }
+  },
+  {
+   "id": "zh L5 no step completed before the learner acted",
+   "ok": true
+  },
+  {
+   "id": "zh L5 wrong quiz answer not accepted",
+   "ok": true
+  },
+  {
+   "id": "zh L5 own inputs restored after the lesson",
+   "ok": true,
+   "d": {
+    "area": "333"
+   }
+  },
+  {
+   "id": "zh L6 all 5 steps completed",
+   "ok": true,
+   "d": {
+    "steps": 5
+   }
+  },
+  {
+   "id": "zh L6 no step completed before the learner acted",
+   "ok": true
+  },
+  {
+   "id": "zh L6 wrong quiz answer not accepted",
+   "ok": true
+  },
+  {
+   "id": "zh L6 own inputs restored after the lesson",
+   "ok": true,
+   "d": {
+    "area": "333"
+   }
+  },
+  {
+   "id": "zh L7 all 4 steps completed",
+   "ok": true,
+   "d": {
+    "steps": 4
+   }
+  },
+  {
+   "id": "zh L7 no step completed before the learner acted",
+   "ok": true
+  },
+  {
+   "id": "zh L7 wrong quiz answer not accepted",
+   "ok": true
+  },
+  {
+   "id": "zh L7 own inputs restored after the lesson",
+   "ok": true,
+   "d": {
+    "area": "333"
+   }
+  },
+  {
+   "id": "zh no page errors",
+   "ok": true,
+   "d": []
+  },
+  {
+   "id": "en L1 all 5 steps completed",
+   "ok": true,
+   "d": {
+    "steps": 5
+   }
+  },
+  {
+   "id": "en L1 no step completed before the learner acted",
+   "ok": true
+  },
+  {
+   "id": "en L1 wrong quiz answer not accepted",
+   "ok": true
+  },
+  {
+   "id": "en L1 own inputs restored after the lesson",
+   "ok": true,
+   "d": {
+    "area": "333"
+   }
+  },
+  {
+   "id": "en L2 all 7 steps completed",
+   "ok": true,
+   "d": {
+    "steps": 7
+   }
+  },
+  {
+   "id": "en L2 no step completed before the learner acted",
+   "ok": true
+  },
+  {
+   "id": "en L2 wrong quiz answer not accepted",
+   "ok": true
+  },
+  {
+   "id": "en L2 own inputs restored after the lesson",
+   "ok": true,
+   "d": {
+    "area": "333"
+   }
+  },
+  {
+   "id": "en L3 all 4 steps completed",
+   "ok": true,
+   "d": {
+    "steps": 4
+   }
+  },
+  {
+   "id": "en L3 no step completed before the learner acted",
+   "ok": true
+  },
+  {
+   "id": "en L3 wrong quiz answer not accepted",
+   "ok": true
+  },
+  {
+   "id": "en L3 own inputs restored after the lesson",
+   "ok": true,
+   "d": {
+    "area": "333"
+   }
+  },
+  {
+   "id": "en L4 all 4 steps completed",
+   "ok": true,
+   "d": {
+    "steps": 4
+   }
+  },
+  {
+   "id": "en L4 no step completed before the learner acted",
+   "ok": true
+  },
+  {
+   "id": "en L4 wrong quiz answer not accepted",
+   "ok": true
+  },
+  {
+   "id": "en L4 own inputs restored after the lesson",
+   "ok": true,
+   "d": {
+    "area": "333"
+   }
+  },
+  {
+   "id": "en L5 all 8 steps completed",
+   "ok": true,
+   "d": {
+    "steps": 8
+   }
+  },
+  {
+   "id": "en L5 no step completed before the learner acted",
+   "ok": true
+  },
+  {
+   "id": "en L5 wrong quiz answer not accepted",
+   "ok": true
+  },
+  {
+   "id": "en L5 own inputs restored after the lesson",
+   "ok": true,
+   "d": {
+    "area": "333"
+   }
+  },
+  {
+   "id": "en L6 all 5 steps completed",
+   "ok": true,
+   "d": {
+    "steps": 5
+   }
+  },
+  {
+   "id": "en L6 no step completed before the learner acted",
+   "ok": true
+  },
+  {
+   "id": "en L6 wrong quiz answer not accepted",
+   "ok": true
+  },
+  {
+   "id": "en L6 own inputs restored after the lesson",
+   "ok": true,
+   "d": {
+    "area": "333"
+   }
+  },
+  {
+   "id": "en L7 all 4 steps completed",
+   "ok": true,
+   "d": {
+    "steps": 4
+   }
+  },
+  {
+   "id": "en L7 no step completed before the learner acted",
+   "ok": true
+  },
+  {
+   "id": "en L7 wrong quiz answer not accepted",
+   "ok": true
+  },
+  {
+   "id": "en L7 own inputs restored after the lesson",
+   "ok": true,
+   "d": {
+    "area": "333"
+   }
+  },
+  {
+   "id": "en no page errors",
+   "ok": true,
+   "d": []
+  }
+ ]
+}

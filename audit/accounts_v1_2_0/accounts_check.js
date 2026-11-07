@@ -157,7 +157,7 @@ const STATE = { schema: 1, app: '1.2.0', lang: 'zh-Hant', fields: { 'qp#1': '0.2
   /* ---------------- calculation files unchanged ---------------- */
   const diffCore = execSync('git diff --stat release/v1.1.0 -- dist/routing-core.js dist/physics-refinement.js dist/module-shell.js', { cwd: __dirname + '/../..' }).toString().trim();
   const diffAll = execSync('git diff --name-only release/v1.1.0 -- dist', { cwd: __dirname + '/../..' }).toString().trim().split('\n').filter(Boolean);
-  ok('C1 calculation files identical to v1.1.0; only display files (index.html, account.js, button-feedback.js, help-center.js, help-content.js) changed in dist', diffCore === '' && diffAll.every(f => ['dist/index.html', 'dist/account.js', 'dist/button-feedback.js', 'dist/help-center.js', 'dist/help-content.js'].includes(f)), diffAll.join(', '));
+  ok('C1 calculation files identical to v1.1.0; only display files (index.html, account.js, button-feedback.js, help-center.js, help-content.js, beginner-check.js, diagnostic-guide.js) changed in dist', diffCore === '' && diffAll.every(f => ['dist/index.html', 'dist/account.js', 'dist/button-feedback.js', 'dist/help-center.js', 'dist/help-content.js', 'dist/beginner-check.js', 'dist/diagnostic-guide.js'].includes(f)), diffAll.join(', '));
   const pass = res.filter(r => r.pass).length; console.log(`${pass}/${res.length}`);
   fs.writeFileSync(OUT, JSON.stringify({ date: new Date().toISOString(), base: BASE, pass, total: res.length, results: res }, null, 1));
   process.exit(pass === res.length ? 0 : 1);

@@ -1,0 +1,91 @@
+{
+ "date": "2026-11-07T11:56:34.651Z",
+ "pass": 18,
+ "total": 18,
+ "results": [
+  {
+   "id": "G1 guide loaded: 13 chapters, >= 50 steps, >= 35 figures",
+   "pass": true,
+   "detail": "13 chapters, 54 steps, 40 figures"
+  },
+  {
+   "id": "G2 every guide figure loads and is larger than 100 px",
+   "pass": true,
+   "detail": "smallest side 159 px"
+  },
+  {
+   "id": "G3 guide text has no English-only sentence",
+   "pass": true,
+   "detail": "none"
+  },
+  {
+   "id": "G4 guide text uses Traditional Chinese (no common simplified-only characters)",
+   "pass": true
+  },
+  {
+   "id": "G4n negative control: the simplified-character test detects simplified text",
+   "pass": true
+  },
+  {
+   "id": "G5 every figure has a caption and numbered notes",
+   "pass": true
+  },
+  {
+   "id": "G6 chapter 3 values match a fresh run",
+   "pass": true,
+   "detail": "{\"qpo\":\"0.0903 m³/s\",\"rq\":\"0.753\",\"ds\":\"74.385 m³\",\"hmax\":\"0.413 m\",\"eps\":\"0.000 %\"}"
+  },
+  {
+   "id": "G7 chapter 4 result A matches",
+   "pass": true,
+   "detail": "{\"qpo\":\"0.1512 m³/s\",\"rq\":\"0.756\",\"ds\":\"104.854 m³\",\"hmax\":\"0.583 m\",\"eps\":\"0.000 %\"}"
+  },
+  {
+   "id": "G8 chapter 8 selected area and weir width match",
+   "pass": true,
+   "detail": "460 m², 0.53 m"
+  },
+  {
+   "id": "G9 in-app guide tab shows chapters, appendices and figures",
+   "pass": true,
+   "detail": "{\"details\":17,\"imgs\":40}"
+  },
+  {
+   "id": "G10 downloaded guide is one HTML file with every figure embedded",
+   "pass": true,
+   "detail": "PondGate_student_guide_v1.1.0_zh-Hant.html, 3.8 MB"
+  },
+  {
+   "id": "D1 short S(H) table: stop message is visible beside the run button, in Chinese",
+   "pass": true,
+   "detail": "請先修正紅框標示的欄位，再執行路由\n初始水位 H0 與參考水位 Href 必須落在宣告的水位—蓄水量表 S(H) 範圍內"
+  },
+  {
+   "id": "D2 short S(H) table: Module 6 marks the shown results as the previous run; no repeated rows",
+   "pass": true
+  },
+  {
+   "id": "D3 after the table is fixed the run succeeds and the notice disappears",
+   "pass": true
+  },
+  {
+   "id": "N4 negative control (v1.0.2): stop message hidden in Module 3, English, repeated rows",
+   "pass": true,
+   "detail": "{\"visible\":false,\"english\":true,\"dupRows\":10}"
+  },
+  {
+   "id": "D5 Chinese interface shows no English-only sentence (default, long event, S(H) table)",
+   "pass": true,
+   "detail": "none"
+  },
+  {
+   "id": "N5 negative control (v1.0.2): the same scan finds English sentences",
+   "pass": true,
+   "detail": "33 found"
+  },
+  {
+   "id": "D6 charts still draw after the axis-label change",
+   "pass": true
+  }
+ ]
+}
