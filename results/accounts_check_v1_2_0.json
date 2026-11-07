@@ -1,0 +1,168 @@
+{
+ "date": "2026-11-07T00:56:53.200Z",
+ "base": "http://127.0.0.1:8787",
+ "pass": 32,
+ "total": 32,
+ "results": [
+  {
+   "id": "A1 wrong password and unknown user both give the same 401 (no account guessing)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A2 correct login sets an HttpOnly, Secure, SameSite=Strict session cookie",
+   "pass": true,
+   "detail": "pg_session=…; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=43200"
+  },
+  {
+   "id": "A3 before the first password change, projects are refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A4n short new password and wrong old password are refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A4 password change works, issues a new session and ends the old one",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A5n invalid username refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A5 admin creates users; duplicate name (any letter case) refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A6 user saves a project; empty name and malformed state refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A7n another user cannot read, overwrite, delete or list the project",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A8n a user cannot reach admin functions",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A9 owner reads own project; admin can read it and list all, but not overwrite it",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A10n cross-site and form posts are refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A11n no session or a made-up session is refused",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A12n five wrong passwords lock the account even for the right password",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A13 admin reset unlocks the account and forces a password change",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A14n disabled user cannot sign in and the open session ends; admin cannot disable self",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A15 re-enabled user signs in; logout ends the session",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "A16 the database holds no password in plain text",
+   "pass": true,
+   "detail": "none found"
+  },
+  {
+   "id": "A16n negative control: the same search finds a known stored value (username)",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U1 server copy shows the sign-in screen first",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U2n wrong password shows a Chinese error and stays on sign-in",
+   "pass": true,
+   "detail": "帳號或密碼錯誤。"
+  },
+  {
+   "id": "U3 admin signs in; bar shows the administrator role and the Accounts button",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U4 admin adds a user from the Accounts window",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U5 save as new project; bar shows it as the current project",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U6n a fresh page does not have the saved inputs (so the next check is meaningful)",
+   "pass": true,
+   "detail": "6 fields differ"
+  },
+  {
+   "id": "U7 opening the project restores every input field",
+   "pass": true,
+   "detail": "82 fields, 0 differ"
+  },
+  {
+   "id": "U8 running again gives the same results as before saving",
+   "pass": true,
+   "detail": "入流尖峰 Qp,i 0.2000 m³/s 宣告水力負荷|出流尖峰 Qp,o 0.0783 m³/s 所有啟用出口構造之總出流|尖峰比 RQ = Qp,o/Qp,i 0.392 尖"
+  },
+  {
+   "id": "U9 sign out returns to the sign-in screen",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U10 new user must change the password first, then sees no Accounts button",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U11n the new user does not see the admin's project",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "U12 static copy (Claude page) works as before: no sign-in, no bar",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "C1 calculation files identical to v1.1.0; only index.html and account.js changed in dist",
+   "pass": true,
+   "detail": "dist/account.js, dist/index.html"
+  }
+ ]
+}

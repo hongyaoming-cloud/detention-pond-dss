@@ -1,0 +1,15 @@
+name = "pondgate"
+main = "src/worker.js"
+compatibility_date = "2026-10-01"
+workers_dev = true
+
+[assets]
+directory = "./public"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "pondgate-accounts"
+database_id = "23bc1e74-e081-45de-ad41-52adc82a7c3d"
+migrations_dir = "migrations"
