@@ -1,11 +1,13 @@
 // Runs every Part II example in PondGate exactly as a reader would, and records what the screen shows.
-// Usage: serve dist/ on a port, then: node docs/book/run_examples.js <port>
+// Usage: serve dist/ on a port, then: node docs/book/run_examples.js <port> [en]
+// With 'en' the English interface is used: figures go to dist/book/fig_en/ and results to docs/book/examples_en.json.
 // Outputs: docs/book/examples.json (inputs + numbers read from the result table),
 //          dist/book/fig/*.png (chart screenshots), dist/book/data/*.csv (input files for the ZIP).
 // Nothing is computed here; docs/book/check_examples.py recomputes the numbers independently.
 const { chromium } = require('playwright'); const fs = require('fs'); const path = require('path');
 const port = process.argv[2] || 8765; const ROOT = path.join(__dirname, '..', '..');
-const FIG = path.join(ROOT, 'dist', 'book', 'fig'); const DATA = path.join(ROOT, 'dist', 'book', 'data');
+const EN = process.argv[3] === 'en';
+const FIG = path.join(ROOT, 'dist', 'book', EN ? 'fig_en' : 'fig'); const DATA = path.join(ROOT, 'dist', 'book', 'data');
 fs.mkdirSync(FIG, { recursive: true }); fs.mkdirSync(DATA, { recursive: true });
 const FREE = ['freeDischarge', 'freeTailwater', 'freeBackwater', 'freeSubmergence', 'freeOperation'];
 const EVID = '教學假設（僅供練習）：單一出口自由出流，不受尾水、回水、淹沒或操作控制影響。';
@@ -50,6 +52,8 @@ const inputs = p => p.evaluate(() => { const o = {}; document.querySelectorAll('
   const out = { version: null, generated: new Date().toISOString(), examples: [] };
   for (const ex of EX) {
     await p.goto(`http://localhost:${port}/index.html`); await p.waitForTimeout(1500);
+    if (EN && await p.evaluate(() => document.documentElement.lang) !== 'en') { await p.click('#lang'); await p.waitForTimeout(2500); }
+    if (EN) await p.addStyleTag({ content: '.button-feedback{display:none!important}' }); // keep action toasts out of the figures
     out.version = out.version || await p.evaluate(() => (window.PondGateBook && window.PondGateBook.version) || (window.PondGateHelp && window.PondGateHelp.version) || '');
     const keys = Object.keys(ex.set).sort((a, c) => (ORDER.indexOf(a) + 1 || 99) - (ORDER.indexOf(c) + 1 || 99));
     for (const k of keys) await setv(p, k, ex.set[k]);
@@ -61,15 +65,15 @@ const inputs = p => p.evaluate(() => { const o = {}; document.querySelectorAll('
     for (const c of (ex.ch === 'C' ? [] : FIGS[ex.id] || [])) { const l = p.locator('#' + c); if (await l.count()) { await l.scrollIntoViewIfNeeded(); await l.screenshot({ path: path.join(FIG, `${ex.id}_${c}.png`) }); } }
     if (ex.screen) {
       await p.evaluate(() => document.getElementById('optimize').click());
-      for (let i = 0; i < 60; i++) { await p.waitForTimeout(500); const o = await p.evaluate(() => document.getElementById('optout').innerText.trim()); if (/^(選定可行|阻擋)/.test(o)) break; }
+      for (let i = 0; i < 60; i++) { await p.waitForTimeout(500); const o = await p.evaluate(() => document.getElementById('optout').innerText.trim()); if (/^(選定可行|阻擋|Selected feasible|No feasible|Blocked)/.test(o)) break; }
       await p.waitForTimeout(1200);
       rec.screen = await p.evaluate(() => { const rows = [...document.querySelectorAll('#optout tr')].map(r => [...r.cells].map(c => c.innerText.trim())); return { text: document.getElementById('optout').innerText.trim(), rows, guide: (document.querySelector('.diagnostic-guide .three-step') || {}).innerText || '' }; });
       rec.afterScreen = { area: await p.evaluate(() => document.getElementById('area').value), bw: await p.evaluate(() => document.getElementById('bw').value) };
       const l = p.locator('#optout'); if (ex.ch !== 'C' && ['screen_ok', 'site_screen'].includes(ex.id) && await l.count()) await l.screenshot({ path: path.join(FIG, `${ex.id}_optout.png`) });
     }
-    out.examples.push(rec); console.log(ex.id, rec.metrics['出流尖峰 Qp,o'], rec.metrics['最大水位 Hmax'], rec.screen ? rec.screen.text.split('\n')[0] : '');
+    out.examples.push(rec); console.log(ex.id, Object.values(rec.metrics)[1], Object.values(rec.metrics)[7], rec.screen ? rec.screen.text.split('\n')[0] : '');
   }
-  fs.writeFileSync(path.join(__dirname, 'examples.json'), JSON.stringify(out, null, 1));
+  fs.writeFileSync(path.join(__dirname, EN ? 'examples_en.json' : 'examples.json'), JSON.stringify(out, null, 1));
   fs.writeFileSync(path.join(DATA, 'ch17_irregular_stage_storage.csv'), 'H_m, S_m3\n' + IRREG + '\n');
   fs.writeFileSync(path.join(DATA, 'ch20_site_inflow.csv'), 't_min, Q_m3s\n' + SITE + '\n');
   await b.close();

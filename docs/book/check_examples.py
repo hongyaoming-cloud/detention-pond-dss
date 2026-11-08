@@ -87,18 +87,22 @@ def route(p):
     ds = smax - s0
     return {'qpo': qpo, 'hmax': h_of_s(smax), 'ds': ds, 'resid': 100 * (s_end - s0) / ds}
 
+def pick(d, zh, en):
+    # Readings are stored under the on-screen label: Chinese in examples.json, English in examples_en.json.
+    return d[zh] if zh in d else d[en]
+
 def main():
     path = next((a for a in sys.argv[1:] if a.endswith('.json')), 'docs/book/examples.json')
     data = json.load(open(path, encoding='utf-8'))
     if '--perturb' in sys.argv:
-        data['examples'][0]['metrics']['出流尖峰 Qp,o'] = '0.0913 m³/s'
+        m0 = data['examples'][0]['metrics']; m0['出流尖峰 Qp,o' if '出流尖峰 Qp,o' in m0 else 'Peak outflow Qp,o'] = '0.0913 m³/s'
     bad = 0
     for ex in data['examples']:
         m, r = ex['metrics'], route(ex['inputs'])
-        checks = [('Qp,o', num(m['出流尖峰 Qp,o']), r['qpo'], 0.00005 + 1e-9),
-                  ('Hmax', num(m['最大水位 Hmax']), r['hmax'], 0.0005 + 1e-9),
-                  ('dSmax', num(m['事件新增滯洪量 ΔSmax']), r['ds'], 0.0005 + 1e-9),
-                  ('resid%', num(m['Te + Td 剩餘蓄水']), r['resid'], 0.005 + 1e-9)]
+        checks = [('Qp,o', num(pick(m, '出流尖峰 Qp,o', 'Peak outflow Qp,o')), r['qpo'], 0.00005 + 1e-9),
+                  ('Hmax', num(pick(m, '最大水位 Hmax', 'Peak water level Hmax')), r['hmax'], 0.0005 + 1e-9),
+                  ('dSmax', num(pick(m, '事件新增滯洪量 ΔSmax', 'Event-added detention volume ΔSmax')), r['ds'], 0.0005 + 1e-9),
+                  ('resid%', num(pick(m, 'Te + Td 剩餘蓄水', 'Drain-down residual at Te + Td')), r['resid'], 0.005 + 1e-9)]
         for name, shown, mine, tol in checks:
             ok = abs(shown - mine) <= tol
             bad += not ok
@@ -108,10 +112,10 @@ def main():
             rows = {r[0]: r[1] for r in ex['screen']['rows'] if len(r) > 1}
             q = dict(ex['inputs'], area=ex['afterScreen']['area'], bw=ex['afterScreen']['bw'])
             rs = route(q)
-            for name, shown, mine, tol in [('screen Qp,o', num(rows['出流尖峰／容許值']), rs['qpo'], 0.00005 + 1e-9),
-                                           ('screen Hmax', num(rows['最高水位／容許值']), rs['hmax'], 0.0005 + 1e-9),
-                                           ('screen dSmax', num(rows['事件新增滯洪量 ΔSmax']), rs['ds'], 0.05 + 1e-9),
-                                           ('screen resid%', num(rows['Te + Td 排空殘留']), rs['resid'], 0.005 + 1e-9)]:
+            for name, shown, mine, tol in [('screen Qp,o', num(pick(rows, '出流尖峰／容許值', 'Peak outflow / allowable')), rs['qpo'], 0.00005 + 1e-9),
+                                           ('screen Hmax', num(pick(rows, '最高水位／容許值', 'Peak water level / allowable')), rs['hmax'], 0.0005 + 1e-9),
+                                           ('screen dSmax', num(pick(rows, '事件新增滯洪量 ΔSmax', 'Event-added detention volume ΔSmax')), rs['ds'], 0.05 + 1e-9),
+                                           ('screen resid%', num(pick(rows, 'Te + Td 排空殘留', 'Drain-down residual at Te + Td')), rs['resid'], 0.005 + 1e-9)]:
                 ok = abs(shown - mine) <= tol
                 bad += not ok
                 if not ok:

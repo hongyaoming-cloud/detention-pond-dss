@@ -1,5 +1,14 @@
 # Changelog
 
+## v1.3.4 (draft, 2026-11-08)
+
+Full English editions of the book and of the step-by-step guide. No calculation changed.
+- Book: English translation of all 20 chapters and 4 appendices (docs/book/en/, dist/book-data-en.js). In the English UI the Book tab shows the English edition, its PDF (dist/book/PondGate_book_v1.3.4_en.pdf, 62 pages) and example data (…_examples_en.zip); the Chinese UI still shows the Chinese edition. Appendix A keeps a Chinese-term column.
+- All 25 Part II examples were re-run in the English UI (docs/book/run_examples.js 8765 en) and the figures retaken (dist/book/fig_en/). Every number equals the Chinese edition, and check_examples.py recomputes docs/book/examples_en.json independently: PASS; with --perturb: FAIL as expected.
+- Full step-by-step guide: English version built by operating the English UI (docs/build_student_guide_en.js; 13 chapters, 54 steps, 40 screenshots in dist/manual/guide_en/; dist/student-guide-en.js; docs/STUDENT_GUIDE_en.md). New PDF download button in the guide tab (English PDF 65 pages; Chinese PDF 58 pages).
+- English book search now accepts a single-word match (e.g. "orifice"); the Chinese threshold is unchanged.
+- Checks: audit/english_docs_v1_3_4/english_docs_check.js 18/18 with negative controls; regressions videos 17/17, book 16/16, fix 14/14, manual PDF 14/14, accounts 47/47 (C1 allow-list adds the two English data files).
+
 ## v1.3.3 (draft, 2026-11-08)
 
 - New tab Start here -> Tutorial videos with four short voiced videos (Chinese narration and captions, 1:29–1:59 each): first login and finding help; first case and reading results; changing the outlet or pond area; constrained design screening. Each can be played in the page (preload none) or downloaded as MP4 (dist/videos/).
