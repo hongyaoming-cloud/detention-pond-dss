@@ -1,0 +1,139 @@
+{
+ "generated": "2026-11-08T03:34:38.212Z",
+ "pass": true,
+ "results": [
+  {
+   "id": "E1 book/PondGate_book_v1.3.4_en.pdf has 50+ pages and English front pages",
+   "pass": true,
+   "detail": {
+    "pages": 62
+   }
+  },
+  {
+   "id": "E1 manual/PondGate_student_guide_v1.3.4_en.pdf has 50+ pages and English front pages",
+   "pass": true,
+   "detail": {
+    "pages": 65
+   }
+  },
+  {
+   "id": "E2-neg [zh] book tab still shows the Chinese edition",
+   "pass": true,
+   "detail": {
+    "lang": "zh-Hant",
+    "v": "1.3.1",
+    "title": "PondGate 滯洪池演算實務：使用手冊與範例教程",
+    "pdf": "book/PondGate_book_v1.3.1_zh-Hant.pdf",
+    "h": "序"
+   }
+  },
+  {
+   "id": "E3-neg [zh] guide tab still shows the Chinese guide and zh PDF",
+   "pass": true,
+   "detail": {
+    "pdf": "manual/PondGate_student_guide_v1.1.0_zh-Hant.pdf",
+    "t": "第 1 章　開始之前\n\nPondGate 是一套在瀏覽器中執行的滯洪池演算軟體。給它一場已知的入流歷線（流量隨時間的變化）、池的水位—蓄水量關係與出口構造，它會一步一步算出池內水位、蓄水量與出流隨時間的變化，並留下可追溯的紀錄。\n\n它計算的是水平池（蓄水連續）方程 dS/dt = Qin − Qout(H)：池內蓄水量 S 的變化率，等於流入量 Qin 減去流出量 Qout；流出量由水位 H 與出",
+    "img": "manual/guide/g02_01_layout.png"
+   }
+  },
+  {
+   "id": "E4 UI is English",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "E5 [en] book tab shows the English edition (26 chapters, v1.3.4)",
+   "pass": true,
+   "detail": {
+    "lang": "en",
+    "v": "1.3.4",
+    "n": 26,
+    "title": "PondGate Detention-Pond Routing in Practice — User Manual and Worked Examples"
+   }
+  },
+  {
+   "id": "E6 [en] book download links point to the English files",
+   "pass": true,
+   "detail": [
+    "book/PondGate_book_v1.3.4_en.pdf",
+    "book/PondGate_book_v1.3.4_examples_en.zip"
+   ]
+  },
+  {
+   "id": "E7 English PDFs/ZIP served 200 and a wrong name 404 (link check can fail)",
+   "pass": true,
+   "detail": [
+    200,
+    200,
+    200,
+    404
+   ]
+  },
+  {
+   "id": "E8 English search \"orifice\" returns English hits",
+   "pass": true,
+   "detail": [
+    "Chapter 5  Modules 1 to 3: describe the inflow, the pond and the outlet｜5.3 Module 3: outlet hydraulics and free-discharge evidence",
+    "Chapter 12  Outlet equations: weirs and rectangular openings｜12.2 Rectangular opening"
+   ]
+  },
+  {
+   "id": "E8-neg nonsense search gives \"not found\", not a hit",
+   "pass": true,
+   "detail": "No match in the book; try other words."
+  },
+  {
+   "id": "E9 every English book figure resolves (200)",
+   "pass": true,
+   "detail": {
+    "n": 15,
+    "bad": []
+   }
+  },
+  {
+   "id": "E10 [en] guide tab shows the English guide and English PDF",
+   "pass": true,
+   "detail": {
+    "pdf": "manual/PondGate_student_guide_v1.3.4_en.pdf",
+    "imgs": 40
+   }
+  },
+  {
+   "id": "E11 every English guide figure resolves (200)",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "E12 English guide has 13 chapters and 54 steps (same as the Chinese guide)",
+   "pass": true,
+   "detail": {
+    "ch": 13,
+    "st": 54
+   }
+  },
+  {
+   "id": "E13 guide PDF button downloads the English PDF",
+   "pass": true,
+   "detail": "PondGate_student_guide_v1.3.4_en.pdf"
+  },
+  {
+   "id": "E14-neg switching back to Chinese restores the Chinese book",
+   "pass": true,
+   "detail": "zh-Hant"
+  },
+  {
+   "id": "E15 core files unchanged",
+   "pass": true,
+   "detail": [
+    "f8b7c450",
+    "54a882a7",
+    "337e2da0"
+   ]
+  },
+  {
+   "id": "E16 no page errors",
+   "pass": true,
+   "detail": []
+  }
+ ]
+}
