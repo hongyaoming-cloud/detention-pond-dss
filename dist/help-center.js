@@ -6,6 +6,7 @@
 (() => {
   const C = window.PondGateHelpContent; if (!C) return;
   const zh = () => document.documentElement.lang === 'zh-Hant';
+  const DOC_VER = '1.3.2'; // version printed on downloadable manuals
   const T = (a, b) => zh() ? a : b;
   const $ = id => document.getElementById(id);
   const num = id => Number($(id)?.value);
@@ -166,7 +167,7 @@
     { k: ['外部模型', '交叉', 'swmm', 'hec', 'hms', 'cross', 'external'], a: () => ({ manual: 'cross', actions: [['mod-evaluation', T('前往模組 6', 'Go to Module 6')]] }) },
     { k: ['隱私', '個資', '傳送', '上傳到', '資料會', '外流', '金鑰', 'privacy', 'private', 'send', 'leave', 'server', 'api key'], a: () => ({ text: T('不會傳送任何資料。計算、說明與本助理都在您的瀏覽器內執行；本助理是離線規則式說明，不連線到任何外部 AI 服務。', 'Nothing is sent. Calculation, help and this assistant all run in your browser. This assistant is an offline rule-based guide and does not connect to any external AI service.') }) },
     { k: ['設計核准', '直接用', '最終設計', '核定', '可以用來設計', 'final design', 'approve', 'approval', 'use for design'], a: () => ({ text: T('不行。PondGate 的結果只在您宣告的入流、S(H)、出口律與限制條件下成立，不是最終工程設計，也不是現地驗證。工程責任仍由合格專業人員承擔。', 'No. PondGate results hold only under your declared inflow, S(H), outlet law and limits. They are not a final engineering design or field validation. A qualified engineer remains responsible.') }) },
-    { k: ['手冊', '說明書', '說明', 'manual', 'guide', 'help'], a: () => ({ text: T('「開始這裡」頁有兩份手冊：「使用手冊（精簡版）」，以及給學生一步一步跟著做的「完整版操作手冊」（繁體中文，附截圖、檢核表與練習題），兩份都可以下載。另有「工具書」：第一部是使用手冊，第二部用範例教您完成滯洪池檢核，可下載 PDF。', 'The "Start here" page has two manuals: the short user manual, and a full step-by-step guide for students (Traditional Chinese, with screenshots, a checklist and exercises). Both can be downloaded. There is also a book (Traditional Chinese): Part I is the user manual and Part II teaches detention-pond checking with worked examples; it can be downloaded as a PDF.'), actions: [['help:manual', T('打開使用手冊', 'Open the user manual')], ['help:book', T('打開工具書', 'Open the book')]] }) },
+    { k: ['手冊', '說明書', '說明', 'manual', 'guide', 'help'], a: () => ({ text: T('「開始這裡」頁有兩份手冊：「使用手冊（精簡版）」（有中文版與英文版 PDF 可下載），以及給學生一步一步跟著做的「完整版操作手冊」（繁體中文，附截圖、檢核表與練習題），兩份都可以下載。另有「工具書」：第一部是使用手冊，第二部用範例教您完成滯洪池檢核，可下載 PDF。', 'The "Start here" page has two manuals: the short user manual (PDF in Chinese and in English), and a full step-by-step guide for students (Traditional Chinese, with screenshots, a checklist and exercises). Both can be downloaded. There is also a book (Traditional Chinese): Part I is the user manual and Part II teaches detention-pond checking with worked examples; it can be downloaded as a PDF.'), actions: [['help:manual', T('打開使用手冊', 'Open the user manual')], ['help:book', T('打開工具書', 'Open the book')]] }) },
     { k: ['工具書', '這本書', '書裡', '書中', '教科書', '範例教程', '電子書', 'book', 'textbook', 'pdf'], a: () => ({ text: T('工具書在「開始這裡 → 工具書」：第一部是使用手冊，第二部用範例一步一步教您完成滯洪池檢核。可以線上閱讀，也可以下載 PDF、單一網頁版與範例資料 ZIP。在這裡輸入關鍵字（例如「孔口公式」），我會幫您找到書中的章節。', 'The book is under "Start here → Book": Part I is the user manual and Part II teaches detention-pond checking with worked examples. Read it online or download the PDF, a single-page HTML and the example data ZIP. Type a keyword here (for example "orifice") and I will find the section.'), actions: [['help:book', T('打開工具書', 'Open the book')]] }) },
     { k: ['你好', '嗨', '哈囉', '您好', 'hello', 'hi', 'hey'], a: () => ({ text: T('您好，我是 PondGate 的離線說明助理。可以問我「下一步要做什麼」、「為什麼按鈕不能按」、「Qallow 是什麼」等問題。我不會改動您的輸入，也不做工程判斷。', 'Hello, I am the PondGate offline help assistant. Ask me "what should I do next", "why is the button grey" or "what is Qallow". I never change your inputs and I do not make engineering judgements.') }) }
   ];
@@ -269,7 +270,7 @@
         <p>${T('第一次使用？目前已載入示範案例，可以直接到模組 4 按執行，看看結果長什麼樣子。想練習完整流程（含受限篩選），請用教學案例。', 'First time? The demonstration case is loaded, so you can press run in Module 4 and see what a result looks like. To practise the full workflow including screening, use the teaching case.')}</p>
         <div class="hc-actions"><button type="button" class="hc-btn primary" data-hc-go="run">${T('用示範案例跑一次', 'Run the demonstration case')}</button><button type="button" class="hc-btn" data-hc-go="help:lessons">${T('開始引導練習（7 個案例）', 'Start the guided lessons (7 cases)')}</button><button type="button" class="hc-btn" data-hc-go="teachingAssistant">${T('打開教學案例', 'Open the teaching case')}</button><button type="button" class="hc-btn" data-hc-open="drawer">${T('問 AI 助理', 'Ask the AI assistant')}</button></div>`,
       lessons: '<div id="hcLessons"></div>',
-      manual: `<div class="hc-actions" style="margin-bottom:8px"><button type="button" class="hc-btn" id="hcManualDl">${T('下載使用手冊（HTML）', 'Download the user manual (HTML)')}</button></div><div class="hc-man">${manualHtml(false)}</div>`,
+      manual: `<div class="hc-actions" style="margin-bottom:8px"><a class="hc-btn primary" id="hcManualPdfZh" href="manual/PondGate_user_manual_v${DOC_VER}_zh-Hant.pdf" download>下載中文版（PDF）</a><a class="hc-btn primary" id="hcManualPdfEn" href="manual/PondGate_user_manual_v${DOC_VER}_en.pdf" download>Download English (PDF)</a><button type="button" class="hc-btn" id="hcManualDl">${T('下載目前語言版（HTML）', 'Download in the current language (HTML)')}</button></div><p class="hc-lead" id="hcManualMsg" role="status" aria-live="polite" style="min-height:1.2em;color:#0b557d;font-weight:600"></p><div class="hc-man">${manualHtml(false)}</div>`,
       guide: guidePane(),
       book: window.PondGateBook ? window.PondGateBook.paneHtml() : `<p>${T('工具書未載入。', 'The book did not load.')}</p>`,
       glossary: `<div class="hc-gloss"><input id="hcGlossFilter" type="search" placeholder="${T('輸入名詞搜尋，例如 Qallow、自由出流', 'Search a term, for example Qallow or free discharge')}"><div id="hcGlossList">${glossHtml('')}</div></div>`,
@@ -282,6 +283,10 @@
   box.addEventListener('click', e => {
     const t = e.target.closest('[data-hc-tab]'); if (t) { activeTab = t.dataset.hcTab; renderPage(); }
     if (e.target.closest('#hcManualDl')) downloadManual();
+    { const m = $('hcManualMsg'); if (m) {
+      if (e.target.closest('#hcManualPdfZh')) m.textContent = '已開始下載中文版使用手冊 PDF，請查看瀏覽器的下載清單。';
+      if (e.target.closest('#hcManualPdfEn')) m.textContent = 'English user manual PDF download started. Check the browser download list.';
+      if (e.target.closest('#hcManualDl')) m.textContent = T('已開始下載使用手冊（HTML）。', 'User manual (HTML) download started.'); } }
     if (e.target.closest('#hcGuideDl')) downloadGuide();
   });
   box.addEventListener('input', e => { if (e.target.id === 'hcGlossFilter') $('hcGlossList').innerHTML = glossHtml(e.target.value); });
@@ -289,9 +294,9 @@
     const srcMap = {};
     await Promise.all(FIGS.map(async f => { try { const r = await fetch(figSrc(f)); if (!r.ok) return; const blob = await r.blob();
       srcMap[f.file] = await new Promise(res => { const fr = new FileReader(); fr.onload = () => res(fr.result); fr.onerror = () => res(null); fr.readAsDataURL(blob); }); } catch (e) { /* image left as a link */ } }));
-    const html = `<!doctype html><html lang="${zh() ? 'zh-Hant' : 'en'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${T('PondGate 使用手冊 v1.1.0', 'PondGate user manual v1.1.0')}</title><style>body{font-family:system-ui,sans-serif;max-width:860px;margin:24px auto;padding:0 16px;line-height:1.6;color:#102a43}h1{color:#0b3c5d}h2{color:#0b557d;border-bottom:1px solid #d6e3e8;padding-bottom:4px;margin-top:28px}code{background:#eef4f7;padding:1px 4px}dt{font-weight:700;margin-top:8px}figure{margin:14px 0}figure img{max-width:100%;border:1px solid #c9dbe3;border-radius:6px}figcaption{font-weight:700;margin-top:4px}.hc-fig-notes{margin:4px 0 0;font-size:14px}</style></head><body><h1>${T('PondGate 使用手冊（v1.1.0）', 'PondGate user manual (v1.1.0)')}</h1>${manualHtml(true, srcMap)}<h2>${T('名詞表', 'Glossary')}</h2><dl>${G.map(g => `<dt>${esc(term(g))}</dt><dd>${esc(def(g))}</dd>`).join('')}</dl></body></html>`;
+    const html = `<!doctype html><html lang="${zh() ? 'zh-Hant' : 'en'}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${T('PondGate 使用手冊 v' + DOC_VER, 'PondGate user manual v' + DOC_VER)}</title><style>body{font-family:system-ui,sans-serif;max-width:860px;margin:24px auto;padding:0 16px;line-height:1.6;color:#102a43}h1{color:#0b3c5d}h2{color:#0b557d;border-bottom:1px solid #d6e3e8;padding-bottom:4px;margin-top:28px}code{background:#eef4f7;padding:1px 4px}dt{font-weight:700;margin-top:8px}figure{margin:14px 0}figure img{max-width:100%;border:1px solid #c9dbe3;border-radius:6px}figcaption{font-weight:700;margin-top:4px}.hc-fig-notes{margin:4px 0 0;font-size:14px}</style></head><body><h1>${T('PondGate 使用手冊（v' + DOC_VER + '）', 'PondGate user manual (v' + DOC_VER + ')')}</h1>${manualHtml(true, srcMap)}<h2>${T('名詞表', 'Glossary')}</h2><dl>${G.map(g => `<dt>${esc(term(g))}</dt><dd>${esc(def(g))}</dd>`).join('')}</dl></body></html>`;
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
-    a.download = zh() ? 'PondGate_user_manual_v1.1.0_zh-Hant.html' : 'PondGate_user_manual_v1.1.0_en.html'; document.body.appendChild(a); a.click(); a.remove();
+    a.download = zh() ? `PondGate_user_manual_v${DOC_VER}_zh-Hant.html` : `PondGate_user_manual_v${DOC_VER}_en.html`; document.body.appendChild(a); a.click(); a.remove();
   }
 
 
@@ -340,7 +345,7 @@
     if (!SG()) return;
     const html = guideDocument(await guideImages());
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
-    a.download = 'PondGate_student_guide_v1.1.0_zh-Hant.html'; document.body.appendChild(a); a.click(); a.remove();
+    a.download = `PondGate_student_guide_v${DOC_VER}_zh-Hant.html`; document.body.appendChild(a); a.click(); a.remove();
   }
 
   /* ---------- floating assistant ---------- */

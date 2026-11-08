@@ -1,0 +1,111 @@
+{
+ "generated": "2026-11-08T00:22:44.185Z",
+ "pass": true,
+ "results": [
+  {
+   "id": "M1 [zh-Hant] both language buttons are shown",
+   "pass": true,
+   "detail": {
+    "zh": "下載中文版（PDF）",
+    "en": "Download English (PDF)",
+    "msg": ""
+   }
+  },
+  {
+   "id": "M1-neg [zh-Hant] no message before clicking",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "M2 [zh-Hant] hcManualPdfZh downloads the right PDF and shows a message",
+   "pass": true,
+   "detail": {
+    "file": "PondGate_user_manual_v1.3.2_zh-Hant.pdf",
+    "head": "%PDF",
+    "title": "PondGate 使用手冊（v1.3.2）",
+    "msg": "已開始下載中文版使用手冊 PDF，請查看瀏覽器的下載清單。"
+   }
+  },
+  {
+   "id": "M2 [zh-Hant] hcManualPdfEn downloads the right PDF and shows a message",
+   "pass": true,
+   "detail": {
+    "file": "PondGate_user_manual_v1.3.2_en.pdf",
+    "head": "%PDF",
+    "title": "PondGate user manual (v1.3.2)",
+    "msg": "English user manual PDF download started. Check the browser download list."
+   }
+  },
+  {
+   "id": "M3 [zh-Hant] HTML download carries the current version and language",
+   "pass": true,
+   "detail": "PondGate_user_manual_v1.3.2_zh-Hant.html"
+  },
+  {
+   "id": "M1 [en] both language buttons are shown",
+   "pass": true,
+   "detail": {
+    "zh": "下載中文版（PDF）",
+    "en": "Download English (PDF)",
+    "msg": ""
+   }
+  },
+  {
+   "id": "M1-neg [en] no message before clicking",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "M2 [en] hcManualPdfZh downloads the right PDF and shows a message",
+   "pass": true,
+   "detail": {
+    "file": "PondGate_user_manual_v1.3.2_zh-Hant.pdf",
+    "head": "%PDF",
+    "title": "PondGate 使用手冊（v1.3.2）",
+    "msg": "已開始下載中文版使用手冊 PDF，請查看瀏覽器的下載清單。"
+   }
+  },
+  {
+   "id": "M2 [en] hcManualPdfEn downloads the right PDF and shows a message",
+   "pass": true,
+   "detail": {
+    "file": "PondGate_user_manual_v1.3.2_en.pdf",
+    "head": "%PDF",
+    "title": "PondGate user manual (v1.3.2)",
+    "msg": "English user manual PDF download started. Check the browser download list."
+   }
+  },
+  {
+   "id": "M3 [en] HTML download carries the current version and language",
+   "pass": true,
+   "detail": "PondGate_user_manual_v1.3.2_en.html"
+  },
+  {
+   "id": "M4 Chinese PDF is Chinese and English PDF is English",
+   "pass": true,
+   "detail": {
+    "zh": 570,
+    "en": 2
+   }
+  },
+  {
+   "id": "M4-neg a non-existent manual PDF is not served (link check can fail)",
+   "pass": true,
+   "detail": 404
+  },
+  {
+   "id": "M5 core files unchanged",
+   "pass": true,
+   "detail": [
+    "f8b7c450",
+    "54a882a7",
+    "337e2da0"
+   ]
+  },
+  {
+   "id": "M6 no page errors",
+   "pass": true,
+   "detail": []
+  }
+ ]
+}
