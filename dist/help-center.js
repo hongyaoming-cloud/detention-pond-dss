@@ -138,6 +138,7 @@
       const out = screeningOutcome();
       if (out === 'infeasible') return { text: (blockText() || '') + ' ' + T('這是系統刻意的阻擋，不是錯誤：在目前的限制與邊界內沒有設計能同時符合所有條件。請依「主導限制」調整池面積或出口尺寸，或擴大有工程依據的搜尋邊界；不要只為了得到解而放寬 Qallow 或 Hallow。', 'This is a deliberate block, not an error: no design within the current limits and bounds meets every condition. Adjust pond area or outlet size according to the dominant limit, or widen bounds you can justify. Do not relax Qallow or Hallow just to obtain a solution.'), actions: [['mod-evaluation', T('查看阻擋診斷', 'See the blocking diagnosis')]] };
       return { text: T('目前沒有「無可行解」的結果。當受限篩選或連續最佳化找不到符合所有條件的設計時，系統會顯示「阻擋」與主導限制，並提供「前往修正」連結，不會顯示「通過」。', 'There is no "no feasible solution" result now. When screening or optimization finds no design that meets every condition, the software shows "Blocked", the dominant limit and a "Go to fix" link. It never shows "pass".') }; } },
+    { k: ['影片', '教學影片', '短片', '看影片', 'video', 'tutorial video', 'youtube'], a: () => ({ text: T('「開始這裡 → 教學影片」有 4 支短片（有中文配音與字幕）：1 第一次登入與找到說明、2 跑第一個案例並讀結果、3 改出口或池面積再算一次、4 受限設計篩選。可以線上看，也可以下載 MP4。', 'Start here → Tutorial videos has four short videos with Chinese narration and captions: 1 first login and finding help, 2 run the first case and read the results, 3 change the outlet or pond area and run again, 4 constrained design screening. Watch online or download the MP4 files.'), actions: [['help:videos', T('打開教學影片', 'Open the tutorial videos')]] }) },
     { k: ['基本案例', '回到基本', '重設', '重置', '重來', '恢復預設', '預設值', 'reset', 'base case', 'start over', 'default values'], a: () => ({
       text: T('要回到第二部的基本案例（A = 180 m²、堰寬 b = 0.20 m、三角形入流 Qp = 0.120 m³/s），請到「工具書」分頁按「回到基本案例」，再到模組 4 按「執行路由與評估」。也可以直接重新整理網頁，效果相同（未儲存的修改會消失）。', 'To return to the Part II base case (A = 180 m², weir b = 0.20 m, triangular inflow Qp = 0.120 m³/s), open the Book tab and press "Back to the base case", then press "Run routing and evaluation" in Module 4. Reloading the page does the same (unsaved changes are lost).'),
       actions: [['help:book', T('前往工具書', 'Open the Book')], ['run', T('前往模組 4', 'Go to Module 4')]] }) },
@@ -218,6 +219,7 @@
 .hc-list{margin:4px 0 6px;padding-left:20px}.hc-link{border:0;background:none;color:#0b557d;text-decoration:underline;cursor:pointer;font:inherit;padding:0;text-align:left}
 .hc-actions{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
 .hc-btn{border:1px solid #0b557d;background:#fff;color:#0b557d;border-radius:5px;padding:5px 10px;font:inherit;font-size:14px;cursor:pointer}.hc-btn.primary{background:#0b557d;color:#fff}
+.hc-vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}.hc-vid{border:1px solid #d6e3e8;border-radius:6px;padding:10px;background:#fff}.hc-vid video{display:block;width:100%;margin:8px 0;background:#000;border-radius:4px}
 .hc-man details{border:1px solid #d6e3e8;border-radius:6px;margin:6px 0;background:#fff}.hc-man summary{cursor:pointer;padding:9px 12px;font-weight:700;color:#0b3c5d}
 .hc-man details>div{padding:0 14px 8px}
 .hc-fig{margin:12px 0}.hc-fig img{display:block;max-width:100%;height:auto;border:1px solid #c9dbe3;border-radius:6px}.hc-fig figcaption{font-weight:700;margin-top:5px;color:#0b3c5d}.hc-fig-notes{margin:4px 0 0;padding-left:22px;font-size:14px;color:#334e5e}
@@ -260,8 +262,18 @@
     return G.filter(g => !f || (g.tz + g.te + g.dz + g.de + g.keys.join(' ')).toLowerCase().includes(f))
       .map(g => `<div class="hc-term"><b>${esc(term(g))}</b>（${esc(zh() ? g.te : g.tz)}）<br>${esc(def(g))} <button type="button" class="hc-link" data-hc-go="${esc(g.target)}">${T('看欄位', 'Show field')}</button></div>`).join('') || `<p>${T('找不到符合的名詞。', 'No matching term.')}</p>`;
   }
+  const VIDEOS = [
+    ['pondgate_tutorial_1_login.mp4', '1　第一次登入與找到說明', '1  First login and finding help', '1:59'],
+    ['pondgate_tutorial_2_first_run.mp4', '2　跑第一個案例並讀結果', '2  Run the first case and read the results', '1:29'],
+    ['pondgate_tutorial_3_change_design.mp4', '3　改出口或池面積再算一次', '3  Change the outlet or pond area and run again', '1:39'],
+    ['pondgate_tutorial_4_screening.mp4', '4　受限設計篩選', '4  Constrained design screening', '1:49']];
+  function videosPane() {
+    return `<p class="hc-lead">${T('4 支短片，每支約 1.5–2 分鐘，有中文配音與中文字幕。建議依序觀看，邊看邊在旁邊的畫面跟著做。', 'Four short videos, about 1.5–2 minutes each, with Chinese narration and Chinese captions. Watch them in order and follow along in the app.')}</p>
+      <div class="hc-vids">${VIDEOS.map(([f, z, e, d], i) => `<div class="hc-vid"><b>${esc(T(z, e))}</b>（${d}）<video id="hcVid${i + 1}" controls preload="none" playsinline src="videos/${f}"></video><div class="hc-actions"><a class="hc-btn" href="videos/${f}" download>${T('下載這支影片（MP4）', 'Download this video (MP4)')}</a></div></div>`).join('')}</div>
+      <p class="hc-lead" style="font-size:13px">${T('配音為電腦合成語音，英文字的念法可能不夠自然；畫面上的數字與工具書第二部的基本案例一致。', 'The narration is a computer voice, so English words may sound unnatural. The numbers shown match the Part II base case in the book.')}</p>`;
+  }
   function renderPage() {
-    const tabs = [['start', T('開始這裡', 'Start here')], ['lessons', T('引導練習', 'Guided lessons')], ['manual', T('使用手冊（精簡版）', 'User manual (short)')], ['guide', T('完整版操作手冊', 'Full step-by-step guide')], ['book', T('工具書', 'Book')], ['glossary', T('名詞表', 'Glossary')], ['assistant', T('AI 助理', 'AI assistant')]];
+    const tabs = [['start', T('開始這裡', 'Start here')], ['lessons', T('引導練習', 'Guided lessons')], ['manual', T('使用手冊（精簡版）', 'User manual (short)')], ['guide', T('完整版操作手冊', 'Full step-by-step guide')], ['book', T('工具書', 'Book')], ['videos', T('教學影片', 'Tutorial videos')], ['glossary', T('名詞表', 'Glossary')], ['assistant', T('AI 助理', 'AI assistant')]];
     const steps = T([['1 設定入流', '模組 1：尖峰流量與歷線形狀。', 'mod-inflow'], ['2 設定池與出口', '模組 2–3：池面積、池底高程、堰或開口。', 'mod-storage'], ['3 執行路由', '模組 4：按「執行路由與評估」。', 'run'], ['4 讀結果、存紀錄', '模組 6：先看質量平衡，再看尖峰與水位。', 'mod-evaluation'], ['5（選用）受限篩選', '模組 5：需有自由出流證據。', 'mod-optimization']],
       [['1 Set the inflow', 'Module 1: peak discharge and hydrograph shape.', 'mod-inflow'], ['2 Set pond and outlet', 'Modules 2–3: area, floor elevation, weir or opening.', 'mod-storage'], ['3 Run routing', 'Module 4: press "Run routing and evaluation".', 'run'], ['4 Read and record', 'Module 6: check mass balance first, then peaks and levels.', 'mod-evaluation'], ['5 (optional) Screening', 'Module 5: needs free-discharge evidence.', 'mod-optimization']]);
     const panes = {
@@ -273,6 +285,7 @@
       manual: `<div class="hc-actions" style="margin-bottom:8px"><a class="hc-btn primary" id="hcManualPdfZh" href="manual/PondGate_user_manual_v${DOC_VER}_zh-Hant.pdf" download>下載中文版（PDF）</a><a class="hc-btn primary" id="hcManualPdfEn" href="manual/PondGate_user_manual_v${DOC_VER}_en.pdf" download>Download English (PDF)</a><button type="button" class="hc-btn" id="hcManualDl">${T('下載目前語言版（HTML）', 'Download in the current language (HTML)')}</button></div><p class="hc-lead" id="hcManualMsg" role="status" aria-live="polite" style="min-height:1.2em;color:#0b557d;font-weight:600"></p><div class="hc-man">${manualHtml(false)}</div>`,
       guide: guidePane(),
       book: window.PondGateBook ? window.PondGateBook.paneHtml() : `<p>${T('工具書未載入。', 'The book did not load.')}</p>`,
+      videos: videosPane(),
       glossary: `<div class="hc-gloss"><input id="hcGlossFilter" type="search" placeholder="${T('輸入名詞搜尋，例如 Qallow、自由出流', 'Search a term, for example Qallow or free discharge')}"><div id="hcGlossList">${glossHtml('')}</div></div>`,
       assistant: `<p>${T('AI 助理是<b>離線規則式</b>說明：它在您的瀏覽器內，依關鍵字與目前畫面狀態回答操作與名詞問題。它不連線到外部 AI 服務、不傳送資料、不改動輸入，也不做工程判斷。', 'The AI assistant is an <b>offline rule-based</b> guide. It runs in your browser and answers operation and terminology questions from keywords and the current screen state. It does not connect to an external AI service, send data, change inputs or make engineering judgements.')}</p><div class="hc-actions"><button type="button" class="hc-btn primary" data-hc-open="drawer">${T('打開 AI 助理', 'Open the AI assistant')}</button></div>`
     };

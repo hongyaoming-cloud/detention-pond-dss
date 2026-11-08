@@ -1,0 +1,128 @@
+{
+ "generated": "2026-11-08T01:14:29.848Z",
+ "pass": true,
+ "results": [
+  {
+   "id": "F1 evidence after run keeps result current",
+   "pass": true,
+   "detail": {
+    "stale": false,
+    "staleTxt": false,
+    "diag": "尚未執行受限篩選或連續最佳化"
+   }
+  },
+  {
+   "id": "F1-neg changing weir width marks result stale",
+   "pass": true,
+   "detail": {
+    "stale": true,
+    "staleTxt": true,
+    "diag": "尚未執行受限篩選或連續最佳化"
+   }
+  },
+  {
+   "id": "F2 typing in assistant keeps screening state",
+   "pass": true,
+   "detail": {
+    "before": {
+     "stale": false,
+     "staleTxt": false,
+     "diag": "受限篩選完成"
+    },
+    "after": {
+     "stale": false,
+     "staleTxt": false,
+     "diag": "受限篩選完成"
+    }
+   }
+  },
+  {
+   "id": "F2-neg changing Qallow resets screening state",
+   "pass": true,
+   "detail": {
+    "stale": false,
+    "staleTxt": false,
+    "diag": "尚未執行受限篩選或連續最佳化"
+   }
+  },
+  {
+   "id": "F3-neg modified inputs give different numbers",
+   "pass": true,
+   "detail": "0.1200 m³/s"
+  },
+  {
+   "id": "F3 reset to base case reproduces chapter 4 numbers",
+   "pass": true,
+   "detail": {
+    "m": {
+     "入流尖峰 Qp,i": "0.1200 m³/s",
+     "出流尖峰 Qp,o": "0.0903 m³/s",
+     "尖峰比 RQ = Qp,o/Qp,i": "0.753",
+     "事件新增滯洪量 ΔSmax": "74.385 m³",
+     "Te + Td 剩餘蓄水": "0.03 %",
+     "蓄水比 RS = ΔSmax/Vin": "0.344",
+     "無因次遲滯 RT": "0.124",
+     "最大水位 Hmax": "0.413 m",
+     "絕對守恆殘差": "1.259e-10 m³",
+     "質量平衡殘差 ε/Vin": "0.000 %",
+     "近洪峰平坦指標 FPI95": "0.006",
+     "中位體積時間": "42.6 分鐘",
+     "出流重心時間": "49.3 分鐘"
+    },
+    "vals": {
+     "area": "180",
+     "bw": "0.20",
+     "case": "tri",
+     "qallow": "0.080"
+    }
+   }
+  },
+  {
+   "id": "F3b assistant explains reset",
+   "pass": true,
+   "detail": "要回到第二部的基本案例（A = 180 m²、堰寬 b = 0.20 m、三角形入流 Qp = 0.120 m³/s），請到「工具書」分頁按「回到基本案例」，再"
+  },
+  {
+   "id": "F4-neg no message before clicking",
+   "pass": true,
+   "detail": ""
+  },
+  {
+   "id": "F4 PDF click shows message and downloads",
+   "pass": true,
+   "detail": {
+    "after": "已開始下載 PDF（約 3 MB）。請查看瀏覽器的下載清單；若沒有出現，請改用「下載單一網頁版」。",
+    "file": "PondGate_book_v1.3.1_zh-Hant.pdf"
+   }
+  },
+  {
+   "id": "F5 no bare \"按「執行」\" in the book",
+   "pass": true,
+   "detail": 0
+  },
+  {
+   "id": "F5-neg detector catches an injected bare 執行",
+   "pass": true,
+   "detail": 1
+  },
+  {
+   "id": "F5b chapter 4 lists expected numbers",
+   "pass": true,
+   "detail": true
+  },
+  {
+   "id": "F5c built book-data matches sources (v1.3.1, ch4 table, reset button text)",
+   "pass": true,
+   "detail": true
+  },
+  {
+   "id": "F6 core files unchanged",
+   "pass": true,
+   "detail": {
+    "routing-core.js": "f8b7c450",
+    "physics-refinement.js": "54a882a7",
+    "module-shell.js": "337e2da0"
+   }
+  }
+ ]
+}
