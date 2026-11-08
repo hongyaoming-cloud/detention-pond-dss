@@ -1,0 +1,158 @@
+{
+ "generated": "2026-11-08T01:18:54.287Z",
+ "pass": true,
+ "results": [
+  {
+   "id": "V1 pondgate_tutorial_1_login.mp4 is H.264 + AAC (has voice) and 80–130 s",
+   "pass": true,
+   "detail": {
+    "codecs": "aac,h264",
+    "dur": 118.92
+   }
+  },
+  {
+   "id": "V1 pondgate_tutorial_2_first_run.mp4 is H.264 + AAC (has voice) and 80–130 s",
+   "pass": true,
+   "detail": {
+    "codecs": "aac,h264",
+    "dur": 88.92
+   }
+  },
+  {
+   "id": "V1 pondgate_tutorial_3_change_design.mp4 is H.264 + AAC (has voice) and 80–130 s",
+   "pass": true,
+   "detail": {
+    "codecs": "aac,h264",
+    "dur": 98.68
+   }
+  },
+  {
+   "id": "V1 pondgate_tutorial_4_screening.mp4 is H.264 + AAC (has voice) and 80–130 s",
+   "pass": true,
+   "detail": {
+    "codecs": "aac,h264",
+    "dur": 109.28
+   }
+  },
+  {
+   "id": "V2-neg [zh-Hant] videos pane is hidden until its tab is clicked",
+   "pass": true,
+   "detail": true
+  },
+  {
+   "id": "V2 [zh-Hant] tab shows 4 visible players with the right files, preload none",
+   "pass": true,
+   "detail": [
+    {
+     "src": "videos/pondgate_tutorial_1_login.mp4",
+     "vis": true,
+     "pre": "none"
+    },
+    {
+     "src": "videos/pondgate_tutorial_2_first_run.mp4",
+     "vis": true,
+     "pre": "none"
+    },
+    {
+     "src": "videos/pondgate_tutorial_3_change_design.mp4",
+     "vis": true,
+     "pre": "none"
+    },
+    {
+     "src": "videos/pondgate_tutorial_4_screening.mp4",
+     "vis": true,
+     "pre": "none"
+    }
+   ]
+  },
+  {
+   "id": "V3 [zh-Hant] tab label in current language",
+   "pass": true,
+   "detail": "教學影片"
+  },
+  {
+   "id": "V2-neg [en] videos pane is hidden until its tab is clicked",
+   "pass": true,
+   "detail": true
+  },
+  {
+   "id": "V2 [en] tab shows 4 visible players with the right files, preload none",
+   "pass": true,
+   "detail": [
+    {
+     "src": "videos/pondgate_tutorial_1_login.mp4",
+     "vis": true,
+     "pre": "none"
+    },
+    {
+     "src": "videos/pondgate_tutorial_2_first_run.mp4",
+     "vis": true,
+     "pre": "none"
+    },
+    {
+     "src": "videos/pondgate_tutorial_3_change_design.mp4",
+     "vis": true,
+     "pre": "none"
+    },
+    {
+     "src": "videos/pondgate_tutorial_4_screening.mp4",
+     "vis": true,
+     "pre": "none"
+    }
+   ]
+  },
+  {
+   "id": "V3 [en] tab label in current language",
+   "pass": true,
+   "detail": "Tutorial videos"
+  },
+  {
+   "id": "V4 video 2 loads and plays in the browser",
+   "pass": true,
+   "detail": {
+    "t": 1.463667,
+    "d": 88.92,
+    "err": null
+   }
+  },
+  {
+   "id": "V5 download button gives the MP4",
+   "pass": true,
+   "detail": "pondgate_tutorial_4_screening.mp4"
+  },
+  {
+   "id": "V6 existing video served 200, non-existent 404 (link check can fail)",
+   "pass": true,
+   "detail": [
+    200,
+    404
+   ]
+  },
+  {
+   "id": "V7 assistant answers a video question and links to the tab",
+   "pass": true,
+   "detail": [
+    "help:videos"
+   ]
+  },
+  {
+   "id": "V7-neg an unrelated question does not get the video answer",
+   "pass": true,
+   "detail": "These sections of the book look relevant; press one to open it:\n• 第 12 章　出口公式：堰與"
+  },
+  {
+   "id": "V8 core files unchanged",
+   "pass": true,
+   "detail": [
+    "f8b7c450",
+    "54a882a7",
+    "337e2da0"
+   ]
+  },
+  {
+   "id": "V9 no page errors",
+   "pass": true,
+   "detail": []
+  }
+ ]
+}

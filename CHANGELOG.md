@@ -1,5 +1,12 @@
 # Changelog
 
+## v1.3.3 (draft, 2026-11-08)
+
+- New tab Start here -> Tutorial videos with four short voiced videos (Chinese narration and captions, 1:29–1:59 each): first login and finding help; first case and reading results; changing the outlet or pond area; constrained design screening. Each can be played in the page (preload none) or downloaded as MP4 (dist/videos/).
+- The offline assistant answers questions about the videos and links to the tab.
+- Narration is the macOS built-in offline voice (Meijia); nothing was sent to an online speech service. Numbers on screen match the Part II base case of the book.
+- No calculation change; core files unchanged. Checks: audit/videos_v1_3_3/video_check.js 17/17; regressions book 16/16, fix 14/14, manual PDF 14/14, accounts 47/47 (C1 allow-list now includes dist/manual/ and dist/videos/ display assets).
+
 ## v1.3.2 (draft, 2026-11-08)
 
 Downloadable user manual in both languages. No calculation changed.
