@@ -1,5 +1,13 @@
 # Changelog
 
+## v1.3.2 (draft, 2026-11-08)
+
+Downloadable user manual in both languages. No calculation changed.
+- Start here -> User manual (short) now has two always-visible buttons: 下載中文版（PDF） and Download English (PDF), whatever the screen language, with a message when the download starts. The HTML download is kept for the current language.
+- The PDFs (dist/manual/PondGate_user_manual_v1.3.2_zh-Hant.pdf, _en.pdf) are made from the in-app manual by `docs/build_manual_pdfs.js`, so they match what the app shows.
+- Downloaded manual and step-by-step guide files now carry the current version (1.3.2) instead of 1.1.0.
+- Checks: `audit/manual_v1_3_2/manual_pdf_check.js` 14/14 with negative controls; earlier suites re-run.
+
 ## v1.3.1 (draft, 2026-11-07)
 
 Fixes from a novice follow-along test of the book (ChatGPT agent mode, 3.5/5; every number matched). No calculation changed.
