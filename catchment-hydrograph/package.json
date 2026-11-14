@@ -1,0 +1,8 @@
+{
+  "name": "tphyd-catchment-hydrograph",
+  "version": "0.1.2",
+  "private": true,
+  "description": "Rainfall to inflow hydrograph modules (M1-M3) with an adapter for the Detention Pond DSS V112",
+  "scripts": { "test": "node --test tests/test_modules.js", "mutation": "node tests/mutation_check.js" },
+  "engines": { "node": ">=18" }
+}
