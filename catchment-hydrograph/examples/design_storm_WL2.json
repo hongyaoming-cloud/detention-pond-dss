@@ -1,0 +1,8 @@
+{
+  "name": "WL2_design_example",
+  "catchment": { "id": "WL2", "area_ha": 534.73, "source": "example catchment area (ha)" },
+  "rainfall": { "method": "alternating-block", "horner": { "a": 1500, "b": 20, "c": 0.7, "note": "SYNTHETIC test coefficients, NOT official Horner values (U-6)" }, "duration_min": 180, "dt_min": 10 },
+  "loss": { "method": "scs-cn", "CN": 70, "lambda": 0.2 },
+  "transform": { "method": "linear-reservoir", "K_min": 45, "dt_out_min": 1 },
+  "output": { "baseflow_m3s": 0, "max_points": 5000 }
+}
